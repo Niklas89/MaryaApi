@@ -1,0 +1,49 @@
+version: '3'
+
+
+services:
+# Serveur node.js lts
+  nodejs:
+    container_name: api-nodejs
+    image: node:lts
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./:/home/node/api
+    working_dir: /home/node/api
+    depends_on:
+      - mariadb
+    links:
+      - mariadb:mariadb
+    build: 
+      context: .
+      dockerfile: ./docker/Dockerfile
+    
+
+  # Serveur mariadb
+  mariadb:
+    container_name: api-mariadb
+    image: mariadb:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=api
+      - MYSQL_USER=api
+      - MYSQL_PASSWORD=api
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker-data:/var/lib/mysql
+
+  # Serveur PhpMyAdmin
+  phpmyadmin:
+    container_name: api-phpmyadmin
+    image: phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mariadb
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 1024M
+    links:
+      - mariadb:mariadb
+
