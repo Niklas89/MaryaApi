@@ -1,24 +1,15 @@
 import mariadb from "mariadb";
 
-/*const pool:mariadb.Pool = mariadb.createPool({
-    host: "localhost",
-    user: "api",
-    password: "api",
-    database: "api",
-    port: 3306,
+const {DB_HOST, DB_DATABASE,DB_PASSWORD,DB_PORT,DB_USER} = process.env;
+
+const pool:mariadb.Pool = mariadb.createPool({
+    host: DB_HOST,
+    user: DB_USER,
+    password: DB_PASSWORD,
+    database: DB_DATABASE,
+    port: DB_PORT != undefined ? parseInt(DB_PORT): 3306,
     connectionLimit: 5
-});*/
+});
 
-const conn = mariadb.createConnection({
-    host: "",
-    user: "api",
-    password: "api",
-    database: "api",
-    port: 3306
-}).then(err => {
-    if (err) return console.log("Failed to connect");
-    console.log(`Successfully connected to mariadb server: ${conn}`);
-})
-
-//export default pool;
+export default pool;
 
