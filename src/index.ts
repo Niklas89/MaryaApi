@@ -11,12 +11,6 @@ app.use(express.json());
 
 app.use("/api/user", userRoute);
 
-/*
-app.listen(8080, () => {
-  console.log(`server running on port 8080`)
-}); */
-
-
 dbConnection
   .sync()
   .then((result: any) => {

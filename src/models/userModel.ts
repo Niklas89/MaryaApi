@@ -8,18 +8,33 @@ const userModel = dbConnection.define("user", {
     allowNull: false,
     primaryKey: true
   },
-  firstName: Sequelize.STRING,
-  price: {
-    type: Sequelize.DOUBLE,
+  firstName: {
+    type: Sequelize.STRING(50),
     allowNull: false
   },
-  imageUrl: {
-    type: Sequelize.STRING,
+  lastName: {
+    type: Sequelize.STRING(50),
     allowNull: false
   },
-  description: {
-    type: Sequelize.STRING,
+  password: {
+    type: Sequelize.STRING(60),
     allowNull: false
+  },
+  email: {
+    type: Sequelize.STRING(100),
+    allowNull: false
+  },
+  isActive: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false
+  },
+  signUpDate: {
+    type: Sequelize.DATE,
+    allowNull: false
+  },
+  deactivatedDate: {
+    type: Sequelize.DATE,
+    allowNull: true
   }
 });
 
