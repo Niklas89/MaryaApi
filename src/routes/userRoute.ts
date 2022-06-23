@@ -1,7 +1,13 @@
 import express from 'express';
 const router = express.Router();
-import pool from "../config/dbConfig";
 
+const userController = require('../controllers/userController');
+
+router.post('/add-user', userController.postAddUser);
+
+router.get('/', userController.getUsers);
+
+/*
 router.get('/', async (req, res) => {
     try {
         let conn = await pool.getConnection();
@@ -12,5 +18,7 @@ router.get('/', async (req, res) => {
         throw err;
     }
 });
+*/
+
 
 export default router;
