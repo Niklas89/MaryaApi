@@ -1,4 +1,7 @@
 import userModel from "../models/userModel";
+import clientModel from "../models/clientModel";
+import partnerModel from "../models/partnerModel";
+import roleModel from "../models/roleModel";
 
 const getUsers = (req: any, res: any, next: any) => {
     userModel.findAll()
@@ -10,6 +13,35 @@ const getUsers = (req: any, res: any, next: any) => {
       });
     };
 
+    const getClients = (req: any, res: any, next: any) => {
+      clientModel.findAll()
+      .then((clients: any) => {
+          res.status(200).json(clients);
+      })
+        .catch((err: any) => {
+          console.log(err);
+        });
+      };
+
+      const getPartners = (req: any, res: any, next: any) => {
+        partnerModel.findAll()
+        .then((partners: any) => {
+            res.status(200).json(partners);
+        })
+          .catch((err: any) => {
+            console.log(err);
+          });
+        };
+
+        const getRoles = (req: any, res: any, next: any) => {
+          roleModel.findAll()
+          .then((roles: any) => {
+              res.status(200).json(roles);
+          })
+            .catch((err: any) => {
+              console.log(err);
+            });
+          };
   
 
 /* 
@@ -34,4 +66,4 @@ exports.postAddUser = (req: { body: { firstName: any; imageUrl: any; price: any;
   }; */
 
 
-  export {getUsers};
+  export { getUsers, getClients, getPartners, getRoles };
