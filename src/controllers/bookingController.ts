@@ -10,4 +10,14 @@ const getBookings = (req: any, res: any, next: any) => {
         });
 };
 
+/*const getBookingId = (req: any, res: any, next: any) => {
+    bookingModel.findByPk()
+        .then((bookingId: any) => {
+            res.status(200).json(bookingId);
+        })
+        .catch((err: any) => {
+            console.log(err);
+        });
+}*/
+
 export { getBookings }
