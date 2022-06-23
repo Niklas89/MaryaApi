@@ -30,7 +30,7 @@ const partnerModel = dbConnection.define("partner", {
     },
     img: {
         type: Sequelize.STRING,
-        allowNul: false
+        allowNul: true
     },
     SIRET: {
         type: Sequelize.STRING(14),
