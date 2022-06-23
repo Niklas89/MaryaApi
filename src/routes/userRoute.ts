@@ -1,11 +1,11 @@
-import express from 'express';
+import express from "express";
 const router = express.Router();
 
-const userController = require('../controllers/userController');
+const userController = require("../controllers/userController");
 
-router.post('/add-user', userController.postAddUser);
+router.post("/add-user", userController.postAddUser);
 
-router.get('/', userController.getUsers);
+router.get("/", userController.getUsers);
 
 /*
 router.get('/', async (req, res) => {

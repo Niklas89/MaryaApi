@@ -1,5 +1,5 @@
 import mariadb from "mariadb";
-const Sequelize = require('sequelize');
+const Sequelize = require("sequelize");
 
 const {DB_HOST, DB_DATABASE,DB_PASSWORD,DB_PORT,DB_USER} = process.env;
 

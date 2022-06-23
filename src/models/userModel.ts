@@ -1,7 +1,7 @@
 import dbConnection from "../config/dbConfig";
-import Sequelize from 'sequelize';
+import Sequelize from "sequelize";
 
-const userModel = dbConnection.define('user', {
+const userModel = dbConnection.define("user", {
   idUser: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
