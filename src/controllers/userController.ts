@@ -24,7 +24,7 @@ exports.postAddUser = (req: { body: { firstName: any; imageUrl: any; price: any;
     })
       .then((result: any) => {
         // console.log(result);
-        console.log('Created User');
+        console.log("Created User");
       })
       .catch((err: any) => {
         console.log(err);

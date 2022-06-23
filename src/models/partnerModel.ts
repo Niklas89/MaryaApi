@@ -1,2 +1,2 @@
 import dbConnection from "../config/dbConfig";
-import Sequelize from 'sequelize';
+import Sequelize from "sequelize";
