@@ -1,6 +1,6 @@
 import userModel from "../models/userModel";
 
-exports.getUsers = (req: any, res: any, next: any) => {
+const getUsers = (req: any, res: any, next: any) => {
     userModel.findAll()
     .then((users: any) => {
         res.status(200).json(users);
@@ -10,7 +10,9 @@ exports.getUsers = (req: any, res: any, next: any) => {
       });
     };
 
+  
 
+/* 
 exports.postAddUser = (req: { body: { firstName: any; imageUrl: any; price: any; description: any; }; }, res: any, next: any) => {
     const firstName = req.body.firstName;
     const imageUrl = req.body.imageUrl;
@@ -29,4 +31,7 @@ exports.postAddUser = (req: { body: { firstName: any; imageUrl: any; price: any;
       .catch((err: any) => {
         console.log(err);
       });
-  };
+  }; */
+
+
+  export {getUsers};
