@@ -1,7 +1,7 @@
 import dbConnection from "../config/dbConfig";
 import Sequelize from "sequelize";
 
-const serviceCategory = dbConnection.define("role", {
+const serviceCategoryModel = dbConnection.define("serviceCategory", {
     idServiceCategory: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -14,4 +14,4 @@ const serviceCategory = dbConnection.define("role", {
     },
 });
 
-export default serviceCategory;
+export default serviceCategoryModel;

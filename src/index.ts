@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import userRoute from "./routes/userRoute";
+import serviceRoute from "./routes/serviceRoute";
 import dbConnection from "./config/dbConfig";
 
 const app = express();
@@ -8,7 +9,7 @@ const app = express();
 //middleware
 app.use(express.json());
 
-
+app.use("/api/service", serviceRoute);
 app.use("/api/user", userRoute);
 
 dbConnection
