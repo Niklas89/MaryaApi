@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import userRoute from "./routes/userRoute";
 import serviceRoute from "./routes/serviceRoute";
+import bookingRoute from "./routes/bookingRoute";
 import dbConnection from "./config/dbConfig";
 
 const app = express();
@@ -11,6 +12,7 @@ app.use(express.json());
 
 app.use("/api/service", serviceRoute);
 app.use("/api/user", userRoute);
+app.use("/api/booking", bookingRoute);
 
 dbConnection
   .sync()
