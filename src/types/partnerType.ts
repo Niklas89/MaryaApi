@@ -7,6 +7,6 @@ type Partner = {
     img?: string,
     SIRET: string,
     IBAN: string,
-  }
+  };
 
-  export default Partner
+  export default Partner;

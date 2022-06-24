@@ -9,12 +9,8 @@ import userModel from "./models/userModel";
 import roleModel from "./models/roleModel";
 import clientModel from "./models/clientModel";
 import partnerModel from "./models/partnerModel";
-import User from "./types/userType";
-import { Sequelize } from "sequelize-typescript";
 
 const app = express();
-
-
 
 //middleware
 app.use(express.json());
@@ -45,7 +41,7 @@ clientModel.belongsTo(userModel, { constraints: true, onDelete: "CASCADE" });
 partnerModel.belongsTo(userModel, { constraints: true, onDelete: "CASCADE" });
 
 dbConnection
-  .sync()
+  .sync({force: true})
   .then((result: any) => {
     //console.log(user);
     app.listen(8080);

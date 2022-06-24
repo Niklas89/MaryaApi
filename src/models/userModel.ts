@@ -26,11 +26,8 @@ const userModel = dbConnection.define("user", {
   },
   isActive: {
     type: Sequelize.BOOLEAN,
-    allowNull: false
-  },
-  signUpDate: {
-    type: Sequelize.DATE,
-    allowNull: false
+    allowNull: false,
+    defaultValue: true
   },
   deactivatedDate: {
     type: Sequelize.DATE,
