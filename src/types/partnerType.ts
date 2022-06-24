@@ -1,4 +1,5 @@
 type Partner = {
+  idPartner: number,
     phone: string,
     birthdate: string,
     address: string,

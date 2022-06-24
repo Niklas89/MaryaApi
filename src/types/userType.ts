@@ -1,4 +1,5 @@
 type User = {
+  idUser: number,
     firstName: string,
     lastName: string,
     password: string,
@@ -6,7 +7,7 @@ type User = {
     isActive: boolean,
     signUpDate: string,
     deactivatedDate?: string,
-    idRole: number,
+    roleIdRole: number,
   }
 
   export default User
