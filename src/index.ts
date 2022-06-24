@@ -40,9 +40,6 @@ app.use("/api/booking", bookingRoute);
 
 
     /*  FOREIGN KEY ROLE - USER */
-// Une relation One-To-One (1:1) existe entre userModel et roleModel, la clé étrangère étant définie dans le modèle source (userModel).
-userModel.belongsTo(roleModel, { constraints: false });
-// Une relation One-To-Many existe entre roleModel et userModel, la clé étrangère étant définie dans le modèle cible (userModel).
 roleModel.hasMany(userModel, {
   foreignKey: {
     name: 'idRole', allowNull: false
@@ -52,17 +49,16 @@ roleModel.hasMany(userModel, {
     /* FOREIGN KEY USER - CLIENT / PARTNER */
 // si un user est supprimé, le client sera également supprimé
 // le user peut être un client ou un partenaire
-clientModel.belongsTo(userModel, { constraints: true, onDelete: "CASCADE" });
-userModel.hasOne(clientModel, {
+// Une relation One-To-One (1:1) existe entre clientModel et userModel, la clé étrangère étant définie dans le modèle source (clientModel).
+clientModel.belongsTo(userModel, {
   foreignKey: {
-    name: 'idUser', allowNull: false
+    name: 'idUser', allowNull: false, constraints: true, onDelete: "CASCADE"
   }
 });
 
-partnerModel.belongsTo(userModel, { constraints: true, onDelete: "CASCADE" });
-userModel.hasOne(partnerModel, {
+partnerModel.belongsTo(userModel, {
   foreignKey: {
-    name: 'idUser', allowNull: false
+    name: 'idUser', allowNull: false, constraints: true, onDelete: "CASCADE"
   }
 });
 
@@ -73,13 +69,11 @@ userModel.hasMany(clientModel, {
     name: 'idUser_salesHasClient'
   }
 });
-partnerModel.belongsTo(userModel);
 userModel.hasMany(partnerModel, {
   foreignKey: {
     name: 'idUser_salesHasPartner'
   }
 });
-partnerModel.belongsTo(userModel);
 
 
 
@@ -101,7 +95,7 @@ dbConnection
   .sync({force: true})
   // Après création des tables on veut qu'un user soit créé, s'il y n'en a pas déjà.
   .then((result: any) => {
-    return roleModel.findByPk(2); // Retourner user avec Id 1 de la BDD.
+    return roleModel.findByPk(1); // Retourner user avec Id 1 de la BDD.
   })
   // Ajout d'une autre promesse créé un nouveau user s'il n'y en a pas.
   .then((role: Role) => {
@@ -111,14 +105,14 @@ dbConnection
     return role;
   })
   .then((role: Role) => {
-    return userModel.findOne({where: {roleIdRole: role.idRole}}); // Retourner user avec Id 1 de la BDD.
+    return userModel.findOne({where: {idRole: role.idRole}}); // Retourner user avec Id 1 de la BDD.
   })
   // Ajout d'une autre promesse créé un nouveau user s'il n'y en a pas.
   .then((user: User) => {
     if (!user) { // Vérifier si on a déjà un user, sinon il sera créé.
       return userModel.create({
         firstName: "Nicolas", lastName: "Dupont", password: "supermdp", email: "nicolasdupont@email.com",
-        isActive: 1, signUpDate: "2022-06-22 13:56:01", roleIdRole: 2
+        isActive: 1, idRole: 1
       });
     }
     return user;
