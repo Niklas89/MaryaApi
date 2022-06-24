@@ -8,6 +8,8 @@ type Partner = {
     img?: string,
     SIRET: string,
     IBAN: string,
+    idUser: number,
+    idUser_salesHasPartner?: number
   };
 
   export default Partner;
