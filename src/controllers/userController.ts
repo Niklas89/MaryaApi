@@ -8,7 +8,9 @@ import Partner from "../types/partnerType";
 import Role from "../types/roleType";
 import Express from "express";
 
-const getUsers = (req: Express.Request, res: Express.Response) => {
+
+const getUsers =  (req: Express.Request, res: Express.Response) => {
+
   userModel.findAll()
     .then((users: User) => {
       res.status(200).json(users);
