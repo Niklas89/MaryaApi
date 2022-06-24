@@ -5,7 +5,6 @@ type User = {
     password: string,
     email: string,
     isActive: boolean,
-    signUpDate: string,
     deactivatedDate?: string,
     idRole: number,
   };
