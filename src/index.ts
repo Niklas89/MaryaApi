@@ -115,16 +115,18 @@ serviceTypeModel.hasMany(serviceModel, {
   }
 });
 
-
+/*
 dbConnection
-  .sync({force: true})
+  .sync()
   .then((result: any) => {
     app.listen(8080);
   })
   .catch((err: Error) => {
     console.log(err);
   });
+*/
 
+app.listen(8080);
 
 /*
 dbConnection
