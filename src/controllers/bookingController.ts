@@ -1,4 +1,5 @@
 import bookingModel from "../models/bookingModel";
+import Express from "express";
 
 const getBookings = (req: any, res: any, next: any) => {
     bookingModel.findAll()
@@ -10,8 +11,8 @@ const getBookings = (req: any, res: any, next: any) => {
         });
 };
 
-const getbooking = (req: any, res: any, next: any) => {
-    bookingModel.find
+const getBooking = (req: Express.Request, res: Express.Response) => {
+    bookingModel.findByPk(req.params.id)
         .then((bookings: any) => {
             res.status(200).json(bookings);
         })
@@ -19,4 +20,4 @@ const getbooking = (req: any, res: any, next: any) => {
             console.log(err);
         });
 }
-export { getBookings }
+export { getBookings, getBooking }
