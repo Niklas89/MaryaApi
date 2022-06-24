@@ -117,7 +117,7 @@ serviceTypeModel.hasMany(serviceModel, {
 
 
 dbConnection
-  .sync()
+  .sync({force: true})
   .then((result: any) => {
     app.listen(8080);
   })
@@ -160,5 +160,5 @@ dbConnection
   })
   .catch((err: Error) => {
     console.log(err);
-  });*/
-
+  });
+*/

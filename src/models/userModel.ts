@@ -39,7 +39,7 @@ const userModel = dbConnection.define("user", {
     }
   },
   password: {
-    type: Sequelize.STRING(60),
+    type: Sequelize.STRING,
     allowNull: false,
     validate: {
       notEmpty: {

@@ -9,14 +9,34 @@ import Role from "../types/roleType";
 import Express from "express";
 
 
-const getUsers =  (req: Express.Request, res: Express.Response) => {
-
+const getUsers = (req: Express.Request, res: Express.Response) => {
   userModel.findAll()
     .then((users: User) => {
       res.status(200).json(users);
     })
     .catch((err: Error) => {
-      console.log(err);
+      res.status(409).send(err);
+    });
+};
+
+
+const editUser = (req: Express.Request, res: Express.Response) => {
+  const { firstName, lastName, password, email } = req.body;
+  userModel.update({
+    firstName: firstName,
+    lastName: lastName,
+    password: password,
+    email: email
+  }, {
+    where: {
+      idUser: req.params.id
+    }
+  })
+    .then((user: User) => {
+      res.status(201).json(user);
+    })
+    .catch((err: Error) => {
+      res.status(409).send(err);
     });
 };
 
@@ -26,7 +46,7 @@ const getClients = (req: Express.Request, res: Express.Response) => {
       res.status(200).json(clients);
     })
     .catch((err: Error) => {
-      console.log(err);
+      res.status(409).send(err);
     });
 };
 
@@ -36,7 +56,7 @@ const getPartners = (req: Express.Request, res: Express.Response) => {
       res.status(200).json(partners);
     })
     .catch((err: any) => {
-      console.log(err);
+      res.status(409).send(err);
     });
 };
 
@@ -46,31 +66,9 @@ const getRoles = (req: Express.Request, res: Express.Response) => {
       res.status(200).json(roles);
     })
     .catch((err: any) => {
-      console.log(err);
+      res.status(409).send(err);
     });
 };
 
 
-/* 
-exports.postAddUser = (req: { body: { firstName: any; imageUrl: any; price: any; description: any; }; }, res: any, next: any) => {
-    const firstName = req.body.firstName;
-    const imageUrl = req.body.imageUrl;
-    const price = req.body.price;
-    const description = req.body.description;
-    userModel.create({
-        firstName: firstName,
-      price: price,
-      imageUrl: imageUrl,
-      description: description
-    })
-      .then((result: any) => {
-        // console.log(result);
-        console.log("Created User");
-      })
-      .catch((err: any) => {
-        console.log(err);
-      });
-  }; */
-
-
-export { getUsers, getClients, getPartners, getRoles };
+export { getUsers, getClients, getPartners, getRoles, editUser };
