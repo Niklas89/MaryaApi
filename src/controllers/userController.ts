@@ -20,6 +20,23 @@ const getUsers = (req: Express.Request, res: Express.Response) => {
 };
 
 
+const inactivateUser = (req: Express.Request, res: Express.Response) => {
+  userModel.update({
+    isActive: false
+  }, {
+    where: {
+      idUser: req.params.id
+    }, individualHooks: true,
+  })
+    .then((user: User) => {
+      res.status(201).json(user);
+    })
+    .catch((err: Error) => {
+      res.status(409).send(err);
+    });
+};
+
+
 const editUser = (req: Express.Request, res: Express.Response) => {
   const { firstName, lastName, password, email } = req.body;
   userModel.update({
@@ -30,7 +47,7 @@ const editUser = (req: Express.Request, res: Express.Response) => {
   }, {
     where: {
       idUser: req.params.id
-    }
+    }, individualHooks: true,
   })
     .then((user: User) => {
       res.status(201).json(user);
@@ -71,4 +88,4 @@ const getRoles = (req: Express.Request, res: Express.Response) => {
 };
 
 
-export { getUsers, getClients, getPartners, getRoles, editUser };
+export { getUsers, getClients, getPartners, getRoles, editUser, inactivateUser };
