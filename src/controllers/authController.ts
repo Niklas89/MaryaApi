@@ -19,12 +19,12 @@ const signUp = async (req: Express.Request, res: Express.Response) => {
             lastName: req.body.lastName,
             email: req.body.email,
             password: req.body.password,
-            roleIdRole: req.body.idRole
+            idRole: req.body.idRole
         });
-        res.status(201).json({ user: user.idUser});
+        res.status(201).json({ user: user.idUser });
     } catch (err) {
-        res.status(200).send(err);
+        res.status(400).send(err);
     }
 };
 
-export {signIn, signUp};
+export { signIn, signUp };
