@@ -50,6 +50,7 @@ roleModel.hasMany(userModel, {
   }
 });
 
+
 /* ASSOCIATIONS USER - CLIENT / PARTNER */
 // si un user est supprimé, le client sera également supprimé
 // le user peut être un client ou un partenaire
@@ -115,9 +116,8 @@ serviceTypeModel.hasMany(serviceModel, {
 });
 
 
-
 dbConnection
-  .sync()
+  .sync({force: true})
   .then((result: any) => {
     app.listen(8080);
   })
