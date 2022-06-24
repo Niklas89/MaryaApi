@@ -6,7 +6,7 @@ type User = {
     email: string,
     isActive: boolean,
     deactivatedDate?: string,
-    idRole: number,
+    idRole: number
   };
 
   export default User;
