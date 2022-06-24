@@ -4,6 +4,6 @@ type Client = {
     address: string,
     postalCode: string,
     city: string
-  }
+  };
 
-  export default Client
+  export default Client;

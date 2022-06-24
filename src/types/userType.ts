@@ -7,7 +7,7 @@ type User = {
     isActive: boolean,
     signUpDate: string,
     deactivatedDate?: string,
-    roleIdRole: number,
-  }
+    idRole: number,
+  };
 
-  export default User
+  export default User;

@@ -9,15 +9,15 @@ import userModel from "./models/userModel";
 import roleModel from "./models/roleModel";
 import clientModel from "./models/clientModel";
 import partnerModel from "./models/partnerModel";
+
 import User from "./types/userType";
 import Client from "./types/clientType";
 import Partner from "./types/partnerType";
 import Role from "./types/roleType";
 import { Sequelize } from "sequelize-typescript";
 
+
 const app = express();
-
-
 
 //middleware
 app.use(express.json());
@@ -32,7 +32,7 @@ app.use((req, res, next) => {
     })
     .catch((err: any) => console.log(err));
 });
-*/ 
+*/
 
 app.use("/api/service", serviceRoute);
 app.use("/api/user", userRoute);
@@ -85,7 +85,7 @@ partnerModel.belongsTo(userModel);
 
 /*
 dbConnection
-  .sync()
+  .sync({force: true})
   .then((result: any) => {
     //console.log(user);
     app.listen(8080);
@@ -93,6 +93,7 @@ dbConnection
   .catch((err: Error) => {
     console.log(err);
   }); */
+
 
 
 dbConnection
@@ -129,3 +130,4 @@ dbConnection
   .catch((err: Error) => {
     console.log(err);
   });
+

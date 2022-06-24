@@ -2,7 +2,7 @@ import dbConnection from "../config/dbConfig";
 import Sequelize from "sequelize";
 
 const bookingModel = dbConnection.define("booking", {
-    idUbooking: {
+    idBooking: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
