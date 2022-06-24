@@ -77,19 +77,18 @@ userModel.hasMany(partnerModel, {
 
 
 
-/*
+
 dbConnection
-  .sync({force: true})
+  .sync()
   .then((result: any) => {
-    //console.log(user);
     app.listen(8080);
   })
   .catch((err: Error) => {
     console.log(err);
-  }); */
+  });
 
 
-
+/*
 dbConnection
   //.sync({force: true}) // forcer les tables dans la BDD à être remplacées (DROP et CREATE), à ne pas utiliser après le déploiement, uniquement en développement
   .sync({force: true})
@@ -123,5 +122,5 @@ dbConnection
   })
   .catch((err: Error) => {
     console.log(err);
-  });
+  });*/
 
