@@ -49,13 +49,13 @@ const bookingModel = dbConnection.define("booking", {
 /* ASSOCIATIONS BOOKING - CLIENT / PARTNER */
 clientModel.hasMany(bookingModel, {
     foreignKey: {
-      name: 'idClient', allowNull: false
+        name: 'idClient', allowNull: false
     }
-  });
-  partnerModel.hasMany(bookingModel, {
+});
+partnerModel.hasMany(bookingModel, {
     foreignKey: {
-      name: 'idPartner', allowNull: false
+        name: 'idPartner', allowNull: true
     }
-  });
+});
 
 export default bookingModel;
