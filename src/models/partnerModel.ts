@@ -2,7 +2,7 @@ import dbConnection from "../config/dbConfig";
 import Sequelize from "sequelize";
 
 const partnerModel = dbConnection.define("partner", {
-    idPartner: {
+    id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNul: false,

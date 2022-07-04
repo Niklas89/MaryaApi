@@ -4,15 +4,10 @@ import userRoute from "./routes/userRoute";
 import serviceRoute from "./routes/serviceRoute";
 import bookingRoute from "./routes/bookingRoute";
 import dbConnection from "./config/dbConfig";
+import associateModels from "./models";
 
 import userModel from "./models/userModel";
 import roleModel from "./models/roleModel";
-import clientModel from "./models/clientModel";
-import partnerModel from "./models/partnerModel";
-import bookingModel from "./models/bookingModel";
-import serviceCategoryModel from "./models/serviceCategoryModel";
-import serviceModel from "./models/serviceModel";
-import serviceTypeModel from "./models/serviceTypeModel";
 
 import User from "./types/userType";
 import Role from "./types/roleType";
@@ -34,9 +29,12 @@ app.use("/api/user", userRoute);
 app.use("/api/booking", bookingRoute);
 
 
+
+associateModels();
+
 /*
 dbConnection
-  .sync()
+  .sync({force: true})
   .then((result: any) => {
   })
   .catch((err: Error) => {
@@ -48,6 +46,7 @@ dbConnection
 app.listen(8080, () => {
   console.log(`server running on port 8080`);
 });
+
 
 /*
 dbConnection
@@ -71,7 +70,7 @@ dbConnection
   .then((user: User) => {
     if (!user) { // Vérifier si on a déjà un user, sinon il sera créé.
       return userModel.create({
-        firstName: "Nicolas", lastName: "Dupont", password: "supermdp", email: "nicolasdupont@email.com",
+        firstName: "Nicolas", lastName: "Dupont", password: "Supermdp1/", email: "nicolasdupont@email.com",
         isActive: 1, idRole: 1
       });
     }
@@ -79,9 +78,9 @@ dbConnection
   })
   .then((user: User) => {
     console.log(user);
-    app.listen(8080);
   })
   .catch((err: Error) => {
     console.log(err);
   });
+
 */
