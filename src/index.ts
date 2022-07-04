@@ -17,30 +17,21 @@ import serviceTypeModel from "./models/serviceTypeModel";
 import User from "./types/userType";
 import Role from "./types/roleType";
 import { Sequelize } from "sequelize-typescript";
-
-
+import checkUser from "./middleware/authMiddleware";
 
 const app = express();
 
 //middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true}));
 
-// Créer un middleware qui run pour toute requêtes entrantes et stocke user pour qu'on puisse l'utiliser
-/*
-app.use((req, res, next) => {
-  userModel.findById(1)
-    .then((user:User) => {
-      (req: any) => (user: Sequelize) => user;
-      next(); // continuer avec la prochaine étape si on a déjà le user et qu'il est stocké
-    })
-    .catch((err: any) => console.log(err));
-});
-*/
+//jwt
+app.get('*', checkUser);
 
+//routes
 app.use("/api/service", serviceRoute);
 app.use("/api/user", userRoute);
 app.use("/api/booking", bookingRoute);
-
 
 /*  ASSOCIATIONS ROLE - USER */
 // Par défaut avec Sequelize: ADD CONSTRAINT, ON DELETE CASCADE ON UPDATE CASCADE
@@ -114,17 +105,19 @@ serviceTypeModel.hasMany(serviceModel, {
   }
 });
 
-
-
+/*
 dbConnection
   .sync()
   .then((result: any) => {
-    app.listen(8080);
   })
   .catch((err: Error) => {
     console.log(err);
   });
+*/
 
+app.listen(8080, () => {
+  console.log(`server running on port 8080`);
+});
 
 /*
 dbConnection
