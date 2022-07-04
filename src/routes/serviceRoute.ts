@@ -11,18 +11,18 @@ router.post("/category", addCategory);
 router.put("/category/:id", editCategoryById);
 router.delete("/category/:id", deleteCategoryById);
 
-//Toutes les routes pour les services
-router.get("/", getServices);
-router.get("/:id", getServiceById);
-router.post("/", addService);
-router.put("/:id", editServiceById);
-router.delete("/:id", deleteServiceById);
-
 //Toutes les routes pour les types de service
 router.get("/type", getServicesType);
 router.get("/type/:id", getServiceTypeById);
 router.post("/type", addServiceType);
 router.put("/type/:id", editServiceTypeById);
 router.delete("/type/:id", deleteServiceTypeById);
+
+//Toutes les routes pour les services
+router.get("/", getServices);
+router.get("/:id", getServiceById);
+router.post("/", addService);
+router.put("/:id", editServiceById);
+router.delete("/:id", deleteServiceById);
 
 export default router;
