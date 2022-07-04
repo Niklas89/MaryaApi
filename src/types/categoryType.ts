@@ -1,5 +1,5 @@
 type ServiceCategory = {
-    idServiceCategory: number,
+    id: number,
     name: string,
 };
 

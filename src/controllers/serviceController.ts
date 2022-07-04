@@ -33,7 +33,7 @@ const getCategoryById = (req: Express.Request, res: Express.Response) => {
 const addCategory = (req: Express.Request, res: Express.Response) => {
     serviceCategoryModel.create({ name: req.body.name })
         .then((serviceCategory: ServiceCategory) => {
-            res.status(201).json({ category: serviceCategory.idServiceCategory });
+            res.status(201).json({ category: serviceCategory.id });
         })
         .catch((err: Error) => {
             res.status(409).send(err);
@@ -50,7 +50,7 @@ const editCategoryById = async (req: Express.Request, res: Express.Response) => 
         }
     })
         .then((serviceCategory: ServiceCategory) => {
-            res.status(201).json({ category: serviceCategory.idServiceCategory });
+            res.status(201).json({ category: serviceCategory.id });
         })
         .catch((err: Error) => {
             res.status(409).send(err);
@@ -58,14 +58,14 @@ const editCategoryById = async (req: Express.Request, res: Express.Response) => 
 };
 
 //Supprimer une catégorie via sont id
-const deleteCategoryById = async (req: Express.Request, res: Express.Response) => {
+const deleteCategoryById = (req: Express.Request, res: Express.Response) => {
     serviceCategoryModel.destroy({
         where: {
             idServiceCategory: req.params.id
         }
     })
         .then((serviceCategory: ServiceCategory) => {
-            res.status(200).json({ category: serviceCategory.idServiceCategory });
+            res.status(200).json({ category: serviceCategory.id });
         })
         .catch((err: Error) => {
             res.status(409).send(err);
@@ -99,7 +99,7 @@ const getServiceById = (req: Express.Request, res: Express.Response) => {
 const addService = (req: Express.Request, res: Express.Response) => {
     serviceModel.create({ name: req.body.name })
         .then((services: Service) => {
-            res.status(201).json({ category: services.idService });
+            res.status(201).json({ category: services.id });
         })
         .catch((err: Error) => {
             res.status(409).send(err);
@@ -107,7 +107,7 @@ const addService = (req: Express.Request, res: Express.Response) => {
 };
 
 //Modifier un service via sont id
-const editServiceById = async (req: Express.Request, res: Express.Response) => {
+const editServiceById = (req: Express.Request, res: Express.Response) => {
     serviceModel.update({
         name: req.body.name,
         updatedAt: req.body.updatedAt
@@ -117,7 +117,7 @@ const editServiceById = async (req: Express.Request, res: Express.Response) => {
         }
     })
         .then((services: Service) => {
-            res.status(201).json({ category: services.idService });
+            res.status(201).json({ category: services.id });
         })
         .catch((err: Error) => {
             res.status(409).send(err);
@@ -125,14 +125,14 @@ const editServiceById = async (req: Express.Request, res: Express.Response) => {
 };
 
 //Supprimer un service via sont id
-const deleteServiceById = async (req: Express.Request, res: Express.Response) => {
+const deleteServiceById = (req: Express.Request, res: Express.Response) => {
     serviceModel.destroy({
         where: {
             idService: req.params.id
         }
     })
         .then((services: Service) => {
-            res.status(200).json({ category: services.idService });
+            res.status(200).json({ category: services.id });
         })
         .catch((err: Error) => {
             res.status(409).send(err);
@@ -166,7 +166,7 @@ const getServiceTypeById = (req: Express.Request, res: Express.Response) => {
 const addServiceType = (req: Express.Request, res: Express.Response) => {
     serviceTypeModel.create({ name: req.body.name })
         .then((ServiceType: ServiceType) => {
-            res.status(201).json({ category: ServiceType.idServiceType });
+            res.status(201).json({ category: ServiceType.id });
         })
         .catch((err: Error) => {
             res.status(409).send(err);
@@ -174,7 +174,7 @@ const addServiceType = (req: Express.Request, res: Express.Response) => {
 };
 
 //Modifier une catégorie via sont id
-const editServiceTypeById = async (req: Express.Request, res: Express.Response) => {
+const editServiceTypeById = (req: Express.Request, res: Express.Response) => {
     serviceTypeModel.update({
         name: req.body.name,
         updatedAt: req.body.updatedAt
@@ -184,7 +184,7 @@ const editServiceTypeById = async (req: Express.Request, res: Express.Response) 
         }
     })
         .then((ServiceType: ServiceType) => {
-            res.status(201).json({ category: ServiceType.idServiceType });
+            res.status(201).json({ category: ServiceType.id });
         })
         .catch((err: Error) => {
             res.status(409).send(err);
@@ -192,14 +192,14 @@ const editServiceTypeById = async (req: Express.Request, res: Express.Response) 
 };
 
 //Supprimer une catégorie via sont id
-const deleteServiceTypeById = async (req: Express.Request, res: Express.Response) => {
+const deleteServiceTypeById = (req: Express.Request, res: Express.Response) => {
     serviceTypeModel.destroy({
         where: {
             idServiceType: req.params.id
         }
     })
         .then((ServiceType: ServiceType) => {
-            res.status(200).json({ category: ServiceType.idServiceType })
+            res.status(200).json({ category: ServiceType.id })
         })
         .catch((err: Error) => {
             res.status(409).send(err);
