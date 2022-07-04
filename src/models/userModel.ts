@@ -2,6 +2,9 @@ import dbConnection from "../config/dbConfig";
 import Sequelize from "sequelize";
 import bcrypt from "bcryptjs";
 import User from "../types/userType";
+import roleModel from "../models/roleModel";
+import clientModel from "../models/clientModel";
+import partnerModel from "../models/partnerModel";
 
 const userModel = dbConnection.define("user", {
   idUser: {
@@ -93,5 +96,42 @@ const userModel = dbConnection.define("user", {
   }
 }
 );
+
+
+/*  ASSOCIATIONS ROLE - USER */
+// Par défaut avec Sequelize: ADD CONSTRAINT, ON DELETE CASCADE ON UPDATE CASCADE
+roleModel.hasMany(userModel, {
+  foreignKey: {
+    name: 'idRole', allowNull: false
+  }
+});
+
+
+/* ASSOCIATIONS USER - CLIENT / PARTNER */
+// si un user est supprimé, le client sera également supprimé
+// le user peut être un client ou un partenaire
+userModel.hasOne(clientModel, {
+  foreignKey: {
+    name: 'idUser', allowNull: false
+  }
+});
+userModel.hasOne(partnerModel, {
+  foreignKey: {
+    name: 'idUser', allowNull: false
+  }
+});
+
+// le user (commercial) peut recruter un client ou un partenaire
+// par défaut avec Sequelize, le FK est allowedNull = true
+userModel.hasMany(clientModel, {
+  foreignKey: {
+    name: 'idUser_salesHasClient'
+  }
+});
+userModel.hasMany(partnerModel, {
+  foreignKey: {
+    name: 'idUser_salesHasPartner'
+  }
+});
 
 export default userModel;
