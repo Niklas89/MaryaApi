@@ -20,6 +20,7 @@ const getUsers = (req: Express.Request, res: Express.Response) => {
 };
 
 
+
 // supprimer un utilisateur / le mettre en "inactif" dans la bdd
 const inactivateUser = (req: Express.Request, res: Express.Response) => {
   userModel.update({
@@ -66,7 +67,7 @@ const editUser = (req: Express.Request, res: Express.Response) => {
     email: email
   }, {
     where: {
-      idUser: req.params.id
+      id: req.params.id
     }, individualHooks: true,
   })
     .then((user: User) => {
@@ -90,6 +91,28 @@ const getClients = (req: Express.Request, res: Express.Response) => {
 };
 
 
+// modifier un client
+const editClient = (req: Express.Request, res: Express.Response) => {
+  const { phone, address, postalCode, city } = req.body;
+  clientModel.update({
+    phone: phone,
+    address: address,
+    postalCode: postalCode,
+    city: city
+  }, {
+    where: {
+      id: req.params.id
+    }, individualHooks: true,
+  })
+    .then((client: Client) => {
+      res.status(201).json(client);
+    })
+    .catch((err: Error) => {
+      res.status(409).send(err);
+    });
+};
+
+
 // Récupérer les partenaires
 const getPartners = (req: Express.Request, res: Express.Response) => {
   partnerModel.findAll()
@@ -97,6 +120,32 @@ const getPartners = (req: Express.Request, res: Express.Response) => {
       res.status(200).json(partners);
     })
     .catch((err: any) => {
+      res.status(409).send(err);
+    });
+};
+
+
+// modifier un partenaire
+const editPartner = (req: Express.Request, res: Express.Response) => {
+  const { phone, birthdate, address, postalCode, city, img, SIRET, IBAN } = req.body;
+  partnerModel.update({
+    phone: phone,
+    birthdate: birthdate,
+    address: address,
+    postalCode: postalCode,
+    city: city,
+    img: img,
+    SIRET: SIRET,
+    IBAN: IBAN
+  }, {
+    where: {
+      id: req.params.id
+    }, individualHooks: true,
+  })
+    .then((partner: Partner) => {
+      res.status(201).json(partner);
+    })
+    .catch((err: Error) => {
       res.status(409).send(err);
     });
 };
@@ -114,4 +163,5 @@ const getRoles = (req: Express.Request, res: Express.Response) => {
 };
 
 
-export { getUsers, getClients, getPartners, getRoles, editUser, inactivateUser, editPassword };
+export { getUsers, getClients, getPartners, getRoles, editUser, inactivateUser, editPassword,
+   editClient, editPartner };

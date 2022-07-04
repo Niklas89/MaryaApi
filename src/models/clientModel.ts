@@ -1,5 +1,6 @@
 import dbConnection from "../config/dbConfig";
 import Sequelize from "sequelize";
+import sequelize from "sequelize/types/sequelize";
 
 const clientModel = dbConnection.define("client", {
     id: {

@@ -2,6 +2,8 @@ import dbConnection from "../config/dbConfig";
 import Sequelize from "sequelize";
 import bcrypt from "bcryptjs";
 import User from "../types/userType";
+import sequelize from "sequelize/types/sequelize";
+import clientModel from "./clientModel";
 
 const userModel = dbConnection.define("user", {
   id: {
@@ -82,7 +84,7 @@ const userModel = dbConnection.define("user", {
       const hashedPassword = bcrypt.hashSync(user.password, 10);
       user.password = hashedPassword;
     }
-  }
+  },
 }
 );
 
