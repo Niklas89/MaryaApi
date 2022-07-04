@@ -28,25 +28,12 @@ app.use("/api/service", serviceRoute);
 app.use("/api/user", userRoute);
 app.use("/api/booking", bookingRoute);
 
-
-
+//association
 associateModels();
-
-/*
-dbConnection
-  .sync({force: true})
-  .then((result: any) => {
-  })
-  .catch((err: Error) => {
-    console.log(err);
-  });
-*/
-
 
 app.listen(8080, () => {
   console.log(`server running on port 8080`);
 });
-
 
 /*
 dbConnection
@@ -64,7 +51,7 @@ dbConnection
     return role;
   })
   .then((role: Role) => {
-    return userModel.findOne({ where: { idRole: role.idRole } }); // Retourner user avec Id 1 de la BDD.
+    return userModel.findOne({ where: { idRole: role.id } }); // Retourner user avec Id 1 de la BDD.
   })
   // Ajout d'une autre promesse créé un nouveau user s'il n'y en a pas.
   .then((user: User) => {
@@ -82,5 +69,4 @@ dbConnection
   .catch((err: Error) => {
     console.log(err);
   });
-
-*/
+  */

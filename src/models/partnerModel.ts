@@ -10,23 +10,23 @@ const partnerModel = dbConnection.define("partner", {
     },
     phone: {
         type: Sequelize.STRING(10),
-        allowNul: false
+        allowNul: true
     },
     birthdate: {
         type: Sequelize.DATEONLY,
-        allowNul: false
+        allowNul: true
     },
     address: {
         type: Sequelize.STRING,
-        allowNul: false
+        allowNul: true
     },
     postalCode: {
         type: Sequelize.STRING(5),
-        allowNul: false
+        allowNul: true
     },
     city: {
         type: Sequelize.STRING(50),
-        allowNul: false
+        allowNul: true
     },
     img: {
         type: Sequelize.STRING,
@@ -34,11 +34,11 @@ const partnerModel = dbConnection.define("partner", {
     },
     SIRET: {
         type: Sequelize.STRING(14),
-        allowNul: false
+        allowNul: true
     },
     IBAN: {
         type: Sequelize.STRING(34),
-        allowNul: false
+        allowNul: true
     }
 });
 

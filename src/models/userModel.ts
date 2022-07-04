@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import User from "../types/userType";
 
 const userModel = dbConnection.define("user", {
-  idUser: {
+  id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
     allowNull: false,
