@@ -1,5 +1,5 @@
 type booking = {
-    idBooking: number,
+    id: number,
     appointementDate: string,
     nbHours: number,
     description: string,
