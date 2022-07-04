@@ -41,6 +41,7 @@ roleModel.hasMany(userModel, {
   }
 });
 
+
 /* ASSOCIATIONS USER - CLIENT / PARTNER */
 // si un user est supprimé, le client sera également supprimé
 // le user peut être un client ou un partenaire
@@ -115,6 +116,7 @@ dbConnection
   });
 */
 
+
 app.listen(8080, () => {
   console.log(`server running on port 8080`);
 });
@@ -153,5 +155,5 @@ dbConnection
   })
   .catch((err: Error) => {
     console.log(err);
-  });*/
-
+  });
+*/
