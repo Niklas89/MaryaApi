@@ -11,7 +11,7 @@ const serviceTypeModel = dbConnection.define("serviceType", {
     name: {
         type: Sequelize.STRING(50),
         allowNul: false
-    },
+    }
 });
 
 export default serviceTypeModel;

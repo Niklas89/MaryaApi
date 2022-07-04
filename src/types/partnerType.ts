@@ -1,5 +1,5 @@
 type Partner = {
-  idPartner: number,
+  id: number,
   phone: string,
   birthdate: string,
   address: string,

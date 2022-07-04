@@ -22,8 +22,8 @@ const signIn = (req: Express.Request, res: Express.Response) => {
         .then((user: User) => {
             const auth: boolean = bcrypt.compareSync(req.body.password, user.password);
             if (auth) {
-                const token = createToken(user.idUser);
-                res.status(200).send(token);
+                const token = createToken(user.id);
+                res.status(201).send(user);
             } else {
                 res.status(401).json("Mot de passe incorrect")
             }

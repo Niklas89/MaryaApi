@@ -3,4 +3,4 @@ type Role = {
     name: string,
   };
 
-  export default Role;
+export default Role;

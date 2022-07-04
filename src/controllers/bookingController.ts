@@ -37,7 +37,7 @@ const addBooking = (req: Express.Request, res: Express.Response) => {
         idClient: req.body.idClient,
     })
         .then((booking: Booking) => {
-            res.status(201).json({ booking: booking.idBooking });
+            res.status(201).json({ booking: booking.id });
         })
         .catch((err: Error) => {
             res.status(409).send(err);
@@ -58,7 +58,7 @@ const editBookingById = (req: Express.Request, res: Express.Response) => {
         }
     })
         .then((booking: Booking) => {
-            res.status(201).json({ booking: booking.idBooking });
+            res.status(201).json({ booking: booking.id });
         })
         .catch((err: Error) => {
             res.status(409).send(err);
@@ -75,7 +75,7 @@ const bookedByPartner = (req: Express.Request, res: Express.Response) => {
         }
     })
         .then((booking: Booking) => {
-            res.status(201).json({ booking: booking.idBooking });
+            res.status(201).json({ booking: booking.id });
         })
         .catch((err: Error) => {
             res.status(409).send(err);
@@ -90,7 +90,7 @@ const deleteBookingById = (req: Express.Request, res: Express.Response) => {
         }
     })
         .then((booking: Booking) => {
-            res.status(200).json({ booking: booking.idBooking });
+            res.status(200).json({ booking: booking.id });
         })
         .catch((err: Error) => {
             res.status(409).send(err);
