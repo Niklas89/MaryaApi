@@ -1,9 +1,6 @@
 import dbConnection from "../config/dbConfig";
 import Sequelize from "sequelize";
 
-import clientModel from "../models/clientModel";
-import partnerModel from "../models/partnerModel";
-
 const bookingModel = dbConnection.define("booking", {
     idBooking: {
         type: Sequelize.INTEGER,
@@ -44,18 +41,5 @@ const bookingModel = dbConnection.define("booking", {
         allowNull: true
     }
 });
-
-
-/* ASSOCIATIONS BOOKING - CLIENT / PARTNER */
-clientModel.hasMany(bookingModel, {
-    foreignKey: {
-      name: 'idClient', allowNull: false
-    }
-  });
-  partnerModel.hasMany(bookingModel, {
-    foreignKey: {
-      name: 'idPartner', allowNull: false
-    }
-  });
 
 export default bookingModel;

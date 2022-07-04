@@ -1,8 +1,6 @@
 import dbConnection from "../config/dbConfig";
 import Sequelize from "sequelize";
 
-import serviceModel from "../models/serviceModel";
-
 const serviceTypeModel = dbConnection.define("serviceType", {
     idServiceType: {
         type: Sequelize.INTEGER,
@@ -15,12 +13,5 @@ const serviceTypeModel = dbConnection.define("serviceType", {
         allowNul: false
     },
 });
-
-/* ASSOCIATION serviceType - service */
-serviceTypeModel.hasMany(serviceModel, {
-    foreignKey: {
-      name: 'idServiceType', allowNull: false
-    }
-  });
 
 export default serviceTypeModel;
