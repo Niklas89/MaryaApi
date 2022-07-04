@@ -11,19 +11,19 @@ const clientModel = dbConnection.define("client", {
     },
     phone: {
         type: Sequelize.STRING(10),
-        allowNull: false
+        allowNull: true
     },
     address: {
         type: Sequelize.STRING(255),
-        allowNull: false
+        allowNull: true
     },
     postalCode: {
         type: Sequelize.STRING(5),
-        allowNull: false
+        allowNull: true
     },
     city: {
         type: Sequelize.STRING(50),
-        allowNull: false
+        allowNull: true
     }
 });
 

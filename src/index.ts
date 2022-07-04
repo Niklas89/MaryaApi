@@ -28,9 +28,9 @@ app.use("/api/service", serviceRoute);
 app.use("/api/user", userRoute);
 app.use("/api/booking", bookingRoute);
 
-
-
+//association
 associateModels();
+
 
 /*
 dbConnection
@@ -43,10 +43,10 @@ dbConnection
 */
 
 
+
 app.listen(8080, () => {
   console.log(`server running on port 8080`);
 });
-
 
 
 /*
@@ -84,3 +84,4 @@ dbConnection
     console.log(err);
   });
   */
+

@@ -60,7 +60,7 @@ roleModel.hasMany(userModel, {
   /* ASSOCIATION serviceCategory - partner */
   serviceCategoryModel.hasMany(partnerModel, {
     foreignKey: {
-      name: 'idServiceCategory', allowNull: false
+      name: 'idServiceCategory', allowNull: true
     }
   });
   
