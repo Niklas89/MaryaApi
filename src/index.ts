@@ -4,15 +4,10 @@ import userRoute from "./routes/userRoute";
 import serviceRoute from "./routes/serviceRoute";
 import bookingRoute from "./routes/bookingRoute";
 import dbConnection from "./config/dbConfig";
+import associateModels from "./models";
 
 import userModel from "./models/userModel";
 import roleModel from "./models/roleModel";
-import clientModel from "./models/clientModel";
-import partnerModel from "./models/partnerModel";
-import bookingModel from "./models/bookingModel";
-import serviceCategoryModel from "./models/serviceCategoryModel";
-import serviceModel from "./models/serviceModel";
-import serviceTypeModel from "./models/serviceTypeModel";
 
 import User from "./types/userType";
 import Role from "./types/roleType";
@@ -34,6 +29,9 @@ app.use("/api/user", userRoute);
 app.use("/api/booking", bookingRoute);
 
 
+
+associateModels();
+
 /*
 dbConnection
   .sync({force: true})
@@ -48,6 +46,7 @@ dbConnection
 app.listen(8080, () => {
   console.log(`server running on port 8080`);
 });
+
 
 /*
 dbConnection
@@ -83,4 +82,5 @@ dbConnection
   .catch((err: Error) => {
     console.log(err);
   });
+
 */

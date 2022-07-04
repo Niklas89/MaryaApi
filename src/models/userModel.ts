@@ -2,9 +2,6 @@ import dbConnection from "../config/dbConfig";
 import Sequelize from "sequelize";
 import bcrypt from "bcryptjs";
 import User from "../types/userType";
-import roleModel from "../models/roleModel";
-import clientModel from "../models/clientModel";
-import partnerModel from "../models/partnerModel";
 
 const userModel = dbConnection.define("user", {
   idUser: {

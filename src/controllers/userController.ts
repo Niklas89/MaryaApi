@@ -8,7 +8,7 @@ import Partner from "../types/partnerType";
 import Role from "../types/roleType";
 import Express from "express";
 
-
+// Récupérer les utilisateurs
 const getUsers = (req: Express.Request, res: Express.Response) => {
   userModel.findAll()
     .then((users: User) => {
@@ -20,6 +20,7 @@ const getUsers = (req: Express.Request, res: Express.Response) => {
 };
 
 
+// supprimer un utilisateur / le mettre en "inactif" dans la bdd
 const inactivateUser = (req: Express.Request, res: Express.Response) => {
   userModel.update({
     isActive: false
@@ -37,6 +38,7 @@ const inactivateUser = (req: Express.Request, res: Express.Response) => {
 };
 
 
+// modifier un utilisateur
 const editUser = (req: Express.Request, res: Express.Response) => {
   const { firstName, lastName, password, email } = req.body;
   userModel.update({
@@ -57,6 +59,8 @@ const editUser = (req: Express.Request, res: Express.Response) => {
     });
 };
 
+
+// Récupérer les clients
 const getClients = (req: Express.Request, res: Express.Response) => {
   clientModel.findAll()
     .then((clients: Client) => {
@@ -67,6 +71,8 @@ const getClients = (req: Express.Request, res: Express.Response) => {
     });
 };
 
+
+// Récupérer les partenaires
 const getPartners = (req: Express.Request, res: Express.Response) => {
   partnerModel.findAll()
     .then((partners: Partner) => {
@@ -77,6 +83,8 @@ const getPartners = (req: Express.Request, res: Express.Response) => {
     });
 };
 
+
+// Récupérer les rôles
 const getRoles = (req: Express.Request, res: Express.Response) => {
   roleModel.findAll()
     .then((roles: Role) => {
