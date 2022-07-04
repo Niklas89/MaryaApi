@@ -5,7 +5,7 @@ import partnerModel from "../models/partnerModel";
 import serviceModel from "../models/serviceModel";
 
 const serviceCategoryModel = dbConnection.define("serviceCategory", {
-    idServiceCategory: {
+    id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNul: false,

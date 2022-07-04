@@ -20,12 +20,8 @@ const userModel = dbConnection.define("user", {
       notEmpty: {
         args: true,
         msg: "Le champ est vide."
-      },
-      is: {
-        args: /[a-zA-ZÀ-ÖØ-öø-ÿ\ \-\'\$]*$/,
-        msg: "Le champ contient des caractères non autorisés."
       }
-    }
+    },
   },
   lastName: {
     type: Sequelize.STRING(50),
@@ -34,10 +30,6 @@ const userModel = dbConnection.define("user", {
       notEmpty: {
         args: true,
         msg: "Le champ est vide."
-      },
-      is: {
-        args: /[a-zA-ZÀ-ÖØ-öø-ÿ\ \-\'\$]*$/,
-        msg: "Le champ contient des caractères non autorisés."
       }
     }
   },
@@ -96,42 +88,5 @@ const userModel = dbConnection.define("user", {
   }
 }
 );
-
-
-/*  ASSOCIATIONS ROLE - USER */
-// Par défaut avec Sequelize: ADD CONSTRAINT, ON DELETE CASCADE ON UPDATE CASCADE
-roleModel.hasMany(userModel, {
-  foreignKey: {
-    name: 'idRole', allowNull: false
-  }
-});
-
-
-/* ASSOCIATIONS USER - CLIENT / PARTNER */
-// si un user est supprimé, le client sera également supprimé
-// le user peut être un client ou un partenaire
-userModel.hasOne(clientModel, {
-  foreignKey: {
-    name: 'idUser', allowNull: false
-  }
-});
-userModel.hasOne(partnerModel, {
-  foreignKey: {
-    name: 'idUser', allowNull: false
-  }
-});
-
-// le user (commercial) peut recruter un client ou un partenaire
-// par défaut avec Sequelize, le FK est allowedNull = true
-userModel.hasMany(clientModel, {
-  foreignKey: {
-    name: 'idUser_salesHasClient'
-  }
-});
-userModel.hasMany(partnerModel, {
-  foreignKey: {
-    name: 'idUser_salesHasPartner'
-  }
-});
 
 export default userModel;

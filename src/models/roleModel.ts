@@ -2,7 +2,7 @@ import dbConnection from "../config/dbConfig";
 import Sequelize from "sequelize";
 
 const role = dbConnection.define("role", {
-    idRole: {
+    id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNul: false,

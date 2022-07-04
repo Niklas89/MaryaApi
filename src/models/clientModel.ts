@@ -2,7 +2,7 @@ import dbConnection from "../config/dbConfig";
 import Sequelize from "sequelize";
 
 const clientModel = dbConnection.define("client", {
-    idClient: {
+    id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,

@@ -2,7 +2,7 @@ import dbConnection from "../config/dbConfig";
 import Sequelize from "sequelize";
 
 const serviceModel = dbConnection.define("service", {
-    idService: {
+    id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNul: false,

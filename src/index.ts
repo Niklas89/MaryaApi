@@ -26,7 +26,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
 
 //jwt
-app.get('*', checkUser);
+//app.get('*', checkUser);
 
 //routes
 app.use("/api/service", serviceRoute);
@@ -36,7 +36,7 @@ app.use("/api/booking", bookingRoute);
 
 /*
 dbConnection
-  .sync()
+  .sync({force: true})
   .then((result: any) => {
   })
   .catch((err: Error) => {
@@ -71,7 +71,7 @@ dbConnection
   .then((user: User) => {
     if (!user) { // Vérifier si on a déjà un user, sinon il sera créé.
       return userModel.create({
-        firstName: "Nicolas", lastName: "Dupont", password: "supermdp", email: "nicolasdupont@email.com",
+        firstName: "Nicolas", lastName: "Dupont", password: "Supermdp1/", email: "nicolasdupont@email.com",
         isActive: 1, idRole: 1
       });
     }
@@ -79,7 +79,6 @@ dbConnection
   })
   .then((user: User) => {
     console.log(user);
-    app.listen(8080);
   })
   .catch((err: Error) => {
     console.log(err);
