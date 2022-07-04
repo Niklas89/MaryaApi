@@ -1,5 +1,5 @@
 type Role = {
-    idRole: number,
+    id: number,
     name: string,
   };
 

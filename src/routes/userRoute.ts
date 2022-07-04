@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 
-import { getUsers, getClients, getPartners, getRoles, editUser, inactivateUser } from "../controllers/userController";
+import { getUsers, getClients, getPartners, getRoles, editUser, inactivateUser, editPassword } from "../controllers/userController";
 import { signIn, signUp } from "../controllers/authController";
 
 
@@ -11,7 +11,8 @@ router.get("/partners", getPartners);
 router.get("/roles", getRoles);
 
 router.put("/:id", editUser);
-router.put("/delete-user/:id", inactivateUser);
+router.patch("/:id", inactivateUser);
+router.patch("/password/:id", editPassword);
 
 router.post("/register", signUp);
 router.post("/login", signIn)
