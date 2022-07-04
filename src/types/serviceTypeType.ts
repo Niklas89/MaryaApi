@@ -1,5 +1,5 @@
 type ServiceType = {
-    idServiceType: number,
+    id: number,
     name: string,
     createdAt: string,
     updatedAt: string,

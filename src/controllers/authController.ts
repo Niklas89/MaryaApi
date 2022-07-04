@@ -18,7 +18,7 @@ const signIn = (req: Express.Request, res: Express.Response) => {
         .then((user: User) => {
             const auth: boolean = bcrypt.compareSync(req.body.password, user.password);
             if (auth) {
-                const token = createToken(user.idUser);
+                const token = createToken(user.id);
                 res.status(201).send(user);
             } else {
                 res.status(401).json("Mot de passe incorrect")
@@ -39,7 +39,7 @@ const signUp = (req: Express.Request, res: Express.Response) => {
         idRole: req.body.idRole
     })
         .then((user: User) => {
-            res.status(201).json({ user: user.idUser });
+            res.status(201).json({ user: user.id });
         })
         .catch((err: Error) => {
             res.status(400).send(err);
