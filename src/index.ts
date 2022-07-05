@@ -33,7 +33,6 @@ app.use("/api/user/partner", partnerRoute)
 //association
 associateModels();
 
-
 /*
 dbConnection
   .sync({alter: true})
@@ -44,12 +43,9 @@ dbConnection
   });
 */
 
-
-
 app.listen(8080, () => {
   console.log(`server running on port 8080`);
 });
-
 
 /*
 dbConnection
