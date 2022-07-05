@@ -23,13 +23,13 @@ const signIn = (req: Express.Request, res: Express.Response) => {
             const auth: boolean = bcrypt.compareSync(req.body.password, user.password);
             if (auth) {
                 const token = createToken(user.id);
-                res.status(201).send(user);
+                res.status(201).send({user, token});
             } else {
-                res.status(401).json("Mot de passe incorrect")
+                res.status(422).json("Mot de passe incorrect")
             }
         })
         .catch(() => {
-            res.status(401).send("Email inconnu");
+            res.status(422).send("Email inconnu");
         });
 };
 
@@ -65,6 +65,7 @@ const signUp = async (req: Express.Request, res: Express.Response) => {
         //on retourner les données de notre utilisateur
         return res.status(200).json(user);
     } catch (err) {
+        res.status(400).send(err);
         await transaction.rollback();
     }
 }

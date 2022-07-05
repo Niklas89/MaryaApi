@@ -17,8 +17,6 @@ const getUsers = (req: Express.Request, res: Express.Response) => {
     });
 };
 
-
-
 // supprimer un utilisateur / le mettre en "inactif" dans la bdd
 const inactivateUser = (req: Express.Request, res: Express.Response) => {
   userModel.update({
@@ -77,43 +75,6 @@ const editUser = (req: Express.Request, res: Express.Response) => {
 };
 
 
-// Récupérer les partenaires
-const getPartners = (req: Express.Request, res: Express.Response) => {
-  partnerModel.findAll()
-    .then((partners: Partner) => {
-      res.status(200).json(partners);
-    })
-    .catch((err: any) => {
-      res.status(409).send(err);
-    });
-};
-
-
-// modifier un partenaire
-const editPartner = (req: Express.Request, res: Express.Response) => {
-  const { phone, birthdate, address, postalCode, city, img, SIRET, IBAN } = req.body;
-  partnerModel.update({
-    phone: phone,
-    birthdate: birthdate,
-    address: address,
-    postalCode: postalCode,
-    city: city,
-    img: img,
-    SIRET: SIRET,
-    IBAN: IBAN
-  }, {
-    where: {
-      id: req.params.id
-    }, individualHooks: true,
-  })
-    .then((partner: Partner) => {
-      res.status(201).json(partner);
-    })
-    .catch((err: Error) => {
-      res.status(409).send(err);
-    });
-};
-
 
 // Récupérer les rôles
 const getRoles = (req: Express.Request, res: Express.Response) => {
@@ -127,5 +88,5 @@ const getRoles = (req: Express.Request, res: Express.Response) => {
 };
 
 
-export { getUsers, getPartners, getRoles, editUser, inactivateUser, editPassword,
-   editPartner };
+export { getUsers, getRoles, editUser, inactivateUser, editPassword };
+
