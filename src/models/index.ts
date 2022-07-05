@@ -58,10 +58,10 @@ roleModel.hasMany(userModel, {
   });
 
 
-  /* ASSOCIATIONS booking - category */
-  categoryModel.hasMany(bookingModel, {
+  /* ASSOCIATIONS booking - service */
+  serviceModel.hasMany(bookingModel, {
     foreignKey: {
-      name: 'idCategory', allowNull: false
+      name: 'idService', allowNull: false
     }
   });
   
