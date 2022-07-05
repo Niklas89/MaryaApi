@@ -1,7 +1,7 @@
 import dbConnection from "../config/dbConfig";
 import Sequelize from "sequelize";
 
-const serviceTypeModel = dbConnection.define("serviceType", {
+const typeModel = dbConnection.define("type", {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -14,4 +14,4 @@ const serviceTypeModel = dbConnection.define("serviceType", {
     }
 });
 
-export default serviceTypeModel;
+export default typeModel;

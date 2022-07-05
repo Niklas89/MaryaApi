@@ -3,9 +3,9 @@ import roleModel from "./roleModel";
 import clientModel from "./clientModel";
 import partnerModel from "./partnerModel";
 import bookingModel from "./bookingModel";
-import serviceCategoryModel from "./serviceCategoryModel";
+import categoryModel from "./categoryModel";
 import serviceModel from "./serviceModel";
-import serviceTypeModel from "./serviceTypeModel";
+import typeModel from "./typeModel";
 
 
 export default function associateModels() {
@@ -45,7 +45,7 @@ roleModel.hasMany(userModel, {
     }
   });
   
-  /* ASSOCIATIONS BOOKING - CLIENT / PARTNER */
+  /* ASSOCIATIONS booking - client / partner */
   clientModel.hasMany(bookingModel, {
     foreignKey: {
       name: 'idClient', allowNull: false
@@ -53,28 +53,36 @@ roleModel.hasMany(userModel, {
   });
   partnerModel.hasMany(bookingModel, {
     foreignKey: {
-      name: 'idPartner', allowNull: false
+      name: 'idPartner', allowNull: true
+    }
+  });
+
+
+  /* ASSOCIATIONS booking - category */
+  categoryModel.hasMany(bookingModel, {
+    foreignKey: {
+      name: 'idCategory', allowNull: false
     }
   });
   
-  /* ASSOCIATION serviceCategory - partner */
-  serviceCategoryModel.hasMany(partnerModel, {
+  /* ASSOCIATION category - partner */
+  categoryModel.hasMany(partnerModel, {
     foreignKey: {
-      name: 'idServiceCategory', allowNull: true
+      name: 'idCategory', allowNull: false
     }
   });
   
-  /* ASSOCIATION service - serviceCategory */
-  serviceCategoryModel.hasMany(serviceModel, {
+  /* ASSOCIATION service - category */
+  categoryModel.hasMany(serviceModel, {
     foreignKey: {
-      name: 'idServiceCategory', allowNull: false
+      name: 'idCategory', allowNull: false
     }
   });
   
-  /* ASSOCIATION serviceType - service */
-  serviceTypeModel.hasMany(serviceModel, {
+  /* ASSOCIATION type - service */
+  typeModel.hasMany(serviceModel, {
     foreignKey: {
-      name: 'idServiceType', allowNull: false
+      name: 'idType', allowNull: false
     }
   });
 

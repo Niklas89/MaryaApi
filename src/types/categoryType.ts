@@ -1,6 +1,6 @@
-type ServiceCategory = {
+type Category = {
     id: number,
     name: string,
 };
 
-export default ServiceCategory;
+export default Category;
