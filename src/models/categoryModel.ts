@@ -2,7 +2,7 @@ import dbConnection from "../config/dbConfig";
 import Sequelize from "sequelize";
 
 
-const serviceCategoryModel = dbConnection.define("serviceCategory", {
+const categoryModel = dbConnection.define("category", {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -15,4 +15,4 @@ const serviceCategoryModel = dbConnection.define("serviceCategory", {
     },
 });
 
-export default serviceCategoryModel;
+export default categoryModel;
