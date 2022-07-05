@@ -9,6 +9,6 @@ router.get("/", getClients);
 
 router.put("/:id", editClient);
 
-router.post("/salesaddclient/", salesAddClient);
+router.post("/salesadd/", salesAddClient);
 
 export default router;
