@@ -3,7 +3,7 @@ import Booking from "../types/bookingType";
 import Express from "express";
 
 
-// les function pour les catégories:
+// les function pour les catégories:à 
 //Récupérer toutes les catégories
 const getBookings = (req: Express.Request, res: Express.Response) => {
     bookingModel.findAll()
