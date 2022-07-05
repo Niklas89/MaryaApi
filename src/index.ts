@@ -4,6 +4,7 @@ import userRoute from "./routes/userRoute";
 import serviceRoute from "./routes/serviceRoute";
 import bookingRoute from "./routes/bookingRoute";
 import partnerRoute from "./routes/partnerRoute";
+import clientRoute from "./routes/clientRoute";
 import dbConnection from "./config/dbConfig";
 import associateModels from "./models";
 
@@ -28,7 +29,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/service", serviceRoute);
 app.use("/api/user", userRoute);
 app.use("/api/booking", bookingRoute);
-app.use("/api/user/partner", partnerRoute)
+app.use("/api/partner", partnerRoute);
+app.use("/api/client", clientRoute);
 
 //association
 associateModels();
@@ -50,8 +52,8 @@ app.listen(8080, () => {
   console.log(`server running on port 8080`);
 });
 
-
 /*
+
 dbConnection
   //.sync({force: true}) // forcer les tables dans la BDD à être remplacées (DROP et CREATE), à ne pas utiliser après le déploiement, uniquement en développement
   .sync({ force: true })
@@ -85,5 +87,6 @@ dbConnection
   .catch((err: Error) => {
     console.log(err);
   });
- */
+ 
 
+*/
