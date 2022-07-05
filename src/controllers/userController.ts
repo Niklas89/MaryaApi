@@ -1,9 +1,7 @@
 import userModel from "../models/userModel";
-import clientModel from "../models/clientModel";
 import partnerModel from "../models/partnerModel";
 import roleModel from "../models/roleModel";
 import User from "../types/userType";
-import Client from "../types/clientType";
 import Partner from "../types/partnerType";
 import Role from "../types/roleType";
 import Express from "express";
@@ -79,40 +77,6 @@ const editUser = (req: Express.Request, res: Express.Response) => {
 };
 
 
-// Récupérer les clients
-const getClients = (req: Express.Request, res: Express.Response) => {
-  clientModel.findAll()
-    .then((clients: Client) => {
-      res.status(200).json(clients);
-    })
-    .catch((err: Error) => {
-      res.status(409).send(err);
-    });
-};
-
-
-// modifier un client
-const editClient = (req: Express.Request, res: Express.Response) => {
-  const { phone, address, postalCode, city } = req.body;
-  clientModel.update({
-    phone: phone,
-    address: address,
-    postalCode: postalCode,
-    city: city
-  }, {
-    where: {
-      id: req.params.id
-    }, individualHooks: true,
-  })
-    .then((client: Client) => {
-      res.status(201).json(client);
-    })
-    .catch((err: Error) => {
-      res.status(409).send(err);
-    });
-};
-
-
 // Récupérer les partenaires
 const getPartners = (req: Express.Request, res: Express.Response) => {
   partnerModel.findAll()
@@ -163,5 +127,5 @@ const getRoles = (req: Express.Request, res: Express.Response) => {
 };
 
 
-export { getUsers, getClients, getPartners, getRoles, editUser, inactivateUser, editPassword,
-   editClient, editPartner };
+export { getUsers, getPartners, getRoles, editUser, inactivateUser, editPassword,
+   editPartner };

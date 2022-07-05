@@ -69,5 +69,43 @@ const signUp = async (req: Express.Request, res: Express.Response) => {
     }
 }
 
+
+  //fonction permettant de créer un client par le commercial
+  const salesAddClient = async (req: Express.Request, res: Express.Response) => {
+    //on initie la transaction
+    const transaction:Transaction = await dbConnection.transaction();
+    try {
+        //on crée notre utilisateur
+        const user = await userModel.create({ 
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            password: req.body.password,
+            idRole: req.body.idRole
+        }, { transaction: transaction });
+  
+        //on crée un client 
+        if (user.idRole === 1) {
+            await clientModel.create({
+                idUser: user.id,
+                idUser_salesHasClient: req.body.idUser_salesHasClient,
+                phone: req.body.phone,
+                address: req.body.address,
+                postalCode: req.body.postalCode,
+                city: req.body.city
+            }, { transaction: transaction })
+        }
+  
+        //on commit nos changements 
+        await transaction.commit();
+        //on retourner les données de notre utilisateur
+        return res.status(200).json(user);
+    } catch (err) {
+        await transaction.rollback();
+    }
+  }
+
+  
+
 //on exporte les fonctions inscriptions/connexions
-export { signIn, signUp };
+export { signIn, signUp, salesAddClient };
