@@ -12,6 +12,10 @@ const serviceModel = dbConnection.define("service", {
         type: Sequelize.STRING(50),
         allowNul: false
     },
+    price: {
+        type: Sequelize.FLOAT,
+        allowNull: false
+    }
 });
 
 export default serviceModel;
