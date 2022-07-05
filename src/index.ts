@@ -3,6 +3,7 @@ import express from "express";
 import userRoute from "./routes/userRoute";
 import serviceRoute from "./routes/serviceRoute";
 import bookingRoute from "./routes/bookingRoute";
+import partnerRoute from "./routes/partnerRoute";
 import dbConnection from "./config/dbConfig";
 import associateModels from "./models";
 
@@ -27,6 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/service", serviceRoute);
 app.use("/api/user", userRoute);
 app.use("/api/booking", bookingRoute);
+app.use("/api/user/partner", partnerRoute)
 
 //association
 associateModels();

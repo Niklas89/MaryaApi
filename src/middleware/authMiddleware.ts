@@ -4,7 +4,7 @@ import Express, { NextFunction } from "express";
 //fonction permettant de vérifier si un utilisateur à un token
 const checkUser = (req: Express.Request, res: Express.Response, next: NextFunction) => {
     //on récupère le token via la requete
-    const token = req.body.token;
+    const token = req.headers["authorization"];
 
     //si l'utilisateur n'a pas de token
     if (!token) {
