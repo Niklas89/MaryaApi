@@ -2,6 +2,9 @@ import clientModel from "../models/clientModel";
 import userModel from "../models/userModel";
 import Client from "../types/clientType";
 import Express from "express";
+
+import bookingModel from "../models/bookingModel";
+
 import dbConnection from "../config/dbConfig";
 import { Transaction } from "sequelize/types";
 
@@ -83,5 +86,31 @@ const getClientById = (req: Express.Request, res: Express.Response) => {
 };
 
 
+  //Récupérer les booking du client
+  const getBookingByIdClient = (req: Express.Request, res: Express.Response) => {
+    clientModel.findByPK(
+      req.params.id,
+      {
+        include:[{
+          model: bookingModel,
+          where: {
+            idClient: req.params.id
+          }
+        }]
+      }
+    )
+    .then((client: Client) => {
+      res.status(201).json(client);
+    })
+    .catch((err: Error) => {
+      res.status(409).send(err);
+    });
+  }
 
-  export { getClients, editClient, getClientById };
+  
+
+
+
+  export { getClients, editClient, getBookingByIdClient, getClientById};
+
+
