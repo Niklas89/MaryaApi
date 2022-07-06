@@ -11,19 +11,61 @@ const clientModel = dbConnection.define("client", {
     },
     phone: {
         type: Sequelize.STRING(10),
-        allowNull: false
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            args: true,
+            msg: "Le champ est vide."
+          },
+          min: {
+            args: 10,
+            msg: "Le numéro de téléphone doit contenir 10 chiffres au minimum."
+          },
+          max: {
+            args: 10,
+            msg: "Le numéro de téléphone doit contenir 10 chiffres au maximum."
+          },
+          isNumeric: true,
+        }
     },
     address: {
         type: Sequelize.STRING(255),
-        allowNull: false
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            args: true,
+            msg: "Le champ est vide."
+          }
+        }
     },
     postalCode: {
         type: Sequelize.STRING(5),
-        allowNull: false
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            args: true,
+            msg: "Le champ est vide."
+          },
+          min: {
+            args: 5,
+            msg: "Le code postal doit contenir 5 chiffres au minimum."
+          },
+          max: {
+            args: 5,
+            msg: "Le code postal doit contenir 5 chiffres au maximum."
+          },
+          isNumeric: true,
+        }
     },
     city: {
         type: Sequelize.STRING(50),
-        allowNull: false
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            args: true,
+            msg: "Le champ est vide."
+          }
+        }
     }
 });
 

@@ -18,7 +18,7 @@ const bookingModel = dbConnection.define("booking", {
     },
     description: {
         type: Sequelize.TEXT,
-        allowNull: false
+        allowNull: true
     },
     accepted: {
         type: Sequelize.BOOLEAN,
