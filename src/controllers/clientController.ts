@@ -5,11 +5,11 @@ import Express from "express";
 import dbConnection from "../config/dbConfig";
 import { Transaction } from "sequelize/types";
 
-// Récupérer les clients
+// Récupérer les clients pour les 3 applis
 const getClients = (req: Express.Request, res: Express.Response) => {
     userModel.findAll({ 
       where: { isActive: 1 },
-      attributes: {exclude: ["createdAt","updatedAt", "isActive", "deactivatedDate", "idRole"]},
+      attributes: {exclude: ["updatedAt", "deactivatedDate", "idRole"]},
       include: [
         { model: clientModel, attributes: {exclude: ["createdAt","updatedAt"]} }
       ]
