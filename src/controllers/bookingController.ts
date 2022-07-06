@@ -26,7 +26,7 @@ const getBookingById = (req: Express.Request, res: Express.Response) => {
         .catch((err: Error) => {
             res.status(409).send(err);
         });
-}
+};
 
 //Enregsitré une nouvelle catégorie
 const addBooking = (req: Express.Request, res: Express.Response) => {
@@ -44,7 +44,7 @@ const addBooking = (req: Express.Request, res: Express.Response) => {
         .catch((err: Error) => {
             res.status(409).send(err);
         });
-}
+};
 
 //Modifier un booking via son id pour les modifications clients
 const editBookingByIdForClient = (req: Express.Request, res: Express.Response) => {
@@ -65,6 +65,29 @@ const editBookingByIdForClient = (req: Express.Request, res: Express.Response) =
             res.status(409).send(err);
         });
 };
+
+//Modifier un booking via son id par un commercial / admin
+const editBookingByIdForAdmin = (req: Express.Request, res: Express.Response) => {
+    bookingModel.update({
+        appointementDate: req.body.appointementDate,
+        nbHours: req.body.nbHours,
+        description: req.body.description,
+        idService: req.body.idService
+    }, {
+        where: {
+            id: req.params.id
+        }
+    })
+        .then((booking: Booking) => {
+            res.status(201).json({ booking: booking.id });
+        })
+        .catch((err: Error) => {
+            res.status(409).send(err);
+        });
+};
+
+
+
 //Acceptation de la reservation par le partenaire
 const bookedByPartner = (req: Express.Request, res: Express.Response) => {
     bookingModel.update({
@@ -167,4 +190,5 @@ const dateBooking = (req: Express.Request, res: Express.Response) => {
 
 
 
-export { getBookings, getBookingById, addBooking, editBookingByIdForClient, bookedByPartner, bookingDonne, cancelBooking, deleteBookingById, dateBooking }
+export { getBookings, getBookingById, addBooking, editBookingByIdForClient, bookedByPartner, bookingDonne, cancelBooking, deleteBookingById, dateBooking, editBookingByIdForAdmin }
+

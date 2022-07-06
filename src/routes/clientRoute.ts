@@ -1,15 +1,17 @@
 import express from "express";
 const router = express.Router();
 
-import { getClients, editClient, getBookingByIdClient } from "../controllers/clientController";
+
+import { getClients, editClient, getBookingByIdClient, getClientById } from "../controllers/clientController";
 import { salesAddClient } from "../controllers/authController";
 
 
 router.get("/", getClients);
+router.get("/:id", getClientById);
 
 router.put("/:id", editClient);
 
-router.post("/salesadd/", salesAddClient);
+router.post("/sales/", salesAddClient);
 
 router.get("/booking/:id", getBookingByIdClient);
 

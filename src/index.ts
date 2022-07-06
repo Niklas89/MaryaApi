@@ -5,6 +5,7 @@ import serviceRoute from "./routes/serviceRoute";
 import bookingRoute from "./routes/bookingRoute";
 import partnerRoute from "./routes/partnerRoute";
 import clientRoute from "./routes/clientRoute";
+import adminRoute from "./routes/adminRoute";
 import dbConnection from "./config/dbConfig";
 import associateModels from "./models";
 
@@ -31,6 +32,7 @@ app.use("/api/user", userRoute);
 app.use("/api/booking", bookingRoute);
 app.use("/api/partner", partnerRoute);
 app.use("/api/client", clientRoute);
+app.use("/api/admin", adminRoute);
 
 //association
 associateModels();
@@ -50,7 +52,6 @@ app.listen(8080, () => {
 });
 
 /*
-
 dbConnection
   //.sync({force: true}) // forcer les tables dans la BDD à être remplacées (DROP et CREATE), à ne pas utiliser après le déploiement, uniquement en développement
   .sync({ force: true })
@@ -85,5 +86,4 @@ dbConnection
     console.log(err);
   });
  
-
 */
