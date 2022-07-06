@@ -8,8 +8,10 @@ import { Transaction } from "sequelize/types";
 // Récupérer les clients
 const getClients = (req: Express.Request, res: Express.Response) => {
     userModel.findAll({ 
+      where: { isActive: 1 },
+      attributes: {exclude: ["createdAt","updatedAt", "isActive", "deactivatedDate", "idRole"]},
       include: [
-        { model: clientModel }
+        { model: clientModel, attributes: {exclude: ["createdAt","updatedAt"]} }
       ]
     })
       .then((clients: Client) => {
