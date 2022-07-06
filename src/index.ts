@@ -37,7 +37,7 @@ associateModels();
 
 /*
 dbConnection
-  .sync({alter: true})
+  .sync({force: true})
   .then((result: any) => {
   })
   .catch((err: Error) => {
@@ -49,7 +49,7 @@ app.listen(8080, () => {
   console.log(`server running on port 8080`);
 });
 
-/*
+
 
 dbConnection
   //.sync({force: true}) // forcer les tables dans la BDD à être remplacées (DROP et CREATE), à ne pas utiliser après le déploiement, uniquement en développement
@@ -85,5 +85,3 @@ dbConnection
     console.log(err);
   });
  
-
-*/

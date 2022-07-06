@@ -23,7 +23,7 @@ const signIn = (req: Express.Request, res: Express.Response) => {
             const auth: boolean = bcrypt.compareSync(req.body.password, user.password);
             if (auth) {
                 const token = createToken(user.id);
-                res.status(201).send({user, token});
+                res.status(201).send({ user, token });
             } else {
                 res.status(422).json("Mot de passe incorrect")
             }
@@ -36,7 +36,26 @@ const signIn = (req: Express.Request, res: Express.Response) => {
 //fonction permettant de créer un utilisateur
 const signUp = async (req: Express.Request, res: Express.Response) => {
     //on initie la transaction
-    const transaction:Transaction = await dbConnection.transaction();
+    userModel.create({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        password: req.body.password,
+        idRole: req.body.idRole
+    }).
+    then((user:User) => {
+        res.status(200).send(user);
+    })
+    .catch((err:Error) => {
+        res.status(401).send(err);
+    })
+}
+
+
+//fonction permettant de créer un client par le commercial
+const salesAddClient = async (req: Express.Request, res: Express.Response) => {
+    //on initie la transaction
+    const transaction: Transaction = await dbConnection.transaction();
     try {
         //on crée notre utilisateur
         const user = await userModel.create({
@@ -47,44 +66,6 @@ const signUp = async (req: Express.Request, res: Express.Response) => {
             idRole: req.body.idRole
         }, { transaction: transaction });
 
-        //on crée soit un client soit un partenaire
-        if (user.idRole === 1) {
-            await clientModel.create({
-                idUser: user.id
-            }, { transaction: transaction })
-        }
-        
-        if (user.idRole === 2) {
-            await partnerModel.create({
-                idUser: user.id
-            }, { transaction: transaction })
-        }
-
-        //on commit nos changements 
-        await transaction.commit();
-        //on retourner les données de notre utilisateur
-        return res.status(200).json(user);
-    } catch (err) {
-        res.status(400).send(err);
-        await transaction.rollback();
-    }
-}
-
-
-  //fonction permettant de créer un client par le commercial
-  const salesAddClient = async (req: Express.Request, res: Express.Response) => {
-    //on initie la transaction
-    const transaction:Transaction = await dbConnection.transaction();
-    try {
-        //on crée notre utilisateur
-        const user = await userModel.create({ 
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email,
-            password: req.body.password,
-            idRole: req.body.idRole
-        }, { transaction: transaction });
-  
         //on crée un client 
         if (user.idRole === 1) {
             await clientModel.create({
@@ -96,7 +77,7 @@ const signUp = async (req: Express.Request, res: Express.Response) => {
                 city: req.body.city
             }, { transaction: transaction })
         }
-  
+
         //on commit nos changements 
         await transaction.commit();
         //on retourner les données de notre utilisateur
@@ -104,9 +85,48 @@ const signUp = async (req: Express.Request, res: Express.Response) => {
     } catch (err) {
         await transaction.rollback();
     }
-  }
+}
 
-  
+//fonction permettant de créer un client par le commercial
+const salesAddPartner = async (req: Express.Request, res: Express.Response) => {
+    //on initie la transaction
+    const transaction: Transaction = await dbConnection.transaction();
+    try {
+        //on crée notre utilisateur
+        const user = await userModel.create({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            password: req.body.password,
+            idRole: req.body.idRole
+        }, { transaction: transaction });
+
+        //on crée un client 
+        if (user.idRole === 2) {
+            await partnerModel.create({
+                idUser: user.id,
+                phone: req.body.phone,
+                birthdate: req.body.birthdate,
+                address: req.body.address,
+                postalCode: req.body.postalCode,
+                city: req.body.city,
+                SIRET: req.body.siret,
+                IBAN : req.body.iban,
+                idUser_salesHasPartner: req.body.idUser_salesHasPartner,
+                idCategory: req.body.idCategory
+            }, { transaction: transaction })
+        }
+
+        //on commit nos changements 
+        await transaction.commit();
+        //on retourner les données de notre utilisateur
+        return res.status(200).json(user);
+    } catch (err) {
+        await transaction.rollback();
+    }
+}
+
+
 
 //on exporte les fonctions inscriptions/connexions
-export { signIn, signUp, salesAddClient };
+export { signIn, signUp, salesAddClient, salesAddPartner };

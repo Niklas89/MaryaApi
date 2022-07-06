@@ -14,7 +14,8 @@ export default function associateModels() {
 // Par défaut avec Sequelize: ADD CONSTRAINT, ON DELETE CASCADE ON UPDATE CASCADE
 roleModel.hasMany(userModel, {
     foreignKey: {
-      name: 'idRole', allowNull: false
+      name: 'idRole',
+      allowNull: false
     }
   });
   
@@ -23,12 +24,14 @@ roleModel.hasMany(userModel, {
   // le user peut être un client ou un partenaire
   userModel.hasOne(clientModel, {
     foreignKey: {
-      name: 'idUser', allowNull: false
+      name: 'idUser',
+      allowNull: false,
     }
   });
   userModel.hasOne(partnerModel, {
     foreignKey: {
-      name: 'idUser', allowNull: false
+      name: 'idUser',
+      allowNull: false
     }
   });
   
@@ -48,12 +51,14 @@ roleModel.hasMany(userModel, {
   /* ASSOCIATIONS booking - client / partner */
   clientModel.hasMany(bookingModel, {
     foreignKey: {
-      name: 'idClient', allowNull: false
+      name: 'idClient',
+      allowNull: false
     }
   });
   partnerModel.hasMany(bookingModel, {
     foreignKey: {
-      name: 'idPartner', allowNull: true
+      name: 'idPartner',
+      allowNull: true
     }
   });
 
@@ -61,28 +66,32 @@ roleModel.hasMany(userModel, {
   /* ASSOCIATIONS booking - service */
   serviceModel.hasMany(bookingModel, {
     foreignKey: {
-      name: 'idService', allowNull: false
+      name: 'idService',
+      allowNull: false
     }
   });
   
   /* ASSOCIATION category - partner */
   categoryModel.hasMany(partnerModel, {
     foreignKey: {
-      name: 'idCategory', allowNull: false
+      name: 'idCategory',
+      allowNull: false
     }
   });
   
   /* ASSOCIATION service - category */
   categoryModel.hasMany(serviceModel, {
     foreignKey: {
-      name: 'idCategory', allowNull: false
+      name: 'idCategory',
+      allowNull: false
     }
   });
   
   /* ASSOCIATION type - service */
   typeModel.hasMany(serviceModel, {
     foreignKey: {
-      name: 'idType', allowNull: false
+      name: 'idType',
+      allowNull: false
     }
   });
 
