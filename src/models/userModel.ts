@@ -20,7 +20,7 @@ const userModel = dbConnection.define("user", {
         args: true,
         msg: "Le champ est vide."
       }
-    },
+    }
   },
   lastName: {
     type: Sequelize.STRING(50),
@@ -62,7 +62,10 @@ const userModel = dbConnection.define("user", {
         args: true,
         msg: "L'adresse email est incorrect."
       },
-      notEmpty: true
+      notEmpty: {
+        args: true,
+        msg: "Le champ est vide."
+      }
     }
   },
   isActive: {
