@@ -50,7 +50,6 @@ app.listen(8080, () => {
 });
 
 /*
-
 dbConnection
   //.sync({force: true}) // forcer les tables dans la BDD à être remplacées (DROP et CREATE), à ne pas utiliser après le déploiement, uniquement en développement
   .sync({ force: true })
@@ -85,5 +84,4 @@ dbConnection
     console.log(err);
   });
  
-
 */
