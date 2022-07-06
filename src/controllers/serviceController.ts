@@ -84,7 +84,7 @@ const getServices = (req: Express.Request, res: Express.Response) => {
         });
 };
 
-//Récupérer par l'id
+//Récupérer le service par l'id
 const getServiceById = (req: Express.Request, res: Express.Response) => {
     serviceModel.findByPk(req.params.id)
         .then((service: Service) => {
