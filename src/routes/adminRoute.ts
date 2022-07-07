@@ -7,7 +7,7 @@ import { getAdminById, editAdmin, getRecrutedClients, getRecrutedPartners, getCl
 router.get("/:id", getAdminById);
 router.get("/", getRecrutedClients);
 router.get("/", getRecrutedPartners);
-router.get("/:id", checkUser, getClientById);
+router.get("/client/:id", checkUser, getClientById);
 
 router.put("/", editAdmin);
 
