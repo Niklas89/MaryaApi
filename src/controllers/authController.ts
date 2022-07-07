@@ -49,7 +49,7 @@ const signUp = async (req: Express.Request, res: Express.Response) => {
     .catch((err:Error) => {
         res.status(401).send(err);
     })
-}
+};
 
 
 //fonction permettant de créer un client par le commercial
@@ -85,7 +85,7 @@ const salesAddClient = async (req: Express.Request, res: Express.Response) => {
     } catch (err) {
         await transaction.rollback();
     }
-}
+};
 
 //fonction permettant de créer un client par le commercial
 const salesAddPartner = async (req: Express.Request, res: Express.Response) => {
@@ -124,9 +124,7 @@ const salesAddPartner = async (req: Express.Request, res: Express.Response) => {
     } catch (err) {
         await transaction.rollback();
     }
-}
-
-
+};
 
 //on exporte les fonctions inscriptions/connexions
 export { signIn, signUp, salesAddClient, salesAddPartner };
