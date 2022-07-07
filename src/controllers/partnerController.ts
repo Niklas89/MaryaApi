@@ -6,7 +6,7 @@ import dbConnection from "../config/dbConfig";
 import { Transaction } from "sequelize/types";
 
 //ajouter un partenaire
-const createPartner = (req: Express.Request, res: Express.Response) => {
+const addPartner = (req: Express.Request, res: Express.Response) => {
     const { idUser, phone, birthdate, address, postalCode, city, SIRET, IBAN, idCategory } = req.body;
 
     partnerModel.create({
@@ -66,53 +66,6 @@ const getPartnerById = (req: Express.Request, res: Express.Response) => {
         .catch((err: any) => {
             res.status(409).send(err);
         });
-};
-
-// modifier un partenaire par le commercial
-const salesEditPartner = async (req: Express.Request, res: Express.Response) => {
-    const { firstName, lastName, email, phone, birthdate, address, postalCode, city, img, SIRET, IBAN } = req.body;
-
-    const transaction: Transaction = await dbConnection.transaction();
-    try {
-        //on crée notre utilisateur
-        const user = await userModel.update({
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-        }, {
-            where: {
-                id: req.params.id
-            },
-            individualHooks: true,
-        },
-            { transaction: transaction }
-        );
-
-        const partner = await partnerModel.update({
-            phone: phone,
-            birthdate: birthdate,
-            address: address,
-            postalCode: postalCode,
-            city: city,
-            img: img,
-            SIRET: SIRET,
-            IBAN: IBAN
-        }, {
-            where: {
-                idUser: req.params.id
-            },
-            individualHooks: true,
-        },
-            { transaction: transaction });
-
-        //on commit nos changements 
-        await transaction.commit();
-        //on retourner les données de notre utilisateur
-        return res.status(200).json({ user, partner });
-    } catch (err) {
-        res.status(400).send(err);
-        await transaction.rollback();
-    }
 };
 
 // modification des informations personelles par l'utilisateur
@@ -213,4 +166,4 @@ const editCategory = (req: Express.Request, res: Express.Response) => {
         })
 };
 
-export { createPartner, getPartners, getPartnerById, salesEditPartner, editPersonalInfo, editProfessionalfInfo, editAddress, editCategory };
+export { addPartner, getPartners, getPartnerById, editPersonalInfo, editProfessionalfInfo, editAddress, editCategory };

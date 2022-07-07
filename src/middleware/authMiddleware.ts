@@ -3,7 +3,7 @@ import Express, { NextFunction } from "express";
 
 
 //fonction permettant de vérifier si un utilisateur à un token
-const checkUser =(req: Express.Request | any, res: Express.Response, next: NextFunction) => {
+const isAuth =(req: Express.Request, res: Express.Response, next: NextFunction) => {
     
     //on récupère le token via la requete
     const token = req.header("Authorization")?.replace("Bearer ", "");
@@ -31,4 +31,4 @@ const checkUser =(req: Express.Request | any, res: Express.Response, next: NextF
     }
 }
 
-export default checkUser;
+export default isAuth;
