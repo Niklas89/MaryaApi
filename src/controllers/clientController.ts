@@ -9,6 +9,25 @@ import moment from "moment";
 import { Op } from "sequelize";
 import { JwtPayload } from "jsonwebtoken";
 
+//ajouter un client
+const addClient = (req: Express.Request | any, res: Express.Response) => {
+  const { phone, address, postalCode, city } = req.body;
+
+  clientModel.create({
+      idUser: req.userId,
+      phone: phone,
+      address: address,
+      postalCode: postalCode,
+      city: city
+  })
+  .then((client: Client) => {
+      res.status(200).json(client);
+  })
+  .catch((err: any) => {
+      res.status(409).send(err);
+  });
+};
+
 // Récupérer les clients pour les 3 applis
 const getClients = (req: Express.Request, res: Express.Response) => {
   userModel.findAll({
@@ -63,7 +82,7 @@ const editClient = async (req: Express.Request | any, res: Express.Response) => 
     res.status(400).send(err);
     await transaction.rollback();
   }
-}
+};
 
 
   //Récupérer le client par l'id dans son token
@@ -140,6 +159,7 @@ const getBookingById = (req: Express.Request | any, res: Express.Response) => {
 };
 
 
-export { getClients, editClient, getBookingById, getProfileById };
+export { getClients, editClient, getBookingById, getProfileById, addClient };
+
 
 

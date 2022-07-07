@@ -21,10 +21,6 @@ const clientModel = dbConnection.define("client", {
             args: 10,
             msg: "Le numéro de téléphone doit contenir 10 chiffres au minimum."
           },
-          max: {
-            args: 10,
-            msg: "Le numéro de téléphone doit contenir 10 chiffres au maximum."
-          },
           isNumeric: true,
         }
     },
@@ -49,10 +45,6 @@ const clientModel = dbConnection.define("client", {
           min: {
             args: 5,
             msg: "Le code postal doit contenir 5 chiffres au minimum."
-          },
-          max: {
-            args: 5,
-            msg: "Le code postal doit contenir 5 chiffres au maximum."
           },
           isNumeric: true,
         }

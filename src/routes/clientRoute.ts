@@ -2,7 +2,7 @@ import express from "express";
 const router = express.Router();
 import checkUser from "../middleware/authMiddleware";
 
-import { getClients, editClient, getBookingById, getProfileById } from "../controllers/clientController";
+import { getClients, editClient, getBookingById, getProfileById, addClient } from "../controllers/clientController";
 import { salesAddClient } from "../controllers/authController";
 
 //les get:
@@ -13,7 +13,8 @@ router.get("/", getClients);
 //les put:
 router.put("/", checkUser, editClient);
 
-//Les post:
+// les post:
+router.post("/add/", checkUser, addClient);
 router.post("/sales/", salesAddClient);
 
 export default router;
