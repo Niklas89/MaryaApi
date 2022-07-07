@@ -1,14 +1,11 @@
 import express from "express";
-import { salesAddPartner } from "../controllers/authController";
-import { salesEditPartner, getPartners, getPartnerById, editPersonalInfo, editProfessionalfInfo, editAddress, createPartner, editCategory } from "../controllers/partnerController";
+import { getPartners, getPartnerById, editPersonalInfo, editProfessionalfInfo, editAddress, addPartner, editCategory } from "../controllers/partnerController";
 import verifyToken from "../middleware/authMiddleware";
 const router = express.Router();
 
 router.get("/", getPartners);
 router.get("/:id", getPartnerById);
-router.post("/create", verifyToken, createPartner);
-router.post("/sales-add", salesAddPartner);
-router.put("/sales-edit/:id", salesEditPartner);
+router.post("/create", verifyToken, addPartner);
 router.patch("/personnal-info", editPersonalInfo);
 router.patch("/professional-info", editProfessionalfInfo);
 router.patch("/address", editAddress);

@@ -4,10 +4,6 @@ import Express from "express";
 import User from "../types/userType";
 import Role from "../types/roleType";
 import bcrypt from "bcryptjs";
-import dbConnection from "../config/dbConfig";
-import { Transaction } from "sequelize/types";
-import clientModel from "../models/clientModel";
-import partnerModel from "../models/partnerModel";
 import roleModel from "../models/roleModel";
 
 //fonction permettant de créer un token
@@ -66,80 +62,5 @@ const signUp = async (req: Express.Request, res: Express.Response) => {
     })
 };
 
-
-//fonction permettant de créer un client par le commercial
-const salesAddClient = async (req: Express.Request, res: Express.Response) => {
-    //on initie la transaction
-    const transaction: Transaction = await dbConnection.transaction();
-    try {
-        //on crée notre utilisateur
-        const user = await userModel.create({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email,
-            password: req.body.password,
-            idRole: req.body.idRole
-        }, { transaction: transaction });
-
-        //on crée un client 
-        if (user.idRole === 1) {
-            await clientModel.create({
-                idUser: user.id,
-                idUser_salesHasClient: req.body.idUser_salesHasClient,
-                phone: req.body.phone,
-                address: req.body.address,
-                postalCode: req.body.postalCode,
-                city: req.body.city
-            }, { transaction: transaction })
-        }
-
-        //on commit nos changements 
-        await transaction.commit();
-        //on retourner les données de notre utilisateur
-        return res.status(201).json(user);
-    } catch (err) {
-        await transaction.rollback();
-    }
-};
-
-//fonction permettant de créer un client par le commercial
-const salesAddPartner = async (req: Express.Request, res: Express.Response) => {
-    //on initie la transaction
-    const transaction: Transaction = await dbConnection.transaction();
-    try {
-        //on crée notre utilisateur
-        const user = await userModel.create({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email,
-            password: req.body.password,
-            idRole: req.body.idRole
-        }, { transaction: transaction });
-
-        //on crée un client 
-        if (user.idRole === 2) {
-            await partnerModel.create({
-                idUser: user.id,
-                phone: req.body.phone,
-                birthdate: req.body.birthdate,
-                address: req.body.address,
-                postalCode: req.body.postalCode,
-                city: req.body.city,
-                SIRET: req.body.siret,
-                IBAN : req.body.iban,
-                idUser_salesHasPartner: req.body.idUser_salesHasPartner,
-                idCategory: req.body.idCategory
-            }, { transaction: transaction })
-        }
-
-        //on commit nos changements 
-        await transaction.commit();
-        //on retourner les données de notre utilisateur
-        return res.status(201).json(user);
-    } catch (err) {
-        await transaction.rollback();
-    }
-};
-
 //on exporte les fonctions inscriptions/connexions
-export { signIn, signUp, salesAddClient, salesAddPartner };
+export { signIn, signUp };
