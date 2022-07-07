@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
-import isAuth from "../middleware/authMiddleware";
 
+import isAuth from "../middleware/authMiddleware";
 import { getClients, editClient, getBookingById, getProfileById, addClient } from "../controllers/clientController";
 
 router.get("/booking/:dateType(future|present|past)/:accepted(true|false)/", isAuth, getBookingById);

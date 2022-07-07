@@ -55,7 +55,8 @@ const editBookingByIdForClient = (req: Express.Request, res: Express.Response) =
         totalPrice: req.body.totalPrice,
     }, {
         where: {
-            id: req.params.id
+            id: req.params.id,
+            accepted: false
         }
     })
         .then((booking: Booking) => {
@@ -130,7 +131,8 @@ const cancelBooking = (req: Express.Request, res: Express.Response) => {
         isCancelled: 1,
     }, {
         where: {
-            id: req.params.id
+            id: req.params.id,
+            accepted: false
         }
     })
         .then((booking: Booking) => {
