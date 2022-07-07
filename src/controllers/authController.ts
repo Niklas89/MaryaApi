@@ -9,10 +9,10 @@ import clientModel from "../models/clientModel";
 import partnerModel from "../models/partnerModel";
 
 //fonction permettant de créer un token
-const createToken = (id: number, email: string) => {
+const createToken = (id: number) => {
     if (typeof process.env.TOKEN_SECRET === "string") {
         //on retourne un token suivant l'id de l'utilisateur et son email, qui expires dans 1h
-        return jwt.sign({ id, email }, process.env.TOKEN_SECRET, { expiresIn: "1 hours" })
+        return jwt.sign({ id }, process.env.TOKEN_SECRET, { expiresIn: "1 hours" })
     }
 };
 
@@ -22,7 +22,7 @@ const signIn = (req: Express.Request, res: Express.Response) => {
         .then((user: User) => {
             const auth: boolean = bcrypt.compareSync(req.body.password, user.password);
             if (auth) {
-                const token = createToken(user.id, user.email);
+                const token = createToken(user.id);
 
                 res.status(200).send({ user, token });
             } else {

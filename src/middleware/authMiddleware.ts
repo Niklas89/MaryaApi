@@ -6,7 +6,7 @@ import Express, { NextFunction } from "express";
 const checkUser =(req: Express.Request | any, res: Express.Response, next: NextFunction) => {
     
     //on récupère le token via la requete
-    const token = req.header('Authorization')?.replace('Bearer ', '');
+    const token = req.header("Authorization")?.replace("Bearer ", "");
     let decodedToken: any;
     
     //si l'utilisateur n'a pas de token
@@ -26,7 +26,6 @@ const checkUser =(req: Express.Request | any, res: Express.Response, next: NextF
             res.status(401).send("Pas authentifié.");
           }
           req.userId = decodedToken.id;
-          req.userEmail = decodedToken.email;
           next();
     }
 }
