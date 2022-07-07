@@ -68,14 +68,15 @@ const editClient = async (req: Express.Request, res: Express.Response) => {
   }
 }
 
-//Récupérer le client par l'id
-const getClientById = (req: Express.Request, res: Express.Response) => {
-  userModel.findByPk(req.params.id, {
+
+  //Récupérer le client par l'id
+const getClientById = (req: Express.Request | any, res: Express.Response) => {
+  userModel.findByPk(req.userId, {
     include: [
       {
         model: clientModel,
         where: {
-          idUser: req.params.id
+          idUser:  req.userId
         }
       }
     ]

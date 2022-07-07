@@ -11,7 +11,7 @@ import partnerModel from "../models/partnerModel";
 //fonction permettant de créer un token
 const createToken = (id: number) => {
     if (typeof process.env.TOKEN_SECRET === "string") {
-        //on retourne un token suivant l'id de l'utilisateur, qui expires dans 1h
+        //on retourne un token suivant l'id de l'utilisateur et son email, qui expires dans 1h
         return jwt.sign({ id }, process.env.TOKEN_SECRET, { expiresIn: "1 hours" })
     }
 };
@@ -23,13 +23,14 @@ const signIn = (req: Express.Request, res: Express.Response) => {
             const auth: boolean = bcrypt.compareSync(req.body.password, user.password);
             if (auth) {
                 const token = createToken(user.id);
-                res.status(201).send({ user, token });
+
+                res.status(200).send({ user, token });
             } else {
-                res.status(422).json("Mot de passe incorrect")
+                res.status(401).json("Mot de passe incorrect"); 
             }
         })
         .catch(() => {
-            res.status(422).send("Email inconnu");
+            res.status(401).send("Email inconnu");
         });
 };
 
@@ -44,12 +45,12 @@ const signUp = async (req: Express.Request, res: Express.Response) => {
         idRole: req.body.idRole
     }).
     then((user:User) => {
-        res.status(200).send(user);
+        res.status(201).send(user);
     })
     .catch((err:Error) => {
-        res.status(401).send(err);
+        res.status(422).send(err);
     })
-}
+};
 
 
 //fonction permettant de créer un client par le commercial
@@ -81,11 +82,11 @@ const salesAddClient = async (req: Express.Request, res: Express.Response) => {
         //on commit nos changements 
         await transaction.commit();
         //on retourner les données de notre utilisateur
-        return res.status(200).json(user);
+        return res.status(201).json(user);
     } catch (err) {
         await transaction.rollback();
     }
-}
+};
 
 //fonction permettant de créer un client par le commercial
 const salesAddPartner = async (req: Express.Request, res: Express.Response) => {
@@ -120,13 +121,11 @@ const salesAddPartner = async (req: Express.Request, res: Express.Response) => {
         //on commit nos changements 
         await transaction.commit();
         //on retourner les données de notre utilisateur
-        return res.status(200).json(user);
+        return res.status(201).json(user);
     } catch (err) {
         await transaction.rollback();
     }
-}
-
-
+};
 
 //on exporte les fonctions inscriptions/connexions
 export { signIn, signUp, salesAddClient, salesAddPartner };
