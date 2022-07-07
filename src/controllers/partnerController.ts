@@ -127,7 +127,7 @@ const editPersonalInfo = async (req: Express.Request, res: Express.Response) => 
             email: email,
         }, {
             where: {
-                id: req.params.id
+                id: req.userId
             },
             individualHooks: true,
         },
@@ -139,7 +139,7 @@ const editPersonalInfo = async (req: Express.Request, res: Express.Response) => 
             birthdate: birthdate,
         }, {
             where: {
-                idUser: req.params.id
+                idUser: req.userId
             }, individualHooks: true,
         },
             { transaction: transaction });
@@ -163,7 +163,7 @@ const editProfessionalfInfo = (req: Express.Request, res: Express.Response) => {
         IBAN: IBAN,
     }, {
         where: {
-            idUser: req.params.id
+            idUser: req.userId,
         }, individualHooks: true,
     })
         .then((partner: Partner) => {
@@ -184,7 +184,7 @@ const editAddress = (req: Express.Request, res: Express.Response) => {
         city: city
     }, {
         where: {
-            idUser: req.params.id
+            idUser: req.userId,
         }, individualHooks: true,
     })
         .then((partner: Partner) => {
@@ -202,7 +202,7 @@ const editCategory = (req: Express.Request, res: Express.Response) => {
         idCategory: req.body.idCategory
     }, {
         where: {
-            idUser: req.params.id
+            idUser: req.userId,
         }, individualHooks: true,
     })
         .then((partner: Partner) => {

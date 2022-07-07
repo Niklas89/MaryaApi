@@ -11,6 +11,25 @@ import { Transaction } from "sequelize/types";
 import moment from "moment";
 import { Op } from "sequelize";
 
+//ajouter un client
+const createClient = (req: Express.Request | any, res: Express.Response) => {
+  const { phone, address, postalCode, city } = req.body;
+
+  clientModel.create({
+      idUser: req.userId,
+      phone: phone,
+      address: address,
+      postalCode: postalCode,
+      city: city
+  })
+  .then((client: Client) => {
+      res.status(200).json(client);
+  })
+  .catch((err: any) => {
+      res.status(409).send(err);
+  });
+};
+
 // Récupérer les clients pour les 3 applis
 const getClients = (req: Express.Request, res: Express.Response) => {
   userModel.findAll({
@@ -66,7 +85,7 @@ const editClient = async (req: Express.Request, res: Express.Response) => {
     res.status(400).send(err);
     await transaction.rollback();
   }
-}
+};
 
 
   //Récupérer le client par l'id
@@ -156,10 +175,6 @@ const dateBooking = (req: Express.Request, res: Express.Response) => {
     });
 };
 
-
-
-
-
-export { getClients, editClient, getBookingByIdClient, getClientById, dateBooking };
+export { getClients, editClient, getBookingByIdClient, getClientById, dateBooking, createClient };
 
 
