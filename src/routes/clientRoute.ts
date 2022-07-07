@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import isAuth from '../middleware/authMiddleware';
+import isAuth from "../middleware/authMiddleware";
 
 
 import { getClients, editClient, getBookingByIdClient, getClientById } from "../controllers/clientController";
