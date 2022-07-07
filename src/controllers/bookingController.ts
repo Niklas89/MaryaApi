@@ -160,33 +160,39 @@ const deleteBookingById = (req: Express.Request, res: Express.Response) => {
 const dateBooking = (req: Express.Request, res: Express.Response) => {
     //permet de récuperé l'argument dans l'url
     const dateType = req.params.dateType;
-    //Si dans l'url === future alors prend les Bookings future
+    const accepted = req.params.accepted
     let whereClause = null;
-    
-    if (dateType === "future"){
-        whereClause = {[Op.gt]: moment().add(1, "d").format("YYYY-MM-DD")};
+    if (dateType === "future") {
+        whereClause = { [Op.gt]: moment().add(1, "d").format("YYYY-MM-DD") };
     }
-     //Sinon dans l'url === passed alors prend les Bookings passé
-    else if (dateType === "past"){
-        whereClause = {[Op.lt]: moment().subtract(1, "d").format("YYYY-MM-DD")};
+    //Sinon dans l'url === passed alors prend les Bookings passé
+    else if (dateType === "past") {
+        whereClause = { [Op.lt]: moment().subtract(1, "d").format("YYYY-MM-DD") };
     }
     //Sinon prend les bookings du jour
     else {
-        whereClause = {[Op.between]:[moment().format("YYYY-MM-DD"), moment().add(1, "d").format("YYYY-MM-DD")] };
+        whereClause = { [Op.between]: [moment().format("YYYY-MM-DD"), moment().add(1, "d").format("YYYY-MM-DD")] };
     }
-    bookingModel.findAll ({
-            attributes: ["appointementDate"],
-            where: {
-                appointementDate: whereClause
-            },
-        })
-    .then((booking: Booking) => {
-        res.status(200).json(booking);
+    let acceptedClause = null;
+    if (accepted === "true") {
+        acceptedClause = true
+    } else {
+        acceptedClause = false
+    }
+    bookingModel.findAll({
+        attributes: ["appointementDate", "nbHours", "description", "totalPrice", "accepted"],
+        where: {
+            appointementDate: whereClause,
+            accepted: acceptedClause,
+        },
     })
-    .catch((err: Error) => {
-        res.status(409).send(err);
-    });
-}
+        .then((booking: Booking) => {
+            res.status(200).json(booking);
+        })
+        .catch((err: Error) => {
+            res.status(409).send(err);
+        });
+};
 
 
 
