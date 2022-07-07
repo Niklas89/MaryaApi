@@ -1,17 +1,16 @@
 import express from "express";
-import { salesAddPartner } from "../controllers/authController";
-import { salesEditPartner, getPartners, getPartnerById, editPersonalInfo, editProfessionalfInfo, editAddress, createPartner, editCategory } from "../controllers/partnerController";
-import checkUser from "../middleware/authMiddleware";
 const router = express.Router();
+import { getPartners, getPartnerById, editPersonalInfo, editProfessionalfInfo, editAddress, addPartner, editCategory, getBookingById } from "../controllers/partnerController";
+import isAuth from "../middleware/authMiddleware";
 
+router.get("/booking/:dateType(future|present|past)", isAuth, getBookingById);
 router.get("/", getPartners);
-router.get("/:id", getPartnerById);
-router.post("/create", checkUser, createPartner);
-router.post("/sales-add", salesAddPartner);
-router.put("/sales-edit/:id", salesEditPartner);
+router.get("/profile/", isAuth, getPartnerById);
+router.post("/add", isAuth, addPartner);
 router.patch("/personnal-info", editPersonalInfo);
 router.patch("/professional-info", editProfessionalfInfo);
 router.patch("/address", editAddress);
 router.patch("/category", editCategory);
+
 
 export default router;

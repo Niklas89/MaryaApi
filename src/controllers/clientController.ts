@@ -44,7 +44,7 @@ const getClients = (req: Express.Request, res: Express.Response) => {
     });
 };
 
-//fonction permettant de modifier un client par le commercial et le client lui-même
+//fonction permettant de modifier un client par le client lui-même
 const editClient = async (req: Express.Request | any, res: Express.Response) => {
   const { firstName, lastName, email, phone, address, postalCode, city } = req.body;
   //on initie la transaction
@@ -85,7 +85,7 @@ const editClient = async (req: Express.Request | any, res: Express.Response) => 
 
 
   //Récupérer le client par l'id dans son token
-const getClientProfile = (req: Express.Request | any, res: Express.Response) => {
+const getClientProfile = (req: Express.Request, res: Express.Response) => {
   userModel.findByPk(req.userId, {
     include: [
       {
