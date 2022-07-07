@@ -8,7 +8,7 @@ import { getAdminProfile, editAdminProfile, getRecrutedClients, getRecrutedPartn
 
 // clients
 router.get("/client/", isAuth, getRecrutedClients);
-router.get("/client/", getClients);
+router.get("/client/", isAuth, getClients);
 router.get("/client/:id", isAuth, getClient);
 router.put("/client/:id", isAuth, editClient);
 router.post("/client/", isAuth, addClient);
@@ -22,9 +22,9 @@ router.post("/partner/", isAuth, addPartner);
 
 // bookings
 router.put("/booking/:id", isAuth, editBooking);
-router.get("/booking/", getBookings);
-router.get("/booking/:id", getBooking);
-router.patch("/booking/:id", cancelBooking);
+router.get("/booking/", isAuth, getBookings);
+router.get("/booking/:id", isAuth, getBooking);
+router.patch("/booking/:id", isAuth, cancelBooking);
 
 // users
 router.patch("/inactivate/:id", isAuth, inactivateUser);
