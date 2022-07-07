@@ -26,6 +26,7 @@ const checkUser =(req: Express.Request | any, res: Express.Response, next: NextF
             res.status(401).send("Pas authentifié.");
           }
           req.userId = decodedToken.id;
+          req.userRole = decodedToken.role;
           next();
     }
 }
