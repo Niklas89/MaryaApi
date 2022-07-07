@@ -79,6 +79,30 @@ const getRecrutedPartners = (req: Express.Request, res: Express.Response) => {
         res.status(409).send(err);
       });
   };
+
+
+    //Récupérer le client par son avec vérification admin
+  const getClientById = (req: Express.Request | any, res: Express.Response) => {
+    userModel.findByPk(req.params.id, {
+      include: [
+        {
+          model: clientModel,
+          where: {
+            idUser:  req.params.id
+          }
+        }
+      ]
+    })
+      .then((client: Client) => {
+        if (req.userRole !== "admin") {
+          res.status(403).send("Accès refusé.");
+        } 
+        res.status(200).json(client);
+      })
+      .catch((err: Error) => {
+        res.status(500).send(err);
+      });
+  };
   
   
-    export { getAdminById, editAdmin, getRecrutedClients, getRecrutedPartners };
+    export { getAdminById, editAdmin, getRecrutedClients, getRecrutedPartners, getClientById };
