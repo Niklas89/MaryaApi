@@ -15,13 +15,13 @@ import roleModel from "./models/roleModel";
 import User from "./types/userType";
 import Role from "./types/roleType";
 import { Sequelize } from "sequelize-typescript";
-import checkUser from "./middleware/authMiddleware";
 
 const app = express();
 
 //middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 
 //jwt
 //app.get('*', checkUser);
