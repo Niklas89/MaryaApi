@@ -1,14 +1,18 @@
-import jwt from "jsonwebtoken";
+import jwt, { Jwt, JwtPayload } from "jsonwebtoken";
 import Express, { NextFunction } from "express";
 
+type Token = {
+    id: number,
+    role: string
+}
+
+type IntersectionType = JwtPayload | string;
 
 //fonction permettant de vérifier si un utilisateur à un token
-const isAuth =(req: Express.Request, res: Express.Response, next: NextFunction) => {
-    
+const isAuth = (req: Express.Request, res: Express.Response, next: NextFunction) => {
     //on récupère le token via la requete
     const token = req.header("Authorization")?.replace("Bearer ", "");
-    let decodedToken: any;
-    
+
     //si l'utilisateur n'a pas de token
     if (!token) {
         return res.status(401).send("Accès refusé");
@@ -16,18 +20,13 @@ const isAuth =(req: Express.Request, res: Express.Response, next: NextFunction) 
 
     // si il a un token, on fait un try & catch
     if (typeof process.env.TOKEN_SECRET === "string") {
-        try {
-            //on vérifie le token, si il correspond, on passe à la suite, sinon on catch l'erreur
-            decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
-        } catch(err) {
-            res.status(500).send("Token invalide");
-        }
-        if (!decodedToken) {
-            res.status(401).send("Pas authentifié.");
-          }
-          req.userId = decodedToken.id;
-          req.userRole = decodedToken.role;
-          next();
+        jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
+            if (err) {
+                res.status(500).send("Token invalide")
+            }
+            req.user = decoded;
+            next();
+        });
     }
 }
 

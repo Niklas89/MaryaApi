@@ -10,10 +10,9 @@ import { Op } from "sequelize";
 
 //ajouter un partenaire
 const addPartner = (req: Express.Request, res: Express.Response) => {
-    const { idUser, phone, birthdate, address, postalCode, city, SIRET, IBAN, idCategory } = req.body;
-
+    const { phone, birthdate, address, postalCode, city, SIRET, IBAN, idCategory } = req.body;
     partnerModel.create({
-        idUser: idUser,
+        idUser: req.user.id,
         phone: phone,
         birthdate: birthdate,
         address: address,
@@ -83,7 +82,7 @@ const editPersonalInfo = async (req: Express.Request, res: Express.Response) => 
             email: email,
         }, {
             where: {
-                id: req.userId
+                id: req.user.id
             },
             individualHooks: true,
         },
@@ -95,7 +94,7 @@ const editPersonalInfo = async (req: Express.Request, res: Express.Response) => 
             birthdate: birthdate,
         }, {
             where: {
-                idUser: req.userId
+                idUser: req.user.id
             }, individualHooks: true,
         },
             { transaction: transaction });
@@ -119,7 +118,7 @@ const editProfessionalfInfo = (req: Express.Request, res: Express.Response) => {
         IBAN: IBAN,
     }, {
         where: {
-            idUser: req.userId,
+            idUser: req.user.id,
         }, individualHooks: true,
     })
         .then((partner: Partner) => {
@@ -140,7 +139,7 @@ const editAddress = (req: Express.Request, res: Express.Response) => {
         city: city
     }, {
         where: {
-            idUser: req.userId,
+            idUser: req.user.id,
         }, individualHooks: true,
     })
         .then((partner: Partner) => {
@@ -158,7 +157,7 @@ const editCategory = (req: Express.Request, res: Express.Response) => {
         idCategory: req.body.idCategory
     }, {
         where: {
-            idUser: req.userId,
+            idUser: req.user.id,
         }, individualHooks: true,
     })
         .then((partner: Partner) => {

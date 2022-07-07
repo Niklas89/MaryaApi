@@ -1,10 +1,7 @@
 import express from "express";
-
+const router = express.Router();
 import { getPartners, getPartnerById, editPersonalInfo, editProfessionalfInfo, editAddress, addPartner, editCategory, getBookingById } from "../controllers/partnerController";
 import isAuth from "../middleware/authMiddleware";
-
-const router = express.Router();
-
 
 router.get("/booking/:dateType(future|present|past)", isAuth, getBookingById);
 router.get("/", getPartners);
