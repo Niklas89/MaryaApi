@@ -2,8 +2,8 @@ import express from "express";
 const router = express.Router();
 
 import { getUsers, getRoles, editUser, inactivateUser, editPassword } from "../controllers/userController";
-
 import { signIn, signUp } from "../controllers/authController";
+import verifyToken from "../middleware/authMiddleware";
 
 
 router.get("/", getUsers);
