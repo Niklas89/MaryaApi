@@ -3,12 +3,12 @@ const router = express.Router();
 import checkUser from "../middleware/authMiddleware";
 
 
-import { getClients, editClient, getBookingByIdClient, getClientById, dateBooking } from "../controllers/clientController";
+import { getClients, editClient, getBookingByIdClient, getProfileById, dateBooking } from "../controllers/clientController";
 import { salesAddClient } from "../controllers/authController";
 
 
 router.get("/", getClients);
-router.get("/:id", checkUser, getClientById);
+router.get("/", checkUser, getProfileById);
 
 router.put("/:id", editClient);
 

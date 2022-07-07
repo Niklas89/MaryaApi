@@ -10,6 +10,7 @@ import { Transaction } from "sequelize/types";
 
 import moment from "moment";
 import { Op } from "sequelize";
+import { JwtPayload } from "jsonwebtoken";
 
 // Récupérer les clients pour les 3 applis
 const getClients = (req: Express.Request, res: Express.Response) => {
@@ -69,8 +70,8 @@ const editClient = async (req: Express.Request, res: Express.Response) => {
 }
 
 
-  //Récupérer le client par l'id
-const getClientById = (req: Express.Request | any, res: Express.Response) => {
+  //Récupérer le client par l'id dans son token
+const getProfileById = (req: Express.Request | any, res: Express.Response) => {
   userModel.findByPk(req.userId, {
     include: [
       {
@@ -85,7 +86,7 @@ const getClientById = (req: Express.Request | any, res: Express.Response) => {
       res.status(200).json(client);
     })
     .catch((err: Error) => {
-      res.status(409).send(err);
+      res.status(500).send(err);
     });
 };
 
@@ -160,6 +161,6 @@ const dateBooking = (req: Express.Request, res: Express.Response) => {
 
 
 
-export { getClients, editClient, getBookingByIdClient, getClientById, dateBooking };
+export { getClients, editClient, getBookingByIdClient, getProfileById, dateBooking };
 
 
