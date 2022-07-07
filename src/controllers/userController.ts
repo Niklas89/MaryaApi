@@ -23,7 +23,7 @@ const inactivateUser = (req: Express.Request, res: Express.Response) => {
     isActive: 0
   }, {
     where: {
-      id: req.params.id
+      id: req.user.id
     }, individualHooks: true,
   })
     .then((user: User) => {
@@ -41,7 +41,7 @@ const editPassword = (req: Express.Request, res: Express.Response) => {
     password: req.body.password,
   }, {
     where: {
-      id: req.params.id
+      id: req.user.id
     }, individualHooks: true,
   })
     .then((user: User) => {
@@ -51,30 +51,6 @@ const editPassword = (req: Express.Request, res: Express.Response) => {
       res.status(409).send(err);
     });
 };
-
-
-// modifier un utilisateur
-const editUser = (req: Express.Request, res: Express.Response) => {
-  const { firstName, lastName, password, email } = req.body;
-  userModel.update({
-    firstName: firstName,
-    lastName: lastName,
-    password: password,
-    email: email
-  }, {
-    where: {
-      id: req.params.id
-    }, individualHooks: true,
-  })
-    .then((user: User) => {
-      res.status(201).json(user);
-    })
-    .catch((err: Error) => {
-      res.status(409).send(err);
-    });
-};
-
-
 
 // Récupérer les rôles
 const getRoles = (req: Express.Request, res: Express.Response) => {
@@ -88,5 +64,5 @@ const getRoles = (req: Express.Request, res: Express.Response) => {
 };
 
 
-export { getUsers, getRoles, editUser, inactivateUser, editPassword };
+export { getUsers, getRoles, inactivateUser, editPassword };
 
