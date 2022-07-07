@@ -1,9 +1,12 @@
 import Partner from "../types/partnerType";
 import partnerModel from "../models/partnerModel";
 import userModel from "../models/userModel";
+import bookingModel from "../models/bookingModel";
 import Express from "express";
 import dbConnection from "../config/dbConfig";
 import { Transaction } from "sequelize/types";
+import moment from "moment";
+import { Op } from "sequelize";
 
 //ajouter un partenaire
 const createPartner = (req: Express.Request, res: Express.Response) => {
@@ -20,12 +23,12 @@ const createPartner = (req: Express.Request, res: Express.Response) => {
         IBAN: IBAN,
         idCategory: idCategory
     })
-    .then((partner: Partner) => {
-        res.status(200).json(partner);
-    })
-    .catch((err: any) => {
-        res.status(409).send(err);
-    });
+        .then((partner: Partner) => {
+            res.status(200).json(partner);
+        })
+        .catch((err: any) => {
+            res.status(409).send(err);
+        });
 };
 
 // Récupérer les partenaires
@@ -56,7 +59,7 @@ const getPartnerById = (req: Express.Request, res: Express.Response) => {
                 where: {
                     idUser: req.params.id
                 },
-            attributes: ["phone", "birthdate", "address", "postalCode", "city", "SIRET", "IBAN", "idCategory"]
+                attributes: ["phone", "birthdate", "address", "postalCode", "city", "SIRET", "IBAN", "idCategory"]
             }],
             attributes: ["id", "firstName", "lastName", "email", "idRole"]
         })
@@ -213,4 +216,48 @@ const editCategory = (req: Express.Request, res: Express.Response) => {
         })
 };
 
-export { createPartner, getPartners, getPartnerById, salesEditPartner, editPersonalInfo, editProfessionalfInfo, editAddress, editCategory };
+//Fonction qui permet de récuperé les bookings du client par (future, present, passé) et (accepté ou pas)
+const getBookingById = (req: Express.Request | any, res: Express.Response) => {
+    //permet de récuperé l'argument dans l'url
+    const dateType = req.params.dateType;
+    //On instancie les variable à null
+    let whereClause = null;
+    //Pour les dates on verifie si c'est un date supperieur à aujourd'hui, 
+    if (dateType === "future") {
+        whereClause = { [Op.gt]: moment().add(1, "d").format("YYYY-MM-DD") };
+    }
+    //Si c'est une date inférieur à aujourd'hui
+    else if (dateType === "past") {
+        whereClause = { [Op.lt]: moment().subtract(1, "d").format("YYYY-MM-DD") };
+    }
+    //Sinon si c'est une date égale à aujourd'hui
+    else {
+        whereClause = { [Op.between]: [moment().format("YYYY-MM-DD"), moment().add(1, "d").format("YYYY-MM-DD")] };
+    }
+    //On fait deux jointure dans la même requette
+    userModel.findByPk(req.userId, {
+        include: [
+            {
+                model: partnerModel,
+                where: {
+                    idUser: req.userId
+                },
+                include: {
+                    model: bookingModel,
+                    //attributes: ["appointementDate", "nbHours", "description", "totalPrice", "accepted"],
+                    where: {
+                        appointementDate: whereClause,
+                    }
+                }
+            }
+        ]
+    })
+        .then((partner: Partner) => {
+            res.status(200).json(partner);
+        })
+        .catch((err: Error) => {
+            res.status(400).send(err);
+        })
+};
+
+export { createPartner, getPartners, getPartnerById, salesEditPartner, editPersonalInfo, editProfessionalfInfo, editAddress, editCategory, getBookingById };
