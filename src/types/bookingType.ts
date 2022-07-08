@@ -1,4 +1,4 @@
-type booking = {
+type Booking = {
     id: number,
     appointementDate: string,
     nbHours: number,
@@ -12,4 +12,4 @@ type booking = {
     updatedAt: string
 };
 
-export default booking;
+export default Booking;

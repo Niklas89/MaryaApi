@@ -6,7 +6,6 @@ import isAuth from "../middleware/authMiddleware";
 
 router.get("/booking/:dateType(future|present|past)", isAuth, getBookingById);
 router.get("/profile", isAuth, getPartnerProfile);
-router.get("/", getPartners);
 router.post("/add", isAuth, addPartner);
 router.patch("/personnal-info", isAuth, editPersonalInfo);
 router.patch("/professional-info", isAuth, editProfessionalfInfo);
