@@ -1,13 +1,6 @@
 import jwt, { Jwt, JwtPayload } from "jsonwebtoken";
 import Express, { NextFunction } from "express";
 
-type Token = {
-    id: number,
-    role: string
-}
-
-type IntersectionType = JwtPayload | string;
-
 //fonction permettant de vérifier si un utilisateur à un token
 const isAuth = (req: Express.Request, res: Express.Response, next: NextFunction) => {
     //on récupère le token via la requete
