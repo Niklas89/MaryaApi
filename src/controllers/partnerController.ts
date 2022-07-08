@@ -1,4 +1,5 @@
 import Partner from "../types/partnerType";
+import Booking from "../types/bookingType";
 import partnerModel from "../models/partnerModel";
 import userModel from "../models/userModel";
 import bookingModel from "../models/bookingModel";
@@ -199,24 +200,39 @@ const getBookingById = (req: Express.Request | any, res: Express.Response) => {
 
 //récuperé les bookings sans partenaire
 const getBookingNoAccepted = (req: Express.Request, res: Express.Response) => {
-    partnerModel.findAll({
-        include: [
-            {
-                model: categoryModel,
-                include: {
-                    model: serviceModel,
-                    include: {
-                        model: bookingModel,
-                    }
-                },
-                where: {
-                    idUser: req.user.id
-                }
-            }
-        ]
+    //on recupère l'idCategory du partenaire via le token
+    partnerModel.findOne({
+        attributes: ["idCategory"],
+        where: {
+            idUser: req.user.id
+        }
     })
         .then((partner: Partner) => {
-            res.status(200).json(partner);
+            //on recupère les bookings non acceptés correspondant à la catégorie du partenaire
+            categoryModel.findAll({
+                where: {
+                    id: partner.idCategory
+                },
+                include: [
+                    {
+                        model: serviceModel,
+                        include: {
+                            model: bookingModel,
+                            where: {
+                                accepted: 0,
+                                appointmentDate: { [Op.gt]: moment().add(1, "d").format("YYYY-MM-DD") }
+                            }
+                        }
+                    }
+                ]
+            })
+                .then((booking: Booking) => {
+                    res.status(200).json(booking);
+                })
+                .catch((err: Error) => {
+                    res.status(409).send(err);
+                })
+
         })
         .catch((err: Error) => {
             res.status(409).send(err);

@@ -1,4 +1,4 @@
-import jwt, { Jwt, JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import Express, { NextFunction } from "express";
 
 //fonction permettant de vérifier si un utilisateur à un token

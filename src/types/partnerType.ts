@@ -9,7 +9,8 @@ type Partner = {
   SIRET: string,
   IBAN: string,
   idUser: number,
-  idUser_salesHasPartner?: number
+  idUser_salesHasPartner?: number,
+  idCategory: number
 };
 
 export default Partner;

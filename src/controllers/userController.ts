@@ -1,10 +1,9 @@
 import userModel from "../models/userModel";
-import partnerModel from "../models/partnerModel";
 import roleModel from "../models/roleModel";
 import User from "../types/userType";
-import Partner from "../types/partnerType";
 import Role from "../types/roleType";
 import Express from "express";
+import bcrypt from "bcryptjs";
 
 // Récupérer les utilisateurs
 const getUsers = (req: Express.Request, res: Express.Response) => {
@@ -17,22 +16,34 @@ const getUsers = (req: Express.Request, res: Express.Response) => {
     });
 };
 
+//mot de passe oublié
+const forgottenPassword = (req: Express.Request, res: Express.Response) => {
+  
+};
 
-// modifier le mot de passe d'un utilisateur lors du mot de passe oublié
+//modifier le mot de passe par l'utilisateur
 const editPassword = (req: Express.Request, res: Express.Response) => {
-  userModel.update({
-    password: req.body.password,
-  }, {
-    where: {
-      id: req.user.id
-    }, individualHooks: true,
-  })
+  userModel.findByPk(req.user.id)
     .then((user: User) => {
-      res.status(201).json(user);
+      const auth: boolean = bcrypt.compareSync(req.body.lastPassword, user.password);
+      if (auth) {
+        userModel.update({
+          password: req.body.newPassword,
+        }, {
+          where: {
+            id: req.user.id
+          }, individualHooks: true,
+        })
+          .then((user: User) => {
+            res.status(201).json(user);
+          })
+          .catch((err: Error) => {
+            res.status(409).send(err);
+          });
+      } else {
+        res.status(401).json("Mot de passe incorrect");
+      }
     })
-    .catch((err: Error) => {
-      res.status(409).send(err);
-    });
 };
 
 // Récupérer les rôles
@@ -66,6 +77,6 @@ const inactivateUser = (req: Express.Request, res: Express.Response) => {
 
 
 
-export { getUsers, getRoles, editPassword, inactivateUser };
+export { getUsers, getRoles, editPassword, inactivateUser, forgottenPassword };
 
 

@@ -8,7 +8,7 @@ const bookingModel = dbConnection.define("booking", {
         allowNull: false,
         primaryKey: true
     },
-    appointementDate: {
+    appointmentDate: {
         type: Sequelize.DATE,
         allowNull: false
     },
