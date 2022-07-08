@@ -5,6 +5,22 @@ import User from "../types/userType";
 import Role from "../types/roleType";
 import bcrypt from "bcryptjs";
 import roleModel from "../models/roleModel";
+import nodemailer from "nodemailer";
+import { IsEmail } from "sequelize-typescript";
+
+const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: 465,
+    secure: true, 
+    auth: {
+      user: process.env.EMAIL_USERNAME,
+      pass: process.env.EMAIL_PASSWORD
+    },
+    tls: {
+      // do not fail on invalid certs
+      rejectUnauthorized: false,
+    }
+  });
 
 //fonction permettant de créer un token
 const createToken = (id: number, role: string) => {
@@ -56,6 +72,12 @@ const signUp = async (req: Express.Request, res: Express.Response) => {
     }).
     then((user:User) => {
         res.status(201).send(user);
+        transporter.sendMail({
+            to: user.email,
+            from: "contact@marya.app",
+            subject: "Inscription réussie !",
+            html: "<h1>Vous vous êtes bien inscrit sur Marya.app, félicitations !<h1>"
+        });
     })
     .catch((err:Error) => {
         res.status(422).send(err);
