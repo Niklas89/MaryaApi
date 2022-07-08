@@ -4,9 +4,11 @@ import userModel from "../models/userModel";
 import bookingModel from "../models/bookingModel";
 import Express from "express";
 import dbConnection from "../config/dbConfig";
-import { Transaction } from "sequelize/types";
+import { Transaction, where } from "sequelize/types";
 import moment from "moment";
 import { Op } from "sequelize";
+import categoryModel from "../models/categoryModel";
+import serviceModel from "../models/serviceModel";
 
 //ajouter un partenaire
 const addPartner = (req: Express.Request, res: Express.Response) => {
@@ -213,5 +215,31 @@ const getBookingById = (req: Express.Request | any, res: Express.Response) => {
         })
 };
 
+//récuperé les bookings sans partenaire
+const getBookingNoAccepted = (req: Express.Request, res: Express.Response) => {
+    partnerModel.findAll({
+        include: [
+            {
+                model: categoryModel,
+                include: {
+                    model: serviceModel,
+                    include: {
+                        model: bookingModel,
+                    }
+                },
+                where: {
+                    idUser: req.user.id
+                }
+            }
+        ]
+    })
+        .then((partner: Partner) => {
+            res.status(200).json(partner);
+        })
+        .catch((err: Error) => {
+            res.status(409).send(err);
+        });
+};
 
-export { addPartner, getPartners, getPartnerById, editPersonalInfo, editProfessionalfInfo, editAddress, editCategory, getBookingById };
+
+export { addPartner, getPartners, getPartnerById, editPersonalInfo, editProfessionalfInfo, editAddress, editCategory, getBookingById, getBookingNoAccepted };
