@@ -46,8 +46,26 @@ const getRoles = (req: Express.Request, res: Express.Response) => {
     });
 };
 
+// supprimer un utilisateur / le mettre en "inactif" dans la bdd
+const inactivateUser = (req: Express.Request, res: Express.Response) => {
+  // Vérifier si l'utilisateur connecté est bien un admin
+  userModel.update({
+    isActive: 0
+  }, {
+    where: {
+      id: req.user.id
+    }, individualHooks: true,
+  })
+    .then((user: User) => {
+      res.status(201).json(user);
+    })
+    .catch((err: Error) => {
+      res.status(409).send(err);
+    });
+};
 
 
-export { getUsers, getRoles, editPassword };
+
+export { getUsers, getRoles, editPassword, inactivateUser };
 
 

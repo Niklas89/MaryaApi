@@ -1,17 +1,18 @@
 import express from "express";
 const router = express.Router();
-import { getPartners, getPartnerById, editPersonalInfo, editProfessionalfInfo, editAddress, addPartner, editCategory, getBookingById, getBookingNoAccepted } from "../controllers/partnerController";
+
+import { getPartnerProfile, editPersonalInfo, editProfessionalfInfo, editAddress, addPartner, editCategory, getBookingById, getBookingNoAccepted } from "../controllers/partnerController";
 import isAuth from "../middleware/authMiddleware";
 
 router.get("/booking/:dateType(future|present|past)", isAuth, getBookingById);
+router.get("/profile", isAuth, getPartnerProfile);
 router.get("/", getPartners);
-router.get("/profile/", isAuth, getPartnerById);
-router.get("/display-bookings/", isAuth, getBookingNoAccepted)
 router.post("/add", isAuth, addPartner);
-router.patch("/personnal-info", editPersonalInfo);
-router.patch("/professional-info", editProfessionalfInfo);
-router.patch("/address", editAddress);
-router.patch("/category", editCategory);
+router.patch("/personnal-info", isAuth, editPersonalInfo);
+router.patch("/professional-info", isAuth, editProfessionalfInfo);
+router.patch("/address", isAuth, editAddress);
+router.patch("/category", isAuth, editCategory);
+router.get("/display-bookings/", isAuth, getBookingNoAccepted)
 
 
 export default router;

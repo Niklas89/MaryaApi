@@ -32,33 +32,15 @@ const addPartner = (req: Express.Request, res: Express.Response) => {
         });
 };
 
-// Récupérer les partenaires
-const getPartners = (req: Express.Request, res: Express.Response) => {
-    userModel.findAll({
-        attributes: ["id", "firstName", "lastName", "email", "idRole"],
-        include: [{
-            model: partnerModel,
-            required: true,
-            attributes: ["phone", "birthdate", "address", "postalCode", "city", "SIRET", "IBAN", "idCategory"]
-        }]
-    })
-        .then((partners: Partner) => {
-            res.status(200).json(partners);
-        })
-        .catch((err: any) => {
-            res.status(409).send(err);
-        });
-};
-
 //récupérer un partenaire
-const getPartnerById = (req: Express.Request, res: Express.Response) => {
+const getPartnerProfile = (req: Express.Request, res: Express.Response) => {
     userModel.findByPk(
-        req.params.id,
+        req.user.id,
         {
             include: [{
                 model: partnerModel,
                 where: {
-                    idUser: req.params.id
+                    idUser: req.user.id
                 },
                 attributes: ["phone", "birthdate", "address", "postalCode", "city", "SIRET", "IBAN", "idCategory"]
             }],
@@ -190,12 +172,12 @@ const getBookingById = (req: Express.Request | any, res: Express.Response) => {
         whereClause = { [Op.between]: [moment().format("YYYY-MM-DD"), moment().add(1, "d").format("YYYY-MM-DD")] };
     }
     //On fait deux jointure dans la même requette
-    userModel.findByPk(req.userId, {
+    userModel.findByPk(req.user.id, {
         include: [
             {
                 model: partnerModel,
                 where: {
-                    idUser: req.userId
+                    idUser: req.user.id
                 },
                 include: {
                     model: bookingModel,
@@ -242,4 +224,6 @@ const getBookingNoAccepted = (req: Express.Request, res: Express.Response) => {
 };
 
 
-export { addPartner, getPartners, getPartnerById, editPersonalInfo, editProfessionalfInfo, editAddress, editCategory, getBookingById, getBookingNoAccepted };
+
+export { addPartner, getPartnerProfile, editPersonalInfo, editProfessionalfInfo, editAddress, editCategory, getBookingById, getBookingNoAccepted };
+

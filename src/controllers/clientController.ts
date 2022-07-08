@@ -27,23 +27,6 @@ const addClient = (req: Express.Request | any, res: Express.Response) => {
     });
 };
 
-// Récupérer les clients pour les 3 applis
-const getClients = (req: Express.Request, res: Express.Response) => {
-  userModel.findAll({
-    where: { isActive: 1 },
-    attributes: { exclude: ["updatedAt", "deactivatedDate", "idRole"] },
-    include: [
-      { model: clientModel, attributes: { exclude: ["createdAt", "updatedAt"] } }
-    ]
-  })
-    .then((clients: Client) => {
-      res.status(200).json(clients);
-    })
-    .catch((err: Error) => {
-      res.status(409).send(err);
-    });
-};
-
 //fonction permettant de modifier un client par le client lui-même
 const editClient = async (req: Express.Request | any, res: Express.Response) => {
   const { firstName, lastName, email, phone, address, postalCode, city } = req.body;
@@ -57,7 +40,7 @@ const editClient = async (req: Express.Request | any, res: Express.Response) => 
       email: email
     }, {
       where: {
-        id: req.userId
+        id: req.user.id
       }, individualHooks: true
     }, { transaction: transaction });
 
@@ -69,7 +52,7 @@ const editClient = async (req: Express.Request | any, res: Express.Response) => 
       city: city
     }, {
       where: {
-        idUser: req.userId
+        idUser: req.user.id
       }, individualHooks: true
     }, { transaction: transaction });
 
@@ -131,12 +114,12 @@ const getClientBooking = (req: Express.Request | any, res: Express.Response) => 
     acceptedClause = false
   }
   //On fait deux jointure dans la même requette
-  userModel.findByPk(req.userId, {
+  userModel.findByPk(req.user.id, {
     include: [
       {
         model: clientModel,
         where: {
-          idUser: req.userId
+          idUser: req.user.id
         },
         include: {
           model: bookingModel,
@@ -158,7 +141,7 @@ const getClientBooking = (req: Express.Request | any, res: Express.Response) => 
 };
 
 
-export { getClients, editClient, getClientProfile, getClientBooking, addClient };
+export { editClient, getClientProfile, getClientBooking, addClient };
 
 
 
