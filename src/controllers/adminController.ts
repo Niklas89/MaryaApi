@@ -2,10 +2,14 @@ import userModel from "../models/userModel";
 import clientModel from "../models/clientModel";
 import partnerModel from "../models/partnerModel";
 import bookingModel from "../models/bookingModel";
+import serviceModel from "../models/serviceModel";
+import categoryModel from "../models/categoryModel";
 import User from "../types/userType";
 import Client from "../types/clientType";
 import Partner from "../types/partnerType";
 import Booking from "../types/bookingType";
+import Category from "../types/categoryType";
+import Service from "../types/serviceType";
 import Express from "express";
 import dbConnection from "../config/dbConfig";
 import { Transaction } from "sequelize/types";
@@ -26,6 +30,7 @@ import { Transaction } from "sequelize/types";
     3. BOOKINGS
     4. USERS
     5. ADMIN
+    6. SERVICES
   */
 
 
@@ -480,9 +485,140 @@ const editAdminProfile = (req: Express.Request, res: Express.Response) => {
         res.status(409).send(err);
       });
   };
+
+
+
+  /* ******************************************************************** */
+  /* **************************** SERVICES ****************************** */
+  /* ******************************************************************** */
   
+
+
+    //Récupérer toutes les catégories
+  const getCategories = (req: Express.Request, res: Express.Response) => {
+    isNotAdmin(req,res);
+    categoryModel.findAll()
+        .then((categories: Category) => {
+            res.status(200).json(categories);
+        })
+        .catch((err: Error) => {
+            res.status(409).send(err);
+        });
+  };
+
+  //Récupérer une catégorie pour l'afficher avant de la modifier
+  const getCategory = (req: Express.Request, res: Express.Response) => {
+    isNotAdmin(req,res);
+      categoryModel.findByPk(req.params.id)
+          .then((category: Category) => {
+              res.status(200).json(category);
+          })
+          .catch((err: Error) => {
+              res.status(409).send(err);
+          });
+  };
+
+  //Enregistrer une nouvelle catégorie
+  const addCategory = (req: Express.Request, res: Express.Response) => {
+    isNotAdmin(req,res);
+      categoryModel.create({ name: req.body.name })
+          .then((category: Category) => {
+              res.status(201).json({ category });
+          })
+          .catch((err: Error) => {
+              res.status(409).send(err);
+          });
+  };
+
+  //Modifier une catégorie via sont id
+  const editCategory = async (req: Express.Request, res: Express.Response) => {
+    isNotAdmin(req,res);
+      categoryModel.update({
+          name: req.body.name
+      }, {
+          where: {
+              idCategory: req.params.id
+          }
+      })
+          .then((category: Category) => {
+              res.status(201).json({ category });
+          })
+          .catch((err: Error) => {
+              res.status(409).send(err);
+          });
+  };
+
+  // Récupérer tous les services par catégorie - l'id de la catégorie est passé en paramètre
+  const getServicesByCategory = (req: Express.Request, res: Express.Response) => {
+    isNotAdmin(req,res);
+      serviceModel.findAll({where: {idCategory: req.params.id}})
+          .then((services: Service) => {
+              res.status(200).json(services);
+          })
+          .catch((err: Error) => {
+              res.status(409).send(err);
+          });
+  };
   
-  export { getAdminProfile, editAdminProfile, getRecrutedClients, getRecrutedPartners, getClients, getClient,
-    addClient, editClient, getPartners, getPartnerProfile, addPartner, editPartner,
-     editBooking, cancelBooking, getBooking, getBookings,
-      inactivateUser };
+  //Récupérer le service par son id
+  const getService = (req: Express.Request, res: Express.Response) => {
+    isNotAdmin(req,res);
+      serviceModel.findByPk(req.params.id)
+          .then((service: Service) => {
+              res.status(200).json(service);
+          })
+          .catch((err: Error) => {
+              res.status(409).send(err);
+          });
+  };
+  
+  //Enregsitré un nouveau service, avec son type et son tarif
+  const addService = (req: Express.Request, res: Express.Response) => {
+    isNotAdmin(req,res);
+      serviceModel.create({ 
+        name: req.body.name,
+        idCategory: req.body.idCategory,
+        idType: req.body.idCategory,
+        price: req.body.price
+       })
+          .then((service: Service) => {
+              res.status(201).json({ service });
+          })
+          .catch((err: Error) => {
+              res.status(409).send(err);
+          });
+  };
+  
+  //Modifier un service, avec son type et son tarif
+  const editService = (req: Express.Request, res: Express.Response) => {
+    isNotAdmin(req,res);
+      serviceModel.update({
+          name: req.body.name,
+          idCategory: req.body.idCategory,
+          idType: req.body.idCategory,
+          price: req.body.price
+      }, {
+          where: {
+              idService: req.params.id
+          }
+      })
+          .then((service: Service) => {
+              res.status(201).json({ service });
+          })
+          .catch((err: Error) => {
+              res.status(409).send(err);
+          });
+  };
+
+
+
+
+
+
+  
+  export { getAdminProfile, editAdminProfile,
+    addClient, editClient, getRecrutedClients, getClients, getClient,
+    getPartners, getPartnerProfile, addPartner, editPartner, getRecrutedPartners,
+    editBooking, cancelBooking, getBooking, getBookings,
+    inactivateUser,
+    getCategories, getCategory, addCategory, editCategory, getServicesByCategory, getService, addService, editService };
