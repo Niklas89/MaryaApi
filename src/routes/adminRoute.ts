@@ -4,7 +4,8 @@ import isAuth from "../middleware/authMiddleware";
 
 import { getAdminProfile, editAdminProfile, getRecrutedClients, getRecrutedPartners, getClients, getClient,
     addClient, editClient, getPartners, getPartnerProfile, addPartner, editPartner,
-     editBooking, cancelBooking, getBooking, getBookings,  inactivateUser } from "../controllers/adminController";
+     editBooking, cancelBooking, getBooking, getBookings,  inactivateUser,
+     getCategories, getCategory, addCategory, editCategory, getServicesByCategory, getService, addService, editService } from "../controllers/adminController";
 
 // clients
 router.get("/client/", isAuth, getRecrutedClients);
@@ -32,5 +33,15 @@ router.patch("/inactivate/:id", isAuth, inactivateUser);
 // admin
 router.get("/profile/", isAuth, getAdminProfile);
 router.put("/profile/", isAuth, editAdminProfile);
+
+// services
+router.get("/category/", isAuth, getCategories);
+router.get("/category/:id", isAuth, getCategory);
+router.get("/category/services/:id", isAuth, getServicesByCategory);
+router.get("/category/service/:id", isAuth, getService);
+router.post("/category/", isAuth, addCategory);
+router.post("/category/service/", isAuth, addService);
+router.put("/category/:id", isAuth, editCategory);
+router.put("/category/service/:id", isAuth, editService);
 
 export default router;
