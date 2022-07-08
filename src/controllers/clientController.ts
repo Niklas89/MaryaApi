@@ -13,18 +13,18 @@ const addClient = (req: Express.Request | any, res: Express.Response) => {
   const { phone, address, postalCode, city } = req.body;
 
   clientModel.create({
-      idUser: req.user.id,
-      phone: phone,
-      address: address,
-      postalCode: postalCode,
-      city: city
+    idUser: req.user.id,
+    phone: phone,
+    address: address,
+    postalCode: postalCode,
+    city: city
   })
-  .then((client: Client) => {
+    .then((client: Client) => {
       res.status(200).json(client);
-  })
-  .catch((err: any) => {
+    })
+    .catch((err: any) => {
       res.status(409).send(err);
-  });
+    });
 };
 
 //fonction permettant de modifier un client par le client lui-même
@@ -67,7 +67,7 @@ const editClient = async (req: Express.Request | any, res: Express.Response) => 
 };
 
 
-  //Récupérer le client par l'id dans son token
+//Récupérer le client par l'id dans son token
 const getClientProfile = (req: Express.Request, res: Express.Response) => {
   userModel.findByPk(req.user.id, {
     include: [

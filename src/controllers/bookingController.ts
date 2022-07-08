@@ -1,8 +1,6 @@
 import bookingModel from "../models/bookingModel";
 import Booking from "../types/bookingType";
 import Express from "express";
-import moment from "moment";
-import { Op } from "sequelize";
 
 
 //Récupérer par l'id un booking
@@ -111,45 +109,7 @@ const cancelBooking = (req: Express.Request, res: Express.Response) => {
         });
 };
 
-//récuperé la date du booking
-const dateBooking = (req: Express.Request, res: Express.Response) => {
-    //permet de récuperé l'argument dans l'url
-    const dateType = req.params.dateType;
-    const accepted = req.params.accepted
-    let whereClause = null;
-    if (dateType === "future") {
-        whereClause = { [Op.gt]: moment().add(1, "d").format("YYYY-MM-DD") };
-    }
-    //Sinon dans l'url === passed alors prend les Bookings passé
-    else if (dateType === "past") {
-        whereClause = { [Op.lt]: moment().subtract(1, "d").format("YYYY-MM-DD") };
-    }
-    //Sinon prend les bookings du jour
-    else {
-        whereClause = { [Op.between]: [moment().format("YYYY-MM-DD"), moment().add(1, "d").format("YYYY-MM-DD")] };
-    }
-    let acceptedClause = null;
-    if (accepted === "true") {
-        acceptedClause = true
-    } else {
-        acceptedClause = false
-    }
-    bookingModel.findAll({
-        attributes: ["appointementDate", "nbHours", "description", "totalPrice", "accepted"],
-        where: {
-            appointementDate: whereClause,
-            accepted: acceptedClause,
-        },
-    })
-        .then((booking: Booking) => {
-            res.status(200).json(booking);
-        })
-        .catch((err: Error) => {
-            res.status(409).send(err);
-        });
-};
 
+export { getBookingById, addBooking, editBookingByIdForClient, bookedByPartner, bookingDone, cancelBooking }
 
-
-export { getBookingById, addBooking, editBookingByIdForClient, bookedByPartner, bookingDone, cancelBooking, dateBooking }
 
