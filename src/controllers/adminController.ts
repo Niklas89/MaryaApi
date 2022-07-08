@@ -12,8 +12,7 @@ import Category from "../types/categoryType";
 import Service from "../types/serviceType";
 import Express from "express";
 import dbConnection from "../config/dbConfig";
-import { Transaction } from "sequelize/types";
-
+import Transaction from "sequelize/types/transaction";
 
 
   // Vérifier si l'utilisateur connecté est bien un admin

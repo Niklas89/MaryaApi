@@ -4,11 +4,11 @@ import userModel from "../models/userModel";
 import bookingModel from "../models/bookingModel";
 import Express from "express";
 import dbConnection from "../config/dbConfig";
-import { Transaction, where } from "sequelize/types";
 import moment from "moment";
 import { Op } from "sequelize";
 import categoryModel from "../models/categoryModel";
 import serviceModel from "../models/serviceModel";
+import Transaction from "sequelize/types/transaction";
 
 //ajouter un partenaire
 const addPartner = (req: Express.Request, res: Express.Response) => {
