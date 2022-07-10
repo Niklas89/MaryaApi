@@ -16,10 +16,6 @@ const getUsers = (req: Express.Request, res: Express.Response) => {
     });
 };
 
-//mot de passe oublié
-const forgottenPassword = (req: Express.Request, res: Express.Response) => {
-  
-};
 
 //modifier le mot de passe par l'utilisateur
 const editPassword = (req: Express.Request, res: Express.Response) => {
@@ -77,6 +73,6 @@ const inactivateUser = (req: Express.Request, res: Express.Response) => {
 
 
 
-export { getUsers, getRoles, editPassword, inactivateUser, forgottenPassword };
+export { getUsers, getRoles, editPassword, inactivateUser };
 
 

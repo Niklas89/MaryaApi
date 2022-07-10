@@ -68,6 +68,14 @@ const userModel = dbConnection.define("user", {
       }
     }
   },
+  resetToken: {
+    type: Sequelize.STRING,
+    allowNull: true
+  },
+  resetTokenExpiration: {
+    type: Sequelize.DATE,
+    allowNull: true
+  },
   isActive: {
     type: Sequelize.BOOLEAN,
     allowNull: false,
