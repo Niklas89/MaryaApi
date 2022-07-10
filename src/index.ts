@@ -46,17 +46,17 @@ dbConnection
     console.log(err);
   });
 */
-
+/*
 app.listen(8080, () => {
   console.log(`server running on port 8080`);
 });
+*/
 
 
-/*
 
 dbConnection
   //.sync({force: true}) // forcer les tables dans la BDD à être remplacées (DROP et CREATE), à ne pas utiliser après le déploiement, uniquement en développement
-  .sync({ force: true })
+  .sync({ alter: true })
   // Après création des tables on veut qu'un user soit créé, s'il y n'en a pas déjà.
   .then((result: any) => {
     return roleModel.findByPk(1); // Retourner user avec Id 1 de la BDD.
@@ -88,5 +88,5 @@ dbConnection
     console.log(err);
   });
 
-*/
+
 
