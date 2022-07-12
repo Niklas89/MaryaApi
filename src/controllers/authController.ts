@@ -88,44 +88,51 @@ const signUp = async (req: Express.Request, res: Express.Response) => {
 
 // Quand on renseigne son email dans le formulaire pour que l'email s'envoie pour réinitialiser le mot de passe
 const postResetPassword = (req: Express.Request, res: Express.Response) => {
-    // librarie crypto: génerer des valeures uniques et sécurisées
-    // 32 bytes aléatoires: recoit une erreur ou des bytes
-    crypto.randomBytes(32, (err, buffer) => {
-      if (err) {
-        console.log(err);
-        res.status(500).send("Erreur génération de votre token.");
-      }
-  
-      // ce buffer va générer des valeurs hexadécimales, on doit les convertir en caractères ASCII avec toString()
-      // stocker ce token dans le user qu'on veut réinitialiser
-      const token = buffer.toString('hex');
-      userModel.findOne({ email: req.body.email })
-        .then((user: User) => {
-          if (!user) {
-            res.status(401).send("L'adresse email que vous avez renseigné n'a pas été trouvée.");
-          }
-            return userModel.update({ 
-                resetToken: token, 
-                resetTokenExpiration: new Date(3600000) // Date now + 1h
-            });
-        })
-        .then((user: User) => {
-            res.status(200).send(user);
-          transporter.sendMail({
-            to: user.email,
-            from: "contact@marya.app",
-            subject: "Réinitialisation du mot de passe",
-            html: `
-              <p>Vous avez demandé une réinitialisation du mot de passe</p>
-              <p>Cliquez ici: <a href="http://localhost:8080/reset/${token}">lien</a>, pour définir un nouveau mot de passe.</p>
-            `
+  // librarie crypto: génerer des valeures uniques et sécurisées
+  // 32 bytes aléatoires: recoit une erreur ou des bytes
+  crypto.randomBytes(32, (err, buffer) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send("Erreur génération de votre token.");
+    }
+
+    // ce buffer va générer des valeurs hexadécimales, on doit les convertir en caractères ASCII avec toString()
+    // stocker ce token dans le user qu'on veut réinitialiser
+    const token = buffer.toString('hex');
+    let today: Date = new Date();
+    // on veut que le token soit valable 1h, on fait +3 car l'heure retourné est 2h en moins de l'heure de Paris
+    today.setHours(today.getHours() + 3); 
+    userModel.findOne({ where: {email: req.body.email} })
+      .then((user: User) => {
+        if (!user) {
+          res.status(401).send("L'adresse email que vous avez renseigné n'a pas été trouvée.");
+        }
+          return userModel.update({ 
+              resetToken: token, 
+              resetTokenExpiration: today 
+          }, {
+            where: {
+              email: user.email
+            }, individualHooks: true
           });
-        })
-        .catch((err: Error) => {
-            res.status(401).send(err);
+      })
+      .then((user: User) => {
+        res.status(200).send(user);
+        transporter.sendMail({
+          to: req.body.email,
+          from: "contact@marya.app",
+          subject: "Réinitialisation du mot de passe",
+          html: `
+            <p>Vous avez demandé une réinitialisation du mot de passe</p>
+            <p>Cliquez ici: <a href="http://localhost:8080/reset/${token}">lien</a>, pour définir un nouveau mot de passe.</p>
+          `
         });
-    });
-  };
+      })
+      .catch((err: Error) => {
+          res.status(401).send(err);
+      });
+  });
+};
 
 
   // Quand on clique sur le lien dans l'email pour aller sur la page pour réinitialiser le mot de passe
