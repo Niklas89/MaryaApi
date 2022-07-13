@@ -9,6 +9,7 @@ import roleModel from "../models/roleModel";
 import nodemailer from "nodemailer";
 import { IsEmail } from "sequelize-typescript";
 import { Error } from 'sequelize/types';
+import { Op } from "sequelize";
 
 const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
@@ -86,6 +87,7 @@ const signUp = async (req: Express.Request, res: Express.Response) => {
     })
 };
 
+// Etape 1: mot de passe oublié
 // Quand on renseigne son email dans le formulaire pour que l'email s'envoie pour réinitialiser le mot de passe
 const postResetPassword = (req: Express.Request, res: Express.Response) => {
   // librarie crypto: génerer des valeures uniques et sécurisées
@@ -95,8 +97,7 @@ const postResetPassword = (req: Express.Request, res: Express.Response) => {
       console.log(err);
       res.status(500).send("Erreur génération de votre token.");
     }
-
-    // ce buffer va générer des valeurs hexadécimales, on doit les convertir en caractères ASCII avec toString()
+    // ce buffer va générer des valeurs hexadécimales, on doit les convertir en caractères avec toString()
     // stocker ce token dans le user qu'on veut réinitialiser
     const token = buffer.toString('hex');
     let today: Date = new Date();
@@ -135,54 +136,63 @@ const postResetPassword = (req: Express.Request, res: Express.Response) => {
 };
 
 
-  // Quand on clique sur le lien dans l'email pour aller sur la page pour réinitialiser le mot de passe
-  // on vérifie si le token passé en paramètre et l'expiration du token est bon
-  const getNewPassword = (req: Express.Request, res: Express.Response) => {
-    const token = req.params.token;
-    // si le token "resetToken" correspond au token passé en paramètres et que "resetTokenExpiration",
-    // la date d'expiration du token, n'a pas été atteinte (gt Date.now = plus grand que la date maintenant)
-    // alors on peut changer le mot de passe
-    userModel.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } })
-      .then((user: User) => {
+// Etape 2: mot de passe oublié
+// Quand on clique sur le lien dans l'email pour aller sur la page pour réinitialiser le mot de passe
+// on vérifie si le token passé en paramètre et l'expiration du token est bon
+const getNewPassword = (req: Express.Request, res: Express.Response) => {
+  const token = req.params.token;
+  // si le token "resetToken" correspond au token passé en paramètres et que "resetTokenExpiration",
+  // la date d'expiration du token, n'a pas été atteinte (Op.gt = plus grand que la date maintenant)
+  // alors on peut changer le mot de passe
+  let today: Date = new Date();
+  today.setHours(today.getHours() + 2); // heure actuelle Paris 
+  userModel.findOne( { where : { resetToken: token, resetTokenExpiration: { [Op.gt]: today } } })
+    .then((user: User) => {
+      if(user === null) {
+        res.status(401).send("Accès refusé.");
+      } else {
         res.status(200).send({ user, token });
-      })
-      .catch((err: Error) => {
-        res.status(401).send(err);
-    });
-  };
-
-
-
-  const postNewPassword = (req: Express.Request, res: Express.Response) => {
-    const newPassword = req.body.password;
-    const userId = req.body.id;
-    const passwordToken = req.body.token;
-    userModel.findOne({
-      resetToken: passwordToken,
-      resetTokenExpiration: { $gt: Date.now() },
-      id: userId
+      }
     })
-      .then((user: User) => {
-        userModel.update({
-          password: newPassword,
-          resetToken: undefined,
-          resetTokenExpiration: undefined
-        }, {
-          where: {
-            id: userId,
-          }, individualHooks: true,
-        })
-          .then((user: User) => {
-            res.status(200).json(user);
-          })
-          .catch((err: Error) => {
-            res.status(409).send(err);
-          });
+    .catch((err: Error) => {
+      res.status(401).send(err);
+  });
+};
+
+
+// Etape 3: mot de passe oublié - on recupère les données du formulaires pour finaliser le changement de mdp
+const postNewPassword = (req: Express.Request, res: Express.Response) => {
+  const newPassword = req.body.password;
+  const userId = req.body.id;
+  const passwordToken = req.body.token;
+  let today: Date = new Date();
+  today.setHours(today.getHours() + 2); // heure actuelle Paris 
+  userModel.findOne( { where: {
+    resetToken: passwordToken,
+    resetTokenExpiration: { [Op.gt]: today },
+    id: userId
+  }})
+    .then((user: User) => {
+      userModel.update({
+        password: newPassword,
+        resetToken: null,
+        resetTokenExpiration: null
+      }, {
+        where: {
+          id: user.id,
+        }, individualHooks: true,
       })
-      .catch((err: Error) => {
-        res.status(401).send(err);
-    });
-  };
+        .then((user: User) => {
+          res.status(200).json(user);
+        })
+        .catch((err: Error) => {
+          res.status(409).send(err);
+        });
+    })
+    .catch((err: Error) => {
+      res.status(401).send(err);
+  });
+};
 
 
 //on exporte les fonctions inscriptions/connexions
