@@ -68,12 +68,16 @@ const userModel = dbConnection.define("user", {
       }
     }
   },
-  resetToken: {
+  resetToken: { // token pour le mot de passe oublié
     type: Sequelize.STRING,
     allowNull: true
   },
-  resetTokenExpiration: {
+  resetTokenExpiration: { // mettre une date d'expiration pour le resetToken
     type: Sequelize.DATE,
+    allowNull: true
+  },
+  refreshToken: { // refresh token
+    type: Sequelize.STRING,
     allowNull: true
   },
   isActive: {
