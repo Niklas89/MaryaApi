@@ -12,10 +12,10 @@ const isAuth = (req: Express.Request, res: Express.Response, next: NextFunction)
     }
 
     // si il a un token, on fait un try & catch
-    if (typeof process.env.TOKEN_SECRET === "string") {
-        jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
+    if (typeof process.env.ACCESS_TOKEN_SECRET === "string") {
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
             if (err) {
-                res.status(500).send("Token invalide")
+                res.status(403).send("Token invalide")
             }
             req.user = decoded;
             next();

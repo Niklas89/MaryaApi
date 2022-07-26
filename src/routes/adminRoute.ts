@@ -1,6 +1,5 @@
 import express from "express";
 const router = express.Router();
-import isAuth from "../middleware/authMiddleware";
 
 import { getAdminProfile, editAdminProfile, getRecrutedClients, getRecrutedPartners, getClients, getClient,
     addClient, editClient, getPartners, getPartnerProfile, addPartner, editPartner,
@@ -8,40 +7,40 @@ import { getAdminProfile, editAdminProfile, getRecrutedClients, getRecrutedPartn
      getCategories, getCategory, addCategory, editCategory, getServicesByCategory, getService, addService, editService } from "../controllers/adminController";
 
 // clients
-router.get("/client/", isAuth, getRecrutedClients);
-router.get("/client/", isAuth, getClients);
-router.get("/client/:id", isAuth, getClient);
-router.put("/client/:id", isAuth, editClient);
-router.post("/client/", isAuth, addClient);
+router.get("/client/", getRecrutedClients);
+router.get("/client/", getClients);
+router.get("/client/:id", getClient);
+router.put("/client/:id", editClient);
+router.post("/client/", addClient);
 
 // partners
-router.get("/partner/", isAuth, getRecrutedPartners);
-router.get("/", isAuth, getPartners);
-router.get("/partner/", isAuth, getPartnerProfile);
-router.put("/partner/:id", isAuth, editPartner);
-router.post("/partner/", isAuth, addPartner);
+router.get("/partner/", getRecrutedPartners);
+router.get("/", getPartners);
+router.get("/partner/", getPartnerProfile);
+router.put("/partner/:id", editPartner);
+router.post("/partner/", addPartner);
 
 // bookings
-router.put("/booking/:id", isAuth, editBooking);
-router.get("/booking/", isAuth, getBookings);
-router.get("/booking/:id", isAuth, getBooking);
-router.patch("/booking/:id", isAuth, cancelBooking);
+router.put("/booking/:id", editBooking);
+router.get("/booking/", getBookings);
+router.get("/booking/:id", getBooking);
+router.patch("/booking/:id", cancelBooking);
 
 // users
-router.patch("/inactivate/:id", isAuth, inactivateUser);
+router.patch("/inactivate/:id", inactivateUser);
 
 // admin
-router.get("/profile/", isAuth, getAdminProfile);
-router.put("/profile/", isAuth, editAdminProfile);
+router.get("/profile/", getAdminProfile);
+router.put("/profile/", editAdminProfile);
 
 // services
-router.get("/category/", isAuth, getCategories);
-router.get("/category/:id", isAuth, getCategory);
-router.get("/category/services/:id", isAuth, getServicesByCategory);
-router.get("/category/service/:id", isAuth, getService);
-router.post("/category/", isAuth, addCategory);
-router.post("/category/service/", isAuth, addService);
-router.put("/category/:id", isAuth, editCategory);
-router.put("/category/service/:id", isAuth, editService);
+router.get("/category/", getCategories);
+router.get("/category/:id", getCategory);
+router.get("/category/services/:id", getServicesByCategory);
+router.get("/category/service/:id", getService);
+router.post("/category/", addCategory);
+router.post("/category/service/", addService);
+router.put("/category/:id", editCategory);
+router.put("/category/service/:id", editService);
 
 export default router;
