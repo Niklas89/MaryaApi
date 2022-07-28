@@ -4,8 +4,8 @@ import { getUsers, getRoles, editPassword, inactivateUser } from "../controllers
 import { signIn, signUp, postResetPassword, getNewPassword, postNewPassword } from "../controllers/authController";
 import isAuth from "../middleware/authMiddleware";
 
-router.get("/", getUsers);
-router.get("/roles", getRoles);
+router.get("/", isAuth, getUsers);
+router.get("/roles", isAuth, getRoles);
 router.patch("/inactivate", isAuth, inactivateUser);
 router.patch("/password", isAuth, editPassword);
 router.post("/register", signUp);
