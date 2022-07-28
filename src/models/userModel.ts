@@ -65,6 +65,10 @@ const userModel = dbConnection.define("user", {
       notEmpty: {
         args: true,
         msg: "Le champ est vide."
+      },
+      is: { // voir: https://tutorial.eyehunts.com/js/email-regex-javascript-validation-example-code/
+        args: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+        msg: "Le champ contient des caractères non autorisés."
       }
     }
   },
