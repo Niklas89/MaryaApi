@@ -54,6 +54,7 @@ const signIn = (req: Express.Request, res: Express.Response) => {
         .then((user: User) => {
             roleModel.findOne({ where: { id: user.idRole } })
             .then((role: Role) => {
+                const idRole = role.id; // l'id du role va être utilisé côté client dès sa connexion
                 const accessToken = createAccessToken(user.id, role.name);
                 const refreshToken = createRefreshToken(user.id, role.name);
                 // Enregistrer le refreshToken avec l'utilisateur actuel
@@ -65,7 +66,7 @@ const signIn = (req: Express.Request, res: Express.Response) => {
                   res.cookie("jwt", refreshToken, {httpOnly: true, sameSite: "none", maxAge: 24*60*60*1000}); // maxAge: 1day
                   // envoyer l'access token, il va être stocké en mémoire, 
                   // ce n'est pas sécurisé en localStorage/Session ou cookie
-                  res.status(200).send({ user, accessToken });
+                  res.status(200).send({ idRole, accessToken });
                 } else {
                     res.status(500).json("Erreur à la création du token."); 
                 }
