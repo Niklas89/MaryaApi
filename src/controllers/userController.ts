@@ -12,7 +12,7 @@ const getUsers = (req: Express.Request, res: Express.Response) => {
       res.status(200).json(users);
     })
     .catch((err: Error) => {
-      res.status(409).send(err);
+      res.status(403).send(err);
     });
 };
 
