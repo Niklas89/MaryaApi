@@ -29,14 +29,14 @@ const transporter = nodemailer.createTransport({
 const createAccessToken = (id: number, role: string) => {
     if (typeof process.env.ACCESS_TOKEN_SECRET === "string") {
         //on retourne un token suivant l'id de l'utilisateur et son email, qui expires dans 1h: expiresIn: "1 hours"
-        return jwt.sign({ id, role }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "30s" })
+        return jwt.sign({ id, role }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1 hours" }) // pour définir 20 sec: expiresIn: "20s" 
     }
 };
 
 //fonction permettant de créer un refresh token
 const createRefreshToken = (id: number, role: string) => {
   if (typeof process.env.REFRESH_TOKEN_SECRET === "string") {
-      return jwt.sign({ id, role }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "1d" })
+      return jwt.sign({ id, role }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "1d" }) // expiresIn: "1d" (1 jour)
   }
 };
 
@@ -63,7 +63,7 @@ const signIn = (req: Express.Request, res: Express.Response) => {
                   // le refresh token va être stocké en cookie
                   // httpOnly: true signifie que le cookie ne peut pas être accédé par javascript
                   // En prod: httpOnly: true, sameSite: "none", secure: true (marche que pour https)
-                  res.cookie("jwt", refreshToken, {httpOnly: true, sameSite: "none", maxAge: 24*60*60*1000}); // maxAge: 1day
+                  res.cookie("jwt", refreshToken, {httpOnly: true, sameSite: "none", secure: true, maxAge: 24*60*60*1000}); // maxAge: 1day
                   // envoyer l'access token, il va être stocké en mémoire, 
                   // ce n'est pas sécurisé en localStorage/Session ou cookie
                   res.status(200).send({ idRole, accessToken });
@@ -72,7 +72,7 @@ const signIn = (req: Express.Request, res: Express.Response) => {
                 }
             }) 
             .catch(() => {
-                res.status(500).send("Erreur, rôle de l'utilisateur pas trouvé.");
+                res.status(401).send("Erreur, rôle de l'utilisateur pas trouvé.");
             })
         })
         .catch(() => {
