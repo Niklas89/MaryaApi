@@ -54,6 +54,7 @@ app.use("/api/client", clientRoute);
 //association ----------------------------------------
 associateModels();
 
+
 /*
 dbConnection
   .sync({alter: true})

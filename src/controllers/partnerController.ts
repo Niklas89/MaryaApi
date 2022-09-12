@@ -55,7 +55,7 @@ const getPartnerProfile = (req: Express.Request, res: Express.Response) => {
         });
 };
 
-// modification des informations personelles par l'utilisateur
+// modification des informations personelles par l"utilisateur
 const editPersonalInfo = async (req: Express.Request, res: Express.Response) => {
     const { firstName, lastName, email, phone, birthdate } = req.body;
 
@@ -94,7 +94,7 @@ const editPersonalInfo = async (req: Express.Request, res: Express.Response) => 
     }
 };
 
-//modification des informations professionnelles par l'utilisateur
+//modification des informations professionnelles par l"utilisateur
 const editProfessionalfInfo = (req: Express.Request, res: Express.Response) => {
     const { SIRET, IBAN } = req.body;
 
@@ -114,7 +114,7 @@ const editProfessionalfInfo = (req: Express.Request, res: Express.Response) => {
         })
 };
 
-//modification de l'adresse par l'utilisateur
+//modification de l"adresse par l"utilisateur
 const editAddress = (req: Express.Request, res: Express.Response) => {
     const { address, postalCode, city } = req.body;
 
@@ -135,7 +135,7 @@ const editAddress = (req: Express.Request, res: Express.Response) => {
         })
 };
 
-//modification d'une catégorie par l'utilisateur
+//modification d"une catégorie par l"utilisateur
 const editCategory = (req: Express.Request, res: Express.Response) => {
 
     partnerModel.update({
@@ -156,19 +156,19 @@ const editCategory = (req: Express.Request, res: Express.Response) => {
 
 //Fonction qui permet de récuperé les bookings du client par (future, present, passé) et (accepté ou pas)
 const getBookingById = (req: Express.Request | any, res: Express.Response) => {
-    //permet de récuperé l'argument dans l'url
+    //permet de récuperé l"argument dans l"url
     const dateType = req.params.dateType;
     //On instancie les variable à null
     let whereClause = null;
-    //Pour les dates on verifie si c'est un date supperieur à aujourd'hui, 
+    //Pour les dates on verifie si c"est un date supperieur à aujourd"hui, 
     if (dateType === "future") {
         whereClause = { [Op.gt]: moment().add(1, "d").format("YYYY-MM-DD") };
     }
-    //Si c'est une date inférieur à aujourd'hui
+    //Si c"est une date inférieur à aujourd"hui
     else if (dateType === "past") {
         whereClause = { [Op.lt]: moment().subtract(1, "d").format("YYYY-MM-DD") };
     }
-    //Sinon si c'est une date égale à aujourd'hui
+    //Sinon si c"est une date égale à aujourd"hui
     else {
         whereClause = { [Op.between]: [moment().format("YYYY-MM-DD"), moment().add(1, "d").format("YYYY-MM-DD")] };
     }
@@ -199,8 +199,8 @@ const getBookingById = (req: Express.Request | any, res: Express.Response) => {
 };
 
 //récuperé les bookings sans partenaire
-const getBookingNoAccepted = (req: Express.Request, res: Express.Response) => {
-    //on recupère l'idCategory du partenaire via le token
+const getPendingBookings = (req: Express.Request, res: Express.Response) => {
+    //on recupère l"idCategory du partenaire via le token
     partnerModel.findOne({
         attributes: ["idCategory"],
         where: {
@@ -241,5 +241,5 @@ const getBookingNoAccepted = (req: Express.Request, res: Express.Response) => {
 
 
 
-export { addPartner, getPartnerProfile, editPersonalInfo, editProfessionalfInfo, editAddress, editCategory, getBookingById, getBookingNoAccepted };
+export { addPartner, getPartnerProfile, editPersonalInfo, editProfessionalfInfo, editAddress, editCategory, getBookingById, getPendingBookings };
 

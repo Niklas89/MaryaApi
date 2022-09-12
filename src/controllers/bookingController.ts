@@ -1,6 +1,8 @@
 import bookingModel from "../models/bookingModel";
 import Booking from "../types/bookingType";
+import Partner from "../types/partnerType";
 import Express from "express";
+import partnerModel from "../models/partnerModel";
 
 
 //Récupérer par l'id un booking
@@ -53,24 +55,30 @@ const editBookingByIdForClient = (req: Express.Request, res: Express.Response) =
         });
 };
 
-
-
 //Acceptation de la reservation par le partenaire
 const bookedByPartner = (req: Express.Request, res: Express.Response) => {
-    bookingModel.update({
-        idPartner: req.body.idPartner,
-        accepted: 1,
-    }, {
+    partnerModel.findOne({
         where: {
-            id: req.params.id
+            idUser: req.user.id
         }
     })
-        .then((booking: Booking) => {
-            res.status(201).json({ booking: booking.id });
+        .then((partner: Partner) => {
+            bookingModel.update({
+                idPartner: partner.id,
+                accepted: 1,
+            }, {
+                where: {
+                    id: req.params.id
+                }
+            })
+                .then((booking: Booking) => {
+                    res.status(201).json({ booking: booking.id });
+                })
+                .catch((err: Error) => {
+                    res.status(409).send(err);
+                });
         })
-        .catch((err: Error) => {
-            res.status(409).send(err);
-        });
+
 };
 
 //Prestation términé
