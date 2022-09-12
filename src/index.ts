@@ -54,7 +54,7 @@ app.use("/api/client", clientRoute);
 //association ----------------------------------------
 associateModels();
 
-/* 
+/*
 dbConnection
   .sync({alter: true})
   .then((result: any) => {
@@ -62,8 +62,8 @@ dbConnection
   .catch((err: Error) => {
     console.log(err);
   });
-*/
 
+*/
 app.listen(8080, () => {
   console.log(`server running on port 8080`);
 });
