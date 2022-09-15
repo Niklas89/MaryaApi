@@ -95,6 +95,21 @@ const getServiceById = (req: Express.Request, res: Express.Response) => {
         });
 };
 
+//Récupérer le service par l'id
+const getServiceByIdCategory = (req: Express.Request, res: Express.Response) => {
+    serviceModel.findAll({
+        where: {
+            idCategory: req.params.id
+        }
+    })
+        .then((service: Service) => {
+            res.status(200).json(service);
+        })
+        .catch((err: Error) => {
+            res.status(409).send(err);
+        });
+};
+
 //Enregsitré un nouveau service
 const addService = (req: Express.Request, res: Express.Response) => {
     serviceModel.create({ name: req.body.name })
@@ -208,4 +223,4 @@ const deleteTypeById = (req: Express.Request, res: Express.Response) => {
 
 export { getCategories, getCategoryById, addCategory, editCategoryById, deleteCategoryById, 
     getServices, getServiceById, addService, editServiceById, deleteServiceById, 
-    getTypes, getTypeById, addType, editTypeById, deleteTypeById }
+    getTypes, getTypeById, addType, editTypeById, deleteTypeById, getServiceByIdCategory }
