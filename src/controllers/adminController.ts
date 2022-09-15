@@ -17,7 +17,7 @@ import Transaction from "sequelize/types/transaction";
 
   // Vérifier si l'utilisateur connecté est bien un admin
   const isNotAdmin = (req: Express.Request, res: Express.Response) => {
-    if (req.user.role !== "admin") {
+    if (req.user.role !== 3) { // 3: admin
       res.status(403).send("Accès refusé.");
     } 
   };

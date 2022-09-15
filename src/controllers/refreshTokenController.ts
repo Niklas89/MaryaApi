@@ -8,7 +8,7 @@ import roleModel from "../models/roleModel";
 
 
 //fonction permettant de créer un access token
-const createAccessToken = (id: number, role: string) => {
+const createAccessToken = (id: number, role: number) => {
     if (typeof process.env.ACCESS_TOKEN_SECRET === "string") {
         //on retourne un token suivant l'id de l'utilisateur et son email, qui expires dans 1h: expiresIn: "1 hours"
         return jwt.sign({ id, role }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1 hours" }) // pour définir 20 sec: expiresIn: "20s" 
@@ -16,7 +16,7 @@ const createAccessToken = (id: number, role: string) => {
 };
 
 //fonction permettant de créer un refresh token
-const createRefreshToken = (id: number, role: string) => {
+const createRefreshToken = (id: number, role: number) => {
     if (typeof process.env.REFRESH_TOKEN_SECRET === "string") {
         return jwt.sign({ id, role }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "1d" }) // expiresIn: "1d" (1 jour)
     }
@@ -45,8 +45,8 @@ const handleRefreshToken = (req: Express.Request, res: Express.Response) => {
                         (err: any, decoded: any) => {
                             if (err) return res.sendStatus(403);
                             const idRole = role.id;
-                            const accessToken = createAccessToken(user.id, role.name);
-                            const refreshToken = createRefreshToken(user.id, role.name);
+                            const accessToken = createAccessToken(user.id, idRole);
+                            const refreshToken = createRefreshToken(user.id, idRole);
                             userModel.update({ refreshToken: refreshToken}, {where: {id: user.id}})
                             res.cookie("jwt", refreshToken, {httpOnly: true, sameSite: "none", secure: true, maxAge: 24*60*60*1000});  // maxAge: 1day
                             res.status(200).send({ idRole, accessToken });
