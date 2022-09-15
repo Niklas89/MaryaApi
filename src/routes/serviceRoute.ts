@@ -2,9 +2,11 @@ import express from "express";
 const router = express.Router();
 
 //On importe toutes les functions depuis le controller
-import { getCategories, getCategoryById, addCategory, editCategoryById, deleteCategoryById, 
-    getServices, getServiceById, addService, editServiceById, deleteServiceById, 
-    getTypes, getTypeById, addType, editTypeById, deleteTypeById } from "../controllers/serviceController";
+import {
+    getCategories, getCategoryById, addCategory, editCategoryById, deleteCategoryById,
+    getServices, getServiceById, addService, editServiceById, deleteServiceById,
+    getTypes, getTypeById, addType, editTypeById, deleteTypeById, getServiceByIdCategory
+} from "../controllers/serviceController";
 
 //Toutes les routes pour les catégories
 router.get("/category", getCategories);
@@ -23,6 +25,7 @@ router.delete("/type/:id", deleteTypeById);
 //Toutes les routes pour les services
 router.get("/", getServices);
 router.get("/:id", getServiceById);
+router.get("/by-category/:id", getServiceByIdCategory);
 router.post("/", addService);
 router.put("/:id", editServiceById);
 router.delete("/:id", deleteServiceById);
