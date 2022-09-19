@@ -48,7 +48,7 @@ const handleRefreshToken = (req: Express.Request, res: Express.Response) => {
                             const accessToken = createAccessToken(user.id, idRole);
                             const refreshToken = createRefreshToken(user.id, idRole);
                             userModel.update({ refreshToken: refreshToken}, {where: {id: user.id}})
-                            res.cookie("jwt", refreshToken, {httpOnly: true, sameSite: "none", secure: true, maxAge: 24*60*60*1000});  // maxAge: 1day
+                            res.cookie("jwt", refreshToken, {httpOnly: true, maxAge: 24*60*60*1000});  // maxAge: 1day
                             res.status(200).send({ idRole, accessToken });
                         }
                     );
