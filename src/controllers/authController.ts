@@ -57,7 +57,7 @@ const signIn = (req: Express.Request, res: Express.Response) => {
               // le refresh token va être stocké en cookie
               // httpOnly: true signifie que le cookie ne peut pas être accédé par javascript
               // En prod: httpOnly: true, sameSite: "none", secure: true (marche que pour https)
-              res.cookie("jwt", refreshToken, { httpOnly: true, sameSite: "none", secure: true, maxAge: 24 * 60 * 60 * 1000 }); // maxAge: 1day
+              res.cookie("jwt", refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }); // maxAge: 1day
               // envoyer l'access token, il va être stocké en mémoire, 
               // ce n'est pas sécurisé en localStorage/Session ou cookie
               res.status(200).send({ user, idRole, accessToken });
