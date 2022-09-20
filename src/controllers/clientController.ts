@@ -88,7 +88,7 @@ const getClientProfile = (req: Express.Request, res: Express.Response) => {
 };
 
 //Fonction qui permet de récuperé les bookings du client par (future, present, passé) et (accepté ou pas)
-const getClientBooking = (req: Express.Request | any, res: Express.Response) => {
+const getClientBooking = (req: Express.Request, res: Express.Response) => {
   //permet de récuperé l'argument dans l'url
   const dateType = req.params.dateType;
   const accepted = req.params.accepted;
