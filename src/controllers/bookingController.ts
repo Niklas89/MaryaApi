@@ -16,10 +16,10 @@ const getBookingById = (req: Express.Request, res: Express.Response) => {
         });
 };
 
-//Enregsitré une nouvelle catégorie
+//Enregsitrer une nouvelle réservation
 const addBooking = (req: Express.Request, res: Express.Response) => {
     bookingModel.create({
-        appointementDate: req.body.appointementDate,
+        appointmentDate: req.body.appointmentDate,
         nbHours: req.body.nbHours,
         accepted: req.body.accepted,
         totalPrice: req.body.totalPrice,

@@ -1,6 +1,6 @@
 type Booking = {
     id: number,
-    appointementDate: string,
+    appointmentDate: string,
     nbHours: number,
     description: string,
     accepted: boolean,

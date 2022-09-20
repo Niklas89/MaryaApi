@@ -4,7 +4,8 @@ const router = express.Router();
 
 import {
     getBookingById, addBooking, editBookingByIdForClient, bookedByPartner,
-    bookingDone, cancelBooking } from "../controllers/bookingController";
+    bookingDone, cancelBooking
+} from "../controllers/bookingController";
 
 
 //Toutes les routes pour les bookings
