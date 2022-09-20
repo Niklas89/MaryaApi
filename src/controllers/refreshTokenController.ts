@@ -25,10 +25,10 @@ const createRefreshToken = (id: number, role: number) => {
 //fonction permettant d'utiliser le refresh token'
 const handleRefreshToken = (req: Express.Request, res: Express.Response) => {
     const cookies = req.cookies;
-    console.log(cookies);
     if (!cookies?.jwt) return res.sendStatus(401); // si cookie n'existe pas: 401
     const refreshToken = cookies.jwt;
-    res.clearCookie('jwt', { httpOnly: true, sameSite: "none", secure: true });
+    // res.clearCookie('jwt', { httpOnly: true, sameSite: "none", secure: true });
+    res.clearCookie('jwt', { httpOnly: true });
     console.log(refreshToken);
 
     userModel.findOne({ where: { refreshToken: refreshToken } })
