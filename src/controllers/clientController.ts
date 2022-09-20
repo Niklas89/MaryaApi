@@ -115,17 +115,19 @@ const getClientBooking = (req: Express.Request | any, res: Express.Response) => 
   }
   //On fait deux jointure dans la même requette
   userModel.findByPk(req.user.id, {
+    attributes: ["firstName", "lastName"],
     include: [
       {
         model: clientModel,
+        attributes: ["idUser"],
         where: {
           idUser: req.user.id
         },
         include: {
           model: bookingModel,
-          //attributes: ["appointementDate", "nbHours", "description", "totalPrice", "accepted"],
+          attributes: ["appointmentDate", "nbHours", "description", "totalPrice", "accepted", "idService"],
           where: {
-            appointementDate: whereClause,
+            appointmentDate: whereClause,
             accepted: acceptedClause,
           }
         }
