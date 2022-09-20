@@ -10,9 +10,10 @@ router.put("/", isAuth, editClient);
 router.post("/add/", isAuth, addClient);
 */
 
+
 router.get("/booking/:dateType(future|present|past)/:accepted(true|false)", getClientBooking);
-router.get("/profile", getClientProfile);
-router.put("/", editClient);
+router.get("/profile/", getClientProfile);
+router.patch("/edit/", editClient);
 router.post("/add/", addClient);
 
 
