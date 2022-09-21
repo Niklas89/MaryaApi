@@ -37,7 +37,7 @@ const addBooking = (req: Express.Request, res: Express.Response) => {
 //Modifier un booking via son id pour les modifications clients
 const editBookingByIdForClient = (req: Express.Request, res: Express.Response) => {
     bookingModel.update({
-        appointementDate: req.body.appointementDate,
+        appointmentDate: req.body.appointmentDate,
         nbHours: req.body.nbHours,
         description: req.body.description,
         totalPrice: req.body.totalPrice,
