@@ -41,7 +41,7 @@ const editClient = async (req: Express.Request | any, res: Express.Response) => 
     }, {
       where: {
         id: req.user.id
-      }, individualHooks: true
+      }, individualHooks: false
     }, { transaction: transaction });
 
     //on modifie notre client
@@ -53,7 +53,7 @@ const editClient = async (req: Express.Request | any, res: Express.Response) => 
     }, {
       where: {
         idUser: req.user.id
-      }, individualHooks: true
+      }, individualHooks: false
     }, { transaction: transaction });
 
     //on commit nos changements 

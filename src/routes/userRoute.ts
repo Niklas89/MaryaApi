@@ -7,7 +7,7 @@ import isAuth from "../middleware/authMiddleware";
 router.get("/", isAuth, getUsers);
 router.get("/roles", isAuth, getRoles);
 router.patch("/inactivate", isAuth, inactivateUser);
-router.patch("/password", isAuth, editPassword);
+router.patch("/edit-password", isAuth, editPassword);
 router.post("/register", signUp);
 router.post("/login", signIn);
 router.post("/reset", postResetPassword);

@@ -37,7 +37,7 @@ const editPassword = (req: Express.Request, res: Express.Response) => {
             res.status(409).send(err);
           });
       } else {
-        res.status(401).json("Mot de passe incorrect");
+        res.status(401).json("Ancien mot de passe incorrect.");
       }
     })
 };

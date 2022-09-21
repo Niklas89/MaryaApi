@@ -98,11 +98,11 @@ const userModel = dbConnection.define("user", {
     beforeCreate: (user: User) => {
       const hashedPassword = bcrypt.hashSync(user.password, 10);
       user.password = hashedPassword;
-    },/*  commenté car ca va modifier le mdp même si le mdp n'a pas été envoyé dans le formulaire, dès qu'on veut modifier le user
+    },
     beforeUpdate: (user: User) => {
       const hashedPassword = bcrypt.hashSync(user.password, 10);
       user.password = hashedPassword;
-    } */
+    } 
   },
 }
 );
