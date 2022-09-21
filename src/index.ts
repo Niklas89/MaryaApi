@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import cors from 'cors';
 import userRoute from "./routes/userRoute";
+import authRoute from "./routes/authRoute";
 import serviceRoute from "./routes/serviceRoute";
 import bookingRoute from "./routes/bookingRoute";
 import partnerRoute from "./routes/partnerRoute";
@@ -40,16 +41,17 @@ app.use(cookieParser());
 
 //routes ----------------------------------------
 app.use("/api/service", serviceRoute);
-app.use("/api/user", userRoute);
 app.use("/api/booking", bookingRoute);
 app.use("/api/partner", partnerRoute);
 app.use("/api/refresh", refreshRoute);
 app.use("/api/logout", logoutRoute);
+app.use("/api/auth", authRoute);
 
 app.use(isAuth); // toute route sous cette ligne sera verifié avec isAuth
 // donc pas besoin de préciser isAuth dans les fichiers Route.ts
 app.use("/api/admin", adminRoute);
 app.use("/api/client", clientRoute);
+app.use("/api/user", userRoute);
 
 //association ----------------------------------------
 associateModels();

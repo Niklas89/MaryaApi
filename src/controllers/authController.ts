@@ -10,6 +10,8 @@ import nodemailer from "nodemailer";
 import { IsEmail } from "sequelize-typescript";
 import { Error } from 'sequelize/types';
 import { Op } from "sequelize";
+import clientModel from '../models/clientModel';
+import Client from '../types/clientType';
 
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
@@ -81,28 +83,41 @@ const signIn = (req: Express.Request, res: Express.Response) => {
     });
 };
 
-//fonction permettant de créer un utilisateur
-const signUp = async (req: Express.Request, res: Express.Response) => {
-  //on initie la transaction
+//fonction permettant à un client de s'inscrire
+const signUpClient = (req: Express.Request | any, res: Express.Response) => {
+  const { firstName, lastName, email, password, phone, address, postalCode, city } = req.body;
   userModel.create({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    password: req.body.password,
-    idRole: req.body.idRole
-  }).
-    then((user: User) => {
-      res.status(201).send(user);
-      transporter.sendMail({
-        to: user.email,
-        from: "contact@marya.app",
-        subject: "Inscription réussie !",
-        html: "<h1>Vous vous êtes bien inscrit sur Marya.app, félicitations !<h1>"
-      });
+    firstName: firstName,
+    lastName: lastName,
+    password: password,
+    email: email,
+    isActive: 1,
+    idRole: 1
+  }, {individualHooks: true})
+    .then((user: User) => {
+      clientModel.create({
+        idUser: user.id,
+        phone: phone,
+        address: address,
+        postalCode: postalCode,
+        city: city
+      })
+        .then((client: Client, user: User) => {
+          res.status(200).json({user, client});
+          transporter.sendMail({
+            to: user.email,
+            from: "contact@marya.app",
+            subject: "Inscription réussie !",
+            html: "<h1>Vous vous êtes bien inscrit sur Marya.app, félicitations !<h1>"
+          });
+        })
+        .catch(() => {
+          res.status(422).send("Erreur de la création du client.");
+        });
     })
-    .catch((err: Error) => {
-      res.status(422).send(err);
-    })
+    .catch(() => {
+      res.status(422).send("Erreur de la création de l'utilisateur.");
+    });
 };
 
 
@@ -217,4 +232,4 @@ const postNewPassword = (req: Express.Request, res: Express.Response) => {
 
 
 //on exporte les fonctions inscriptions/connexions
-export { signIn, signUp, postResetPassword, getNewPassword, postNewPassword };
+export { signIn, signUpClient, postResetPassword, getNewPassword, postNewPassword };
