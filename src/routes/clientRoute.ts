@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 //import isAuth from "../middleware/authMiddleware";
-import { editClient, getClientBooking, getClientProfile, addClient } from "../controllers/clientController";
+import { signUpClient, editClient, getClientBooking, getClientProfile, addClient } from "../controllers/clientController";
 
 /*
 router.get("/booking/:dateType(future|present|past)/:accepted(true|false)/", isAuth, getClientBooking);
@@ -15,6 +15,7 @@ router.get("/booking/:dateType(future|present|past)/:accepted(true|false)", getC
 router.get("/profile/", getClientProfile);
 router.patch("/edit/", editClient);
 router.post("/add/", addClient);
+router.post("/signup/", signUpClient);
 
 
 export default router;

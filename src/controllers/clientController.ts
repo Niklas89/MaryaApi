@@ -5,8 +5,61 @@ import Express from "express";
 import bookingModel from "../models/bookingModel";
 import dbConnection from "../config/dbConfig";
 import { Transaction } from "sequelize/types";
+import nodemailer from "nodemailer";
 import moment from "moment";
 import { Op } from "sequelize";
+import User from "../types/userType";
+
+const transporter = nodemailer.createTransport({
+  host: process.env.EMAIL_HOST,
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.EMAIL_USERNAME,
+    pass: process.env.EMAIL_PASSWORD
+  },
+  tls: {
+    // do not fail on invalid certs
+    rejectUnauthorized: false,
+  }
+});
+
+//fonction permettant à un client de s'inscrire
+const signUpClient = (req: Express.Request | any, res: Express.Response) => {
+  const { firstName, lastName, email, password, phone, address, postalCode, city } = req.body;
+  userModel.create({
+    firstName: firstName,
+    lastName: lastName,
+    password: password,
+    email: email,
+    isActive: 1,
+    idRole: 1
+  }, {individualHooks: true})
+    .then((user: User) => {
+      clientModel.create({
+        idUser: user.id,
+        phone: phone,
+        address: address,
+        postalCode: postalCode,
+        city: city
+      })
+        .then((client: Client, user: User) => {
+          res.status(200).json({user, client});
+          transporter.sendMail({
+            to: user.email,
+            from: "contact@marya.app",
+            subject: "Inscription réussie !",
+            html: "<h1>Vous vous êtes bien inscrit sur Marya.app, félicitations !<h1>"
+          });
+        })
+        .catch(() => {
+          res.status(422).send("Erreur de la création du client.");
+        });
+    })
+    .catch(() => {
+      res.status(422).send("Erreur de la création de l'utilisateur.");
+    });
+};
 
 //ajouter un client
 const addClient = (req: Express.Request | any, res: Express.Response) => {
@@ -23,7 +76,7 @@ const addClient = (req: Express.Request | any, res: Express.Response) => {
       res.status(200).json(client);
     })
     .catch((err: any) => {
-      res.status(409).send(err);
+      res.status(422).send(err);
     });
 };
 
@@ -61,7 +114,7 @@ const editClient = async (req: Express.Request | any, res: Express.Response) => 
     //on retourner les données de notre utilisateur
     return res.status(200).json({ user, client });
   } catch (err) {
-    res.status(400).send(err);
+    res.status(409).send(err);
     await transaction.rollback();
   }
 };
@@ -143,7 +196,7 @@ const getClientBooking = (req: Express.Request, res: Express.Response) => {
 };
 
 
-export { editClient, getClientProfile, getClientBooking, addClient };
+export { signUpClient, editClient, getClientProfile, getClientBooking, addClient };
 
 
 
