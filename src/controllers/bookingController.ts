@@ -3,6 +3,8 @@ import Booking from "../types/bookingType";
 import Partner from "../types/partnerType";
 import Express from "express";
 import partnerModel from "../models/partnerModel";
+import clientModel from "../models/clientModel";
+import Client from "../types/clientType";
 
 
 //Récupérer par l'id un booking
@@ -18,20 +20,28 @@ const getBookingById = (req: Express.Request, res: Express.Response) => {
 
 //Enregsitrer une nouvelle réservation
 const addBooking = (req: Express.Request, res: Express.Response) => {
-    bookingModel.create({
-        appointmentDate: req.body.appointmentDate,
-        nbHours: req.body.nbHours,
-        accepted: req.body.accepted,
-        totalPrice: req.body.totalPrice,
-        idClient: req.body.idClient,
-        idService: req.body.idService,
-    })
-        .then((booking: Booking) => {
-            res.status(201).json({ booking: booking.id });
+    clientModel.findOne({
+        where: {
+            idUser: req.user.id
+        }
+    }).then((client: Client) => {
+        bookingModel.create({
+            appointmentDate: req.body.appointmentDate,
+            nbHours: req.body.nbHours,
+            accepted: req.body.accepted,
+            totalPrice: req.body.totalPrice,
+            idClient: client.id,
+            idService: req.body.idService,
         })
-        .catch((err: Error) => {
-            res.status(409).send(err);
-        });
+            .then((booking: Booking) => {
+                res.status(201).json({ booking: booking.id });
+            })
+            .catch((err: Error) => {
+                res.status(409).send(err);
+            });
+    }) .catch((err: Error) => {
+        res.status(409).send(err);
+    });
 };
 
 //Modifier un booking via son id pour les modifications clients

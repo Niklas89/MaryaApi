@@ -1,5 +1,6 @@
 import express from "express";
 const router = express.Router();
+import isAuth from "../middleware/authMiddleware";
 
 
 import {
@@ -10,7 +11,7 @@ import {
 
 //Toutes les routes pour les bookings
 router.get("/:id", getBookingById);
-router.post("/", addBooking);
+router.post("/add",isAuth, addBooking);
 router.put("/:id", editBookingByIdForClient);
 router.patch("/:id", bookedByPartner);
 router.patch("/done/:id", bookingDone);
