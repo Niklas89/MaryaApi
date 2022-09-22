@@ -93,7 +93,7 @@ const signUpClient = (req: Express.Request | any, res: Express.Response) => {
     email: email,
     isActive: 1,
     idRole: 1
-  }, {individualHooks: true})
+  }, { individualHooks: true })
     .then((user: User) => {
       clientModel.create({
         idUser: user.id,
@@ -102,8 +102,8 @@ const signUpClient = (req: Express.Request | any, res: Express.Response) => {
         postalCode: postalCode,
         city: city
       })
-        .then((client: Client, user: User) => {
-          res.status(200).json({user, client});
+        .then((client: Client) => {
+          res.status(201).json({ user, client });
           transporter.sendMail({
             to: user.email,
             from: "contact@marya.app",
@@ -111,11 +111,13 @@ const signUpClient = (req: Express.Request | any, res: Express.Response) => {
             html: "<h1>Vous vous êtes bien inscrit sur Marya.app, félicitations !<h1>"
           });
         })
-        .catch(() => {
+        .catch((e: any) => {
+          console.error(e);
           res.status(422).send("Erreur de la création du client.");
         });
     })
-    .catch(() => {
+    .catch((e: any) => {
+      console.error(e);
       res.status(422).send("Erreur de la création de l'utilisateur.");
     });
 };
