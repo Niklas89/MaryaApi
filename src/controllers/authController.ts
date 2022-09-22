@@ -161,7 +161,8 @@ const postResetPassword = (req: Express.Request, res: Express.Response) => {
           subject: "Réinitialisation du mot de passe",
           html: `
               <p>Vous avez demandé une réinitialisation du mot de passe</p>
-              <p>Cliquez ici: <a href="http://localhost:8080/reset/${token}">lien</a>, pour définir un nouveau mot de passe.</p>
+              <p>Cliquez ici: <a href="http://localhost:3000/resetpassword/new/${token}">lien</a>, pour définir un nouveau mot de passe.</p>
+              <p>Votre token de réinitialisation est valable qu'une heure.</p>
             `
         });
       })
@@ -200,7 +201,7 @@ const getNewPassword = (req: Express.Request, res: Express.Response) => {
 const postNewPassword = (req: Express.Request, res: Express.Response) => {
   const newPassword = req.body.password;
   const userId = req.body.id;
-  const passwordToken = req.body.token;
+  const passwordToken = req.body.resetToken;
   let today: Date = new Date();
   today.setHours(today.getHours() + 2); // heure actuelle Paris 
   userModel.findOne({
