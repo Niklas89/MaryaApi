@@ -32,6 +32,7 @@ const addBooking = (req: Express.Request, res: Express.Response) => {
             totalPrice: req.body.totalPrice,
             idClient: client.id,
             idService: req.body.idService,
+            description: req.body.description,
         })
             .then((booking: Booking) => {
                 res.status(201).json({ booking: booking.id });
@@ -39,7 +40,7 @@ const addBooking = (req: Express.Request, res: Express.Response) => {
             .catch((err: Error) => {
                 res.status(409).send(err);
             });
-    }) .catch((err: Error) => {
+    }).catch((err: Error) => {
         res.status(409).send(err);
     });
 };
