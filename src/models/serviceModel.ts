@@ -15,6 +15,10 @@ const serviceModel = dbConnection.define("service", {
     price: {
         type: Sequelize.FLOAT,
         allowNull: false
+    },
+    priceId: {
+        type: Sequelize.STRING(100),
+        allowNull: false
     }
 });
 
