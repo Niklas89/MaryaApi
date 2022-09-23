@@ -24,6 +24,7 @@
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.21.3",
     "sequelize-typescript": "^2.1.3",
+    "stripe": "^10.10.0",
     "validator": "^13.7.0",
     "yup": "^0.32.11"
   },

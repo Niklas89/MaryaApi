@@ -10,6 +10,7 @@ import clientRoute from "./routes/clientRoute";
 import adminRoute from "./routes/adminRoute";
 import refreshRoute from "./routes/refreshRoute";
 import logoutRoute from "./routes/logoutRoute";
+import checkoutRoute from "./routes/checkoutRoute";
 
 import dbConnection from "./config/dbConfig";
 import associateModels from "./models";
@@ -46,6 +47,7 @@ app.use("/api/partner", partnerRoute);
 app.use("/api/refresh", refreshRoute);
 app.use("/api/logout", logoutRoute);
 app.use("/api/auth", authRoute);
+app.use("/api/checkout", checkoutRoute);
 
 app.use(isAuth); // toute route sous cette ligne sera verifié avec isAuth
 // donc pas besoin de préciser isAuth dans les fichiers Route.ts
