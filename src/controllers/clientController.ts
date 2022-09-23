@@ -126,10 +126,13 @@ const getClientBooking = (req: Express.Request, res: Express.Response) => {
         },
         include: {
           model: bookingModel,
-          attributes: ["appointmentDate", "nbHours", "description", "totalPrice", "accepted", "idService"],
+          attributes: ["id", "appointmentDate", "nbHours", "description", "totalPrice", "accepted", "idService", "accepted"],
           where: {
             appointmentDate: whereClause,
             accepted: acceptedClause,
+            isCancelled: {
+              [Op.eq]: 0
+            }
           }
         }
       }
