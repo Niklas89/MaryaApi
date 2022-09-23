@@ -1,27 +1,32 @@
 import Express from "express";
+import Session from "../types/sessionType";
 
 // Stripe API Secret key
 const stripe = require('stripe')('sk_test_0juybcJ0rYydgGZGO9foGyQi');
 
-const YOUR_DOMAIN = 'http://localhost:3000/checkout/';
+const CHECKOUT_PAGE = 'http://localhost:3000/formBooking';
 
 //checkout
-const checkout = async (req: Express.Request | any, res: Express.Response) => {
-    const session = await stripe.checkout.sessions.create({
-        line_items: [
-          {
-            // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-            price: "price_1Lkqi7DJbYHjS1fymGwPV3Da",
-            quantity: 1,
-          },
-        ],
-        mode: 'payment',
-        success_url: `${YOUR_DOMAIN}?success=true`,
-        cancel_url: `${YOUR_DOMAIN}?canceled=true`,
-      });
+const checkout = (req: Express.Request | any, res: Express.Response) => {
+  const bookingId = req.body.bookingId
+  stripe.checkout.sessions.create({
+      line_items: [
+        {
+          price: req.body.priceId,
+          quantity: req.body.nbHours,
+        },
+      ],
+      mode: 'payment',
+      success_url: `${CHECKOUT_PAGE}/${bookingId}/?success=true`,
+      cancel_url: `${CHECKOUT_PAGE}/${bookingId}`,
+    })
+    .then((session: Session) => {
+    res.status(201).json(session.url);
+  })
+  .catch((err: Error) => {
+    res.status(409).send(err);
+});
     
-      res.redirect(303, session.url);
-  };
-
+};
 
 export { checkout };
