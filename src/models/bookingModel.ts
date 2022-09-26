@@ -34,11 +34,15 @@ const bookingModel = dbConnection.define("booking", {
     },
     isCancelled: {
         type: Sequelize.BOOLEAN,
-        allowNull: true
+        allowNull: false
     },
     serviceDone: {
         type: Sequelize.BOOLEAN,
-        allowNull: true
+        allowNull: false
+    },
+    isPaid: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false
     }
 });
 
