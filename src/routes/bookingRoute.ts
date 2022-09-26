@@ -5,7 +5,7 @@ import isAuth from "../middleware/authMiddleware";
 
 import {
     getBookingById, addBooking, editBookingByIdForClient, bookedByPartner,
-    bookingDone, cancelBooking
+    bookingDone, bookingPaid, cancelBooking
 } from "../controllers/bookingController";
 
 
@@ -15,6 +15,7 @@ router.post("/add",isAuth, addBooking);
 router.put("/:id", editBookingByIdForClient);
 router.patch("/:id", bookedByPartner);
 router.patch("/done/:id", bookingDone);
+router.patch("/paid/:id", bookingPaid);
 router.patch("/cancel/:id", cancelBooking);
 
 

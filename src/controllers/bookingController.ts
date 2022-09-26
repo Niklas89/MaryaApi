@@ -33,6 +33,9 @@ const addBooking = (req: Express.Request, res: Express.Response) => {
             idClient: client.id,
             idService: req.body.idService,
             description: req.body.description,
+            isCancelled: 0,
+            serviceDone: 0,
+            isPaid: 0
         })
             .then((booking: Booking) => {
                 res.status(201).json({ booking: booking.id });
@@ -109,6 +112,23 @@ const bookingDone = (req: Express.Request, res: Express.Response) => {
         });
 };
 
+//Prestation payée - après succès du paiement stripe
+const bookingPaid = (req: Express.Request, res: Express.Response) => {
+    bookingModel.update({
+        isPaid: 1,
+    }, {
+        where: {
+            id: req.params.id
+        }
+    })
+        .then((booking: Booking) => {
+            res.status(201).json({ booking: booking.id });
+        })
+        .catch((err: Error) => {
+            res.status(409).send(err);
+        });
+};
+
 //annulée une prestation
 const cancelBooking = (req: Express.Request, res: Express.Response) => {
     bookingModel.update({
@@ -129,6 +149,6 @@ const cancelBooking = (req: Express.Request, res: Express.Response) => {
 };
 
 
-export { getBookingById, addBooking, editBookingByIdForClient, bookedByPartner, bookingDone, cancelBooking }
+export { getBookingById, addBooking, editBookingByIdForClient, bookedByPartner, bookingDone, bookingPaid, cancelBooking }
 
 
