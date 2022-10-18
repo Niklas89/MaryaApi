@@ -102,8 +102,8 @@ const signUpClient = (req: Express.Request | any, res: Express.Response) => {
         postalCode: postalCode,
         city: city
       })
-        .then((client: Client) => {
-          res.status(201).json({ user, client });
+        .then((partner: Client) => {
+          res.status(201).json({ user, partner });
           transporter.sendMail({
             to: user.email,
             from: "contact@marya.app",
@@ -113,7 +113,7 @@ const signUpClient = (req: Express.Request | any, res: Express.Response) => {
         })
         .catch((e: any) => {
           console.error(e);
-          res.status(422).send("Erreur de la création du client.");
+          res.status(422).send("Erreur de la création du partenaire.");
         });
     })
     .catch((e: any) => {
