@@ -13,6 +13,7 @@ import { Op } from "sequelize";
 import clientModel from '../models/clientModel';
 import Client from '../types/clientType';
 import partnerModel from '../models/partnerModel';
+import Partner from '../types/partnerType';
 
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
@@ -103,8 +104,8 @@ const signUpClient = (req: Express.Request | any, res: Express.Response) => {
         postalCode: postalCode,
         city: city
       })
-        .then((partner: Client) => {
-          res.status(201).json({ user, partner });
+        .then((client: Client) => {
+          res.status(201).json({ user, client });
           transporter.sendMail({
             to: user.email,
             from: "contact@marya.app",
@@ -143,8 +144,8 @@ const signUpPartner = (req: Express.Request | any, res: Express.Response) => {
         city: city,
         idCategory: idCategory
       })
-        .then((client: Client) => {
-          res.status(201).json({ user, client });
+        .then((partner: Partner) => {
+          res.status(201).json({ user, partner });
           transporter.sendMail({
             to: user.email,
             from: "contact@marya.app",
