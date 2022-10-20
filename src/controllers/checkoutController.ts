@@ -4,7 +4,7 @@ import Session from "../types/sessionType";
 // Stripe API Secret key
 const stripe = require('stripe')('sk_test_0juybcJ0rYydgGZGO9foGyQi');
 
-const CHECKOUT_PAGE = 'http://localhost:3000//booking/create';
+const CHECKOUT_PAGE = 'http://localhost:3000//booking/confirmation';
 
 //checkout
 const checkout = (req: Express.Request | any, res: Express.Response) => {
