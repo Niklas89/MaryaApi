@@ -9,7 +9,8 @@ type Booking = {
     isCancelled: number,
     serviceDone: number,
     createdAt: string,
-    updatedAt: string
+    updatedAt: string,
+    isPaid: boolean,
 };
 
 export default Booking;
