@@ -174,17 +174,19 @@ const getBookingById = (req: Express.Request | any, res: Express.Response) => {
     }
     //On fait deux jointure dans la même requette
     userModel.findByPk(req.user.id, {
+        attributes: {exclude: ["id", "firstName", "lastName", "password", "email", "updatedAt", "createdAt", "deactivatedDate", "isActive", "refreshToken", "resetTokenExpiration", "idRole", "resetToken"]},
         include: [
             {
                 model: partnerModel,
+                attributes: {exclude: ["id", "phone", "birthdate", "address", "postalCode", "city", "img", "SIRET", "IBAN", "createdAt", "updatedAt", "idUser", "idUser_salesHasPartner"]},
                 where: {
                     idUser: req.user.id
                 },
                 include: {
                     model: bookingModel,
-                    //attributes: ["appointementDate", "nbHours", "description", "totalPrice", "accepted"],
+                    attributes: ["id", "appointmentDate", "nbHours", "description", "totalPrice", "accepted", "idService", "accepted"],
                     where: {
-                        appointementDate: whereClause,
+                        appointmentDate: whereClause,
                     }
                 }
             }
