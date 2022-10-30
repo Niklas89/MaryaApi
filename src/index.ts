@@ -45,7 +45,6 @@ app.use("/api/service", serviceRoute);
 app.use("/api/booking", bookingRoute);
 app.use("/api/partner", partnerRoute);
 app.use("/api/refresh", refreshRoute);
-app.use("/api/logout", logoutRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/checkout", checkoutRoute);
 
@@ -54,6 +53,7 @@ app.use(isAuth); // toute route sous cette ligne sera verifié avec isAuth
 app.use("/api/admin", adminRoute);
 app.use("/api/client", clientRoute);
 app.use("/api/user", userRoute);
+app.use("/api/logout", logoutRoute);
 
 //association ----------------------------------------
 associateModels();
