@@ -69,7 +69,7 @@ const editPersonalInfo = async (req: Express.Request, res: Express.Response) => 
             where: {
                 id: req.user.id
             },
-            individualHooks: true,
+            individualHooks: false,
         },
             { transaction: transaction }
         );
@@ -80,7 +80,7 @@ const editPersonalInfo = async (req: Express.Request, res: Express.Response) => 
         }, {
             where: {
                 idUser: req.user.id
-            }, individualHooks: true,
+            }, individualHooks: false,
         },
             { transaction: transaction });
 
