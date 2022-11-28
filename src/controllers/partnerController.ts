@@ -104,7 +104,7 @@ const editProfessionalfInfo = (req: Express.Request, res: Express.Response) => {
     }, {
         where: {
             idUser: req.user.id,
-        }, individualHooks: true,
+        }, individualHooks: false,
     })
         .then((partner: Partner) => {
             res.status(200).json(partner);
@@ -125,7 +125,7 @@ const editAddress = (req: Express.Request, res: Express.Response) => {
     }, {
         where: {
             idUser: req.user.id,
-        }, individualHooks: true,
+        }, individualHooks: false,
     })
         .then((partner: Partner) => {
             res.status(200).json(partner);
@@ -143,7 +143,7 @@ const editCategory = (req: Express.Request, res: Express.Response) => {
     }, {
         where: {
             idUser: req.user.id,
-        }, individualHooks: true,
+        }, individualHooks: false,
     })
         .then((partner: Partner) => {
             res.status(200).json(partner);
