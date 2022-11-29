@@ -279,7 +279,7 @@ const getBookingById = (req: Express.Request | any, res: Express.Response) => {
               "totalPrice",
               "accepted",
               "idService",
-              "accepted",
+              "idClient",
             ],
             where: {
               appointmentDate: whereClause,
