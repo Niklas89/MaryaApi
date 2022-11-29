@@ -13,235 +13,337 @@ import Transaction from "sequelize/types/transaction";
 
 //ajouter un partenaire
 const addPartner = (req: Express.Request, res: Express.Response) => {
-    const { phone, birthdate, address, postalCode, city, SIRET, IBAN, idCategory } = req.body;
-    partnerModel.create({
-        idUser: req.user.id,
-        phone: phone,
-        birthdate: birthdate,
-        address: address,
-        postalCode: postalCode,
-        city: city,
-        SIRET: SIRET,
-        IBAN: IBAN,
-        idCategory: idCategory
+  const {
+    phone,
+    birthdate,
+    address,
+    postalCode,
+    city,
+    SIRET,
+    IBAN,
+    idCategory,
+  } = req.body;
+  partnerModel
+    .create({
+      idUser: req.user.id,
+      phone: phone,
+      birthdate: birthdate,
+      address: address,
+      postalCode: postalCode,
+      city: city,
+      SIRET: SIRET,
+      IBAN: IBAN,
+      idCategory: idCategory,
     })
-        .then((partner: Partner) => {
-            res.status(200).json(partner);
-        })
-        .catch((err: any) => {
-            res.status(409).send(err);
-        });
+    .then((partner: Partner) => {
+      res.status(200).json(partner);
+    })
+    .catch((err: any) => {
+      res.status(409).send(err);
+    });
 };
 
 //récupérer un partenaire
 const getPartnerProfile = (req: Express.Request, res: Express.Response) => {
-    userModel.findByPk(
-        req.user.id,
+  userModel
+    .findByPk(req.user.id, {
+      include: [
         {
-            include: [{
-                model: partnerModel,
-                where: {
-                    idUser: req.user.id
-                },
-                attributes: ["phone", "birthdate", "address", "postalCode", "city", "SIRET", "IBAN", "idCategory"]
-            }],
-            attributes: ["id", "firstName", "lastName", "email", "idRole"]
-        })
-        .then((partner: Partner) => {
-            res.status(200).json(partner);
-        })
-        .catch((err: any) => {
-            res.status(409).send(err);
-        });
+          model: partnerModel,
+          where: {
+            idUser: req.user.id,
+          },
+          attributes: [
+            "phone",
+            "birthdate",
+            "address",
+            "postalCode",
+            "city",
+            "SIRET",
+            "IBAN",
+            "idCategory",
+          ],
+        },
+      ],
+      attributes: ["id", "firstName", "lastName", "email", "idRole"],
+    })
+    .then((partner: Partner) => {
+      res.status(200).json(partner);
+    })
+    .catch((err: any) => {
+      res.status(409).send(err);
+    });
 };
 
 // modification des informations personelles par l"utilisateur
-const editPersonalInfo = async (req: Express.Request, res: Express.Response) => {
-    const { firstName, lastName, email, phone, birthdate } = req.body;
+const editPersonalInfo = async (
+  req: Express.Request,
+  res: Express.Response
+) => {
+  const { firstName, lastName, email, phone, birthdate } = req.body;
 
-    const transaction: Transaction = await dbConnection.transaction();
-    try {
-        const user = await userModel.update({
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-        }, {
-            where: {
-                id: req.user.id
-            },
-            individualHooks: false,
+  const transaction: Transaction = await dbConnection.transaction();
+  try {
+    const user = await userModel.update(
+      {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+      },
+      {
+        where: {
+          id: req.user.id,
         },
-            { transaction: transaction }
-        );
+        individualHooks: false,
+      },
+      { transaction: transaction }
+    );
 
-        const partner = await partnerModel.update({
-            phone: phone,
-            birthdate: birthdate,
-        }, {
-            where: {
-                idUser: req.user.id
-            }, individualHooks: false,
+    const partner = await partnerModel.update(
+      {
+        phone: phone,
+        birthdate: birthdate,
+      },
+      {
+        where: {
+          idUser: req.user.id,
         },
-            { transaction: transaction });
+        individualHooks: false,
+      },
+      { transaction: transaction }
+    );
 
-        //on commit nos changements 
-        await transaction.commit();
-        //on retourner les données de notre utilisateur
-        return res.status(200).json({ user, partner });
-    } catch (err) {
-        res.status(400).send(err);
-        await transaction.rollback();
-    }
+    //on commit nos changements
+    await transaction.commit();
+    //on retourner les données de notre utilisateur
+    return res.status(200).json({ user, partner });
+  } catch (err) {
+    res.status(400).send(err);
+    await transaction.rollback();
+  }
 };
 
 //modification des informations professionnelles par l"utilisateur
 const editProfessionalfInfo = (req: Express.Request, res: Express.Response) => {
-    const { SIRET, IBAN } = req.body;
+  const { SIRET, IBAN } = req.body;
 
-    partnerModel.update({
+  partnerModel
+    .update(
+      {
         SIRET: SIRET,
         IBAN: IBAN,
-    }, {
+      },
+      {
         where: {
-            idUser: req.user.id,
-        }, individualHooks: true,
+          idUser: req.user.id,
+        },
+        individualHooks: true,
+      }
+    )
+    .then((partner: Partner) => {
+      res.status(200).json(partner);
     })
-        .then((partner: Partner) => {
-            res.status(200).json(partner);
-        })
-        .catch((err: Error) => {
-            res.status(400).send(err);
-        })
+    .catch((err: Error) => {
+      res.status(400).send(err);
+    });
 };
 
 //modification de l"adresse par l"utilisateur
 const editAddress = (req: Express.Request, res: Express.Response) => {
-    const { address, postalCode, city } = req.body;
+  const { address, postalCode, city } = req.body;
 
-    partnerModel.update({
+  partnerModel
+    .update(
+      {
         address: address,
         postalCode: postalCode,
-        city: city
-    }, {
+        city: city,
+      },
+      {
         where: {
-            idUser: req.user.id,
-        }, individualHooks: true,
+          idUser: req.user.id,
+        },
+        individualHooks: true,
+      }
+    )
+    .then((partner: Partner) => {
+      res.status(200).json(partner);
     })
-        .then((partner: Partner) => {
-            res.status(200).json(partner);
-        })
-        .catch((err: Error) => {
-            res.status(400).send(err);
-        })
+    .catch((err: Error) => {
+      res.status(400).send(err);
+    });
 };
 
 //modification d"une catégorie par l"utilisateur
 const editCategory = (req: Express.Request, res: Express.Response) => {
-
-    partnerModel.update({
-        idCategory: req.body.idCategory
-    }, {
+  partnerModel
+    .update(
+      {
+        idCategory: req.body.idCategory,
+      },
+      {
         where: {
-            idUser: req.user.id,
-        }, individualHooks: true,
+          idUser: req.user.id,
+        },
+        individualHooks: true,
+      }
+    )
+    .then((partner: Partner) => {
+      res.status(200).json(partner);
     })
-        .then((partner: Partner) => {
-            res.status(200).json(partner);
-        })
-        .catch((err: Error) => {
-            res.status(400).send(err);
-        })
+    .catch((err: Error) => {
+      res.status(400).send(err);
+    });
 };
-
 
 //Fonction qui permet de récuperé les bookings du client par (future, present, passé) et (accepté ou pas)
 const getBookingById = (req: Express.Request | any, res: Express.Response) => {
-    //permet de récuperé l"argument dans l"url
-    const dateType = req.params.dateType;
-    //On instancie les variable à null
-    let whereClause = null;
-    //Pour les dates on verifie si c"est un date supperieur à aujourd"hui, 
-    if (dateType === "future") {
-        whereClause = { [Op.gt]: moment().add(1, "d").format("YYYY-MM-DD") };
-    }
-    //Si c"est une date inférieur à aujourd"hui
-    else if (dateType === "past") {
-        whereClause = { [Op.lt]: moment().subtract(1, "d").format("YYYY-MM-DD") };
-    }
-    //Sinon si c"est une date égale à aujourd"hui
-    else {
-        whereClause = { [Op.between]: [moment().format("YYYY-MM-DD"), moment().add(1, "d").format("YYYY-MM-DD")] };
-    }
-    //On fait deux jointure dans la même requette
-    userModel.findByPk(req.user.id, {
-        attributes: {exclude: ["id", "firstName", "lastName", "password", "email", "updatedAt", "createdAt", "deactivatedDate", "isActive", "refreshToken", "resetTokenExpiration", "idRole", "resetToken"]},
-        include: [
-            {
-                model: partnerModel,
-                attributes: {exclude: ["id", "phone", "birthdate", "address", "postalCode", "city", "img", "SIRET", "IBAN", "createdAt", "updatedAt", "idUser", "idUser_salesHasPartner"]},
-                where: {
-                    idUser: req.user.id
-                },
-                include: {
-                    model: bookingModel,
-                    attributes: ["id", "appointmentDate", "nbHours", "description", "totalPrice", "accepted", "idService", "accepted"],
-                    where: {
-                        appointmentDate: whereClause,
-                    }
-                }
-            }
-        ]
+  //permet de récuperé l"argument dans l"url
+  const dateType = req.params.dateType;
+  console.log(req.user.id);
+  console.log("test");
+  console.log(dateType);
+
+  //On instancie les variable à null
+  let whereClause = null;
+  //Pour les dates on verifie si c"est un date supperieur à aujourd"hui,
+  if (dateType === "future") {
+    whereClause = { [Op.gt]: moment().add(1, "d").format("YYYY-MM-DD") };
+  }
+  //Si c"est une date inférieur à aujourd"hui
+  else if (dateType === "past") {
+    whereClause = { [Op.lt]: moment().subtract(1, "d").format("YYYY-MM-DD") };
+  }
+  //Sinon si c"est une date égale à aujourd"hui
+  else {
+    whereClause = {
+      [Op.between]: [
+        moment().format("YYYY-MM-DD"),
+        moment().add(1, "d").format("YYYY-MM-DD"),
+      ],
+    };
+  }
+  //On fait deux jointure dans la même requete
+  userModel
+    .findByPk(req.user.id, {
+      attributes: {
+        exclude: [
+          "id",
+          "firstName",
+          "lastName",
+          "password",
+          "email",
+          "updatedAt",
+          "createdAt",
+          "deactivatedDate",
+          "isActive",
+          "refreshToken",
+          "resetTokenExpiration",
+          "idRole",
+          "resetToken",
+        ],
+      },
+      include: [
+        {
+          model: partnerModel,
+          attributes: {
+            exclude: [
+              "id",
+              "phone",
+              "birthdate",
+              "address",
+              "postalCode",
+              "city",
+              "img",
+              "SIRET",
+              "IBAN",
+              "createdAt",
+              "updatedAt",
+              "idUser",
+              "idUser_salesHasPartner",
+            ],
+          },
+          where: {
+            idUser: req.user.id,
+          },
+          include: {
+            model: bookingModel,
+            attributes: [
+              "id",
+              "appointmentDate",
+              "nbHours",
+              "description",
+              "totalPrice",
+              "accepted",
+              "idService",
+              "accepted",
+            ],
+            where: {
+              appointmentDate: whereClause,
+            },
+          },
+        },
+      ],
     })
-        .then((partner: Partner) => {
-            res.status(200).json(partner);
-        })
-        .catch((err: Error) => {
-            res.status(400).send(err);
-        })
+    .then((partner: Partner) => {
+      res.status(200).json(partner);
+    })
+    .catch((err: Error) => {
+      res.status(400).send(err);
+    });
 };
 
 //récuperé les bookings sans partenaire
 const getPendingBookings = (req: Express.Request, res: Express.Response) => {
-    //on recupère l"idCategory du partenaire via le token
-    partnerModel.findOne({
-        attributes: ["idCategory"],
-        where: {
-            idUser: req.user.id
-        }
+  //on recupère l"idCategory du partenaire via le token
+  partnerModel
+    .findOne({
+      attributes: ["idCategory"],
+      where: {
+        idUser: req.user.id,
+      },
     })
-        .then((partner: Partner) => {
-            //on recupère les bookings non acceptés correspondant à la catégorie du partenaire
-            categoryModel.findAll({
+    .then((partner: Partner) => {
+      //on recupère les bookings non acceptés correspondant à la catégorie du partenaire
+      categoryModel
+        .findAll({
+          where: {
+            id: partner.idCategory,
+          },
+          include: [
+            {
+              model: serviceModel,
+              include: {
+                model: bookingModel,
                 where: {
-                    id: partner.idCategory
+                  accepted: 0,
+                  appointmentDate: {
+                    [Op.gt]: moment().add(1, "d").format("YYYY-MM-DD"),
+                  },
                 },
-                include: [
-                    {
-                        model: serviceModel,
-                        include: {
-                            model: bookingModel,
-                            where: {
-                                accepted: 0,
-                                appointmentDate: { [Op.gt]: moment().add(1, "d").format("YYYY-MM-DD") }
-                            }
-                        }
-                    }
-                ]
-            })
-                .then((booking: Booking) => {
-                    res.status(200).json(booking);
-                })
-                .catch((err: Error) => {
-                    res.status(409).send(err);
-                })
-
+              },
+            },
+          ],
+        })
+        .then((booking: Booking) => {
+          res.status(200).json(booking);
         })
         .catch((err: Error) => {
-            res.status(409).send(err);
+          res.status(409).send(err);
         });
+    })
+    .catch((err: Error) => {
+      res.status(409).send(err);
+    });
 };
 
-
-
-export { addPartner, getPartnerProfile, editPersonalInfo, editProfessionalfInfo, editAddress, editCategory, getBookingById, getPendingBookings };
-
+export {
+  addPartner,
+  getPartnerProfile,
+  editPersonalInfo,
+  editProfessionalfInfo,
+  editAddress,
+  editCategory,
+  getBookingById,
+  getPendingBookings,
+};
