@@ -67,7 +67,6 @@ const editClient = async (req: Express.Request | any, res: Express.Response) => 
   }
 };
 
-
 //Récupérer le client par l'id dans son token
 const getClientProfile = (req: Express.Request, res: Express.Response) => {
   userModel.findByPk(req.user.id, {
