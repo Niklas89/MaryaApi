@@ -10,6 +10,9 @@ import { Op } from "sequelize";
 import categoryModel from "../models/categoryModel";
 import serviceModel from "../models/serviceModel";
 import Transaction from "sequelize/types/transaction";
+import clientModel from "../models/clientModel";
+import Client from "../types/clientType";
+import User from "../types/userType";
 
 //ajouter un partenaire
 const addPartner = (req: Express.Request, res: Express.Response) => {
@@ -137,7 +140,7 @@ const editProfessionalfInfo = (req: Express.Request, res: Express.Response) => {
         where: {
           idUser: req.user.id,
         },
-        individualHooks: true,
+        individualHooks: false,
       }
     )
     .then((partner: Partner) => {
@@ -163,7 +166,7 @@ const editAddress = (req: Express.Request, res: Express.Response) => {
         where: {
           idUser: req.user.id,
         },
-        individualHooks: true,
+        individualHooks: false,
       }
     )
     .then((partner: Partner) => {
@@ -185,7 +188,7 @@ const editCategory = (req: Express.Request, res: Express.Response) => {
         where: {
           idUser: req.user.id,
         },
-        individualHooks: true,
+        individualHooks: false,
       }
     )
     .then((partner: Partner) => {
@@ -337,13 +340,26 @@ const getPendingBookings = (req: Express.Request, res: Express.Response) => {
     });
 };
 
-export {
-  addPartner,
-  getPartnerProfile,
-  editPersonalInfo,
-  editProfessionalfInfo,
-  editAddress,
-  editCategory,
-  getBookingById,
-  getPendingBookings,
-};
+
+//Récupere le client via son id
+const getClient = (req: Express.Request, res: Express.Response) => {
+    clientModel.findOne({ where: { id: req.params.id } })
+    .then((client: Client) => {
+        userModel.findOne({ where: { id: client.idUser } })
+          .then((user: User) => {
+              res.status(200).send({ user, client });
+          })
+          .catch((err: Error) => {
+            return res.status(401).send("Erreur");
+          })
+    })
+    .then((user: User) => {
+
+    })
+    .catch((err: Error) => {
+      return res.status(401).send("Erreur");
+    });
+  };
+
+
+export { addPartner, getPartnerProfile, editPersonalInfo, editProfessionalfInfo, editAddress, editCategory, getBookingById, getPendingBookings, getClient };
