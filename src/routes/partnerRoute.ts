@@ -1,6 +1,7 @@
 import express from "express";
 const router = express.Router();
 
+
 import { getPartnerProfile, editPersonalInfo, editProfessionalfInfo, editAddress, addPartner, getClient, editCategory, getBookingById, getPendingBookings } from "../controllers/partnerController";
 import isAuth from "../middleware/authMiddleware";
 

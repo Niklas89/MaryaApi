@@ -244,6 +244,7 @@ const getPendingBookings = (req: Express.Request, res: Express.Response) => {
         });
 };
 
+
 //Récupere le client via son id
 const getClient = (req: Express.Request, res: Express.Response) => {
     clientModel.findOne({ where: { id: req.params.id } })
