@@ -70,7 +70,7 @@ const editBookingByIdForClient = (req: Express.Request, res: Express.Response) =
 };
 
 //Acceptation de la reservation par le partenaire
-const bookedByPartner = (req: Express.Request, res: Express.Response) => {
+const bookedByPartner = (req: Express.Request, res: Express.Response) => {   
     partnerModel.findOne({
         where: {
             idUser: req.user.id

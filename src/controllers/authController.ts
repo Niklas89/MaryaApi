@@ -77,9 +77,6 @@ const signIn = (req: Express.Request, res: Express.Response) => {
         return res.status(401).json("Mot de passe incorrect");
       }
     })
-    .then((user: User) => {
-
-    })
     .catch((err: Error) => {
       return res.status(401).send("Email inconnu");
     });
