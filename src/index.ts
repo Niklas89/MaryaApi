@@ -1,6 +1,6 @@
 import "dotenv/config";
 import express from "express";
-import cors from 'cors';
+import cors from "cors";
 import userRoute from "./routes/userRoute";
 import authRoute from "./routes/authRoute";
 import serviceRoute from "./routes/serviceRoute";
@@ -29,13 +29,21 @@ import corsOptions from "./config/corsOptions";
 
 const app = express();
 
+const corsOptionTest = {
+  origin: "*",
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization", "Cache-Control"],
+  exposedHeaders: ["Authorization"],
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  preflightContinue: true,
+};
+
 //middleware ------------------------------------
-app.use(credentials); 
-app.use(cors(corsOptions));
+app.use(credentials);
+app.use(cors(corsOptionTest));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
 
 //jwt
 //app.get('*', checkUser);
