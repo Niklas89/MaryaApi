@@ -40,7 +40,7 @@ const corsOptionTest = {
 
 //middleware ------------------------------------
 app.use(credentials);
-app.use(cors(corsOptionTest));
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
