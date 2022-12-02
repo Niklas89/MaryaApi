@@ -235,11 +235,11 @@ import { INTEGER, Sequelize } from "sequelize/types";
           res.status(403).send("Accès refusé.");
         else {
         userModel.findAll({
-            attributes: ["id", "firstName", "lastName", "email", "idRole"],
+            attributes: ["id", "firstName", "lastName", "email", "isActive", "deactivatedDate", "createdAt"],
             include: [{
                 model: partnerModel,
                 required: true,
-                attributes: ["phone", "birthdate", "address", "postalCode", "city", "SIRET", "IBAN", "idCategory"],
+                attributes: ["id", "phone", "birthdate", "address", "postalCode", "city", "SIRET", "IBAN", "idCategory"],
                 /*include: [{
                   model: categoryModel,
                   attributes: ["id", "name"],
@@ -247,7 +247,6 @@ import { INTEGER, Sequelize } from "sequelize/types";
             }]
         })
             .then((partners: Partner) => {
-              // let service = categoryModel.find((x:any) => x.id === partners.idCategory).name;
                 res.status(200).json(partners);
             })
             .catch((err: any) => {
