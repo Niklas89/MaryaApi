@@ -10,6 +10,7 @@ services:
       - "8080:8080"
     volumes:
       - ./:/home/node/api
+      - /home/node/api/node_modules
     working_dir: /home/node/api
     depends_on:
       - mariadb
