@@ -203,9 +203,6 @@ const editCategory = (req: Express.Request, res: Express.Response) => {
 const getBookingById = (req: Express.Request | any, res: Express.Response) => {
   //permet de récuperé l"argument dans l"url
   const dateType = req.params.dateType;
-  console.log(req.user.id);
-  console.log("test");
-  console.log(dateType);
 
   //On instancie les variable à null
   let whereClause = null;
@@ -226,67 +223,46 @@ const getBookingById = (req: Express.Request | any, res: Express.Response) => {
       ],
     };
   }
-  //On fait deux jointure dans la même requete
-  userModel
-    .findByPk(req.user.id, {
+
+  partnerModel
+    .findOne({
       attributes: {
         exclude: [
           "id",
-          "firstName",
-          "lastName",
-          "password",
-          "email",
-          "updatedAt",
+          "phone",
+          "birthdate",
+          "address",
+          "postalCode",
+          "city",
+          "img",
+          "SIRET",
+          "IBAN",
           "createdAt",
-          "deactivatedDate",
-          "isActive",
-          "refreshToken",
-          "resetTokenExpiration",
-          "idRole",
-          "resetToken",
+          "updatedAt",
+          "idUser",
+          "idUser_salesHasPartner",
         ],
       },
-      include: [
-        {
-          model: partnerModel,
-          attributes: {
-            exclude: [
-              "id",
-              "phone",
-              "birthdate",
-              "address",
-              "postalCode",
-              "city",
-              "img",
-              "SIRET",
-              "IBAN",
-              "createdAt",
-              "updatedAt",
-              "idUser",
-              "idUser_salesHasPartner",
-            ],
-          },
-          where: {
-            idUser: req.user.id,
-          },
-          include: {
-            model: bookingModel,
-            attributes: [
-              "id",
-              "appointmentDate",
-              "nbHours",
-              "description",
-              "totalPrice",
-              "accepted",
-              "idService",
-              "idClient",
-            ],
-            where: {
-              appointmentDate: whereClause,
-            },
-          },
+      where: {
+        idUser: req.user.id,
+      },
+      order: [[bookingModel, "appointmentDate", "ASC"]],
+      include: {
+        model: bookingModel,
+        attributes: [
+          "id",
+          "appointmentDate",
+          "nbHours",
+          "description",
+          "totalPrice",
+          "accepted",
+          "idService",
+          "idClient",
+        ],
+        where: {
+          appointmentDate: whereClause,
         },
-      ],
+      },
     })
     .then((partner: Partner) => {
       res.status(200).json(partner);
@@ -340,26 +316,34 @@ const getPendingBookings = (req: Express.Request, res: Express.Response) => {
     });
 };
 
-
 //Récupere le client via son id
 const getClient = (req: Express.Request, res: Express.Response) => {
-    clientModel.findOne({ where: { id: req.params.id } })
+  clientModel
+    .findOne({ where: { id: req.params.id } })
     .then((client: Client) => {
-        userModel.findOne({ where: { id: client.idUser } })
-          .then((user: User) => {
-              res.status(200).send({ user, client });
-          })
-          .catch((err: Error) => {
-            return res.status(401).send("Erreur");
-          })
+      userModel
+        .findOne({ where: { id: client.idUser } })
+        .then((user: User) => {
+          res.status(200).send({ user, client });
+        })
+        .catch((err: Error) => {
+          return res.status(401).send("Erreur");
+        });
     })
-    .then((user: User) => {
-
-    })
+    .then((user: User) => {})
     .catch((err: Error) => {
       return res.status(401).send("Erreur");
     });
-  };
+};
 
-
-export { addPartner, getPartnerProfile, editPersonalInfo, editProfessionalfInfo, editAddress, editCategory, getBookingById, getPendingBookings, getClient };
+export {
+  addPartner,
+  getPartnerProfile,
+  editPersonalInfo,
+  editProfessionalfInfo,
+  editAddress,
+  editCategory,
+  getBookingById,
+  getPendingBookings,
+  getClient,
+};
