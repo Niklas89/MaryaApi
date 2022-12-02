@@ -13,12 +13,14 @@ import Service from "../types/serviceType";
 import Express from "express";
 import dbConnection from "../config/dbConfig";
 import Transaction from "sequelize/types/transaction";
+import { number } from "yup";
+import { INTEGER, Sequelize } from "sequelize/types";
 
 
   // Vérifier si l'utilisateur connecté est bien un admin
   const isNotAdmin = (req: Express.Request, res: Express.Response) => {
     if (req.user.role !== 3) { // 3: admin
-      res.status(403).send("Accès refusé.");
+      return true;
     } 
   };
 
@@ -40,15 +42,39 @@ import Transaction from "sequelize/types/transaction";
   // Récupérer les clients que le commercial a recruté 
   const getRecrutedClients = (req: Express.Request, res: Express.Response) => {
     // Vérifier si l'utilisateur connecté est bien un admin
-      isNotAdmin(req,res);
-      userModel.findAll({ 
+      if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+      else {
+        userModel.findAll({ 
+          include: [
+            { 
+                model: clientModel,
+                where: {
+                  idUser_salesHasClient:  req.user.id
+                } 
+            }
+          ]
+        })
+          .then((clients: Client) => {
+            res.status(200).json(clients);
+          })
+          .catch((err: Error) => {
+            res.status(409).send(err);
+          });
+      }
+    };
+
+  // Récupérer les clients
+  const getClients = (req: Express.Request, res: Express.Response) => {
+    // Vérifier si l'utilisateur connecté est bien un admin
+    if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+    else {
+      userModel.findAll({
+        where: { isActive: 1 },
+        attributes: { exclude: ["updatedAt", "deactivatedDate", "idRole"] },
         include: [
-          { 
-              model: clientModel,
-              where: {
-                idUser_salesHasClient:  req.user.id
-              } 
-          }
+          { model: clientModel, attributes: { exclude: ["createdAt", "updatedAt"] } }
         ]
       })
         .then((clients: Client) => {
@@ -57,55 +83,42 @@ import Transaction from "sequelize/types/transaction";
         .catch((err: Error) => {
           res.status(409).send(err);
         });
-    };
-
-  // Récupérer les clients
-  const getClients = (req: Express.Request, res: Express.Response) => {
-    // Vérifier si l'utilisateur connecté est bien un admin
-    isNotAdmin(req,res);
-    userModel.findAll({
-      where: { isActive: 1 },
-      attributes: { exclude: ["updatedAt", "deactivatedDate", "idRole"] },
-      include: [
-        { model: clientModel, attributes: { exclude: ["createdAt", "updatedAt"] } }
-      ]
-    })
-      .then((clients: Client) => {
-        res.status(200).json(clients);
-      })
-      .catch((err: Error) => {
-        res.status(409).send(err);
-      });
+    }
   };
 
 
   //Récupérer le client par son identifiant
   const getClient = (req: Express.Request, res: Express.Response) => {
     // Vérifier si l'utilisateur connecté est bien un admin
-    isNotAdmin(req,res);
-    userModel.findByPk(req.params.id, {
-      include: [
-        {
-          model: clientModel,
-          where: {
-            idUser:  req.params.id
+    if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+    else {
+      userModel.findByPk(req.params.id, {
+        include: [
+          {
+            model: clientModel,
+            where: {
+              idUser:  req.params.id
+            }
           }
-        }
-      ]
-    })
-      .then((client: Client) => {
-        res.status(200).json(client);
+        ]
       })
-      .catch((err: Error) => {
-        res.status(500).send(err);
-      });
+        .then((client: Client) => {
+          res.status(200).json(client);
+        })
+        .catch((err: Error) => {
+          res.status(500).send(err);
+        });
+    }
   };
 
 
   // Créer un client par le commercial
   const addClient = async (req: Express.Request, res: Express.Response) => {
       // Vérifier si l'utilisateur connecté est bien un admin
-      isNotAdmin(req,res);
+      if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+    else {
       //on initie la transaction
       const transaction: Transaction = await dbConnection.transaction();
       try {
@@ -137,46 +150,50 @@ import Transaction from "sequelize/types/transaction";
       } catch (err) {
           await transaction.rollback();
       }
+    }
   };
 
   //fonction permettant de modifier un client par le commercial lui-même
   const editClient = async (req: Express.Request | any, res: Express.Response) => {
     // Vérifier si l'utilisateur connecté est bien un admin
-    isNotAdmin(req,res);
-    const { firstName, lastName, email, phone, address, postalCode, city } = req.body;
-    //on initie la transaction
-    const transaction: Transaction = await dbConnection.transaction();
-    try {
-      //on modifie notre utilisateur
-      const user = await userModel.update({
-        firstName: firstName,
-        lastName: lastName,
-        email: email
-      }, {
-        where: {
-          id: req.params.id
-        }, individualHooks: true
-      }, { transaction: transaction });
+    if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+    else {
+      const { firstName, lastName, email, phone, address, postalCode, city } = req.body;
+      //on initie la transaction
+      const transaction: Transaction = await dbConnection.transaction();
+      try {
+        //on modifie notre utilisateur
+        const user = await userModel.update({
+          firstName: firstName,
+          lastName: lastName,
+          email: email
+        }, {
+          where: {
+            id: req.params.id
+          }, individualHooks: true
+        }, { transaction: transaction });
 
-      //on modifie notre client
-      const client = await clientModel.update({
-        phone: phone,
-        address: address,
-        postalCode: postalCode,
-        city: city
-      }, {
-        where: {
-          idUser: req.params.id
-        }, individualHooks: true
-      }, { transaction: transaction });
+        //on modifie notre client
+        const client = await clientModel.update({
+          phone: phone,
+          address: address,
+          postalCode: postalCode,
+          city: city
+        }, {
+          where: {
+            idUser: req.params.id
+          }, individualHooks: true
+        }, { transaction: transaction });
 
-      //on commit nos changements 
-      await transaction.commit();
-      //on retourner les données de notre utilisateur
-      return res.status(200).json({ user, client });
-    } catch (err) {
-      res.status(400).send(err);
-      await transaction.rollback();
+        //on commit nos changements 
+        await transaction.commit();
+        //on retourner les données de notre utilisateur
+        return res.status(200).json({ user, client });
+      } catch (err) {
+        res.status(400).send(err);
+        await transaction.rollback();
+      }
     }
   };
 
@@ -189,7 +206,9 @@ import Transaction from "sequelize/types/transaction";
   // Récupérer les partenaires que le commercial a recruté
   const getRecrutedPartners = (req: Express.Request, res: Express.Response) => {
     // Vérifier si l'utilisateur connecté est bien un admin
-    isNotAdmin(req,res);
+    if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+    else {
       userModel.findAll({ 
         include: [
           { 
@@ -206,32 +225,43 @@ import Transaction from "sequelize/types/transaction";
         .catch((err: Error) => {
           res.status(409).send(err);
         });
-    };
+    }
+  };
 
       // Récupérer les partenaires
       const getPartners = (req: Express.Request, res: Express.Response) => {
         // Vérifier si l'utilisateur connecté est bien un admin
-        isNotAdmin(req,res);
+        if(isNotAdmin(req,res)) 
+          res.status(403).send("Accès refusé.");
+        else {
         userModel.findAll({
             attributes: ["id", "firstName", "lastName", "email", "idRole"],
             include: [{
                 model: partnerModel,
                 required: true,
-                attributes: ["phone", "birthdate", "address", "postalCode", "city", "SIRET", "IBAN", "idCategory"]
+                attributes: ["phone", "birthdate", "address", "postalCode", "city", "SIRET", "IBAN", "idCategory"],
+                /*include: [{
+                  model: categoryModel,
+                  attributes: ["id", "name"],
+              }] */
             }]
         })
             .then((partners: Partner) => {
+              // let service = categoryModel.find((x:any) => x.id === partners.idCategory).name;
                 res.status(200).json(partners);
             })
             .catch((err: any) => {
                 res.status(409).send(err);
             });
+        }
     };
     
     //Récupérer un partenaire
     const getPartnerProfile = (req: Express.Request, res: Express.Response) => {
         // Vérifier si l'utilisateur connecté est bien un admin
-        isNotAdmin(req,res);
+        if(isNotAdmin(req,res)) 
+          res.status(403).send("Accès refusé.");
+        else {
         userModel.findByPk(
             req.params.id,
             {
@@ -250,12 +280,15 @@ import Transaction from "sequelize/types/transaction";
             .catch((err: any) => {
                 res.status(409).send(err);
             });
+          }
     };
   
   // Créer un partenaire par le commercial
   const addPartner = async (req: Express.Request, res: Express.Response) => {
       // Vérifier si l'utilisateur connecté est bien un admin
-      isNotAdmin(req,res);
+      if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+    else {
       //on initie la transaction
       const transaction: Transaction = await dbConnection.transaction();
       try {
@@ -291,12 +324,15 @@ import Transaction from "sequelize/types/transaction";
       } catch (err) {
           await transaction.rollback();
       }
+    }
   };
 
   // modifier un partenaire par le commercial
   const editPartner = async (req: Express.Request, res: Express.Response) => {
       // Vérifier si l'utilisateur connecté est bien un admin
-      isNotAdmin(req,res);
+      if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+    else {
       const { firstName, lastName, email, phone, birthdate, address, postalCode, city, img, SIRET, IBAN } = req.body;
       const transaction: Transaction = await dbConnection.transaction();
       try {
@@ -339,6 +375,7 @@ import Transaction from "sequelize/types/transaction";
           res.status(400).send(err);
           await transaction.rollback();
       }
+    }
   };
 
 
@@ -350,7 +387,9 @@ import Transaction from "sequelize/types/transaction";
     // Modifier un booking via son id par un commercial / admin
     const editBooking = (req: Express.Request, res: Express.Response) => {
       // Vérifier si l'utilisateur connecté est bien un admin
-      isNotAdmin(req,res);
+      if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+    else {
       bookingModel.update({
           appointementDate: req.body.appointementDate,
           nbHours: req.body.nbHours,
@@ -367,12 +406,15 @@ import Transaction from "sequelize/types/transaction";
           .catch((err: Error) => {
               res.status(409).send(err);
           });
+        }
     };
 
     // Annuler une prestation
     const cancelBooking = (req: Express.Request, res: Express.Response) => {
       // Vérifier si l'utilisateur connecté est bien un admin
-      isNotAdmin(req,res);
+      if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+    else {
       bookingModel.update({
           cancelDate: req.body.cancelDate,
           isCancelled: 1,
@@ -388,13 +430,16 @@ import Transaction from "sequelize/types/transaction";
           .catch((err: Error) => {
               res.status(409).send(err);
           });
+        }
     };
 
 
     //Récupérer par l'id un booking
     const getBooking = (req: Express.Request, res: Express.Response) => {
       // Vérifier si l'utilisateur connecté est bien un admin
-      isNotAdmin(req,res);
+      if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+    else {
       bookingModel.findByPk(req.params.id)
           .then((booking: Booking) => {
               res.status(200).json(booking);
@@ -402,20 +447,25 @@ import Transaction from "sequelize/types/transaction";
           .catch((err: Error) => {
               res.status(409).send(err);
           });
+        }
     };
 
 
     //Récupérer toutes les réservations
     const getBookings = (req: Express.Request, res: Express.Response) => {
       // Vérifier si l'utilisateur connecté est bien un admin
-      isNotAdmin(req,res);
-      bookingModel.findAll()
+      // isNotAdmin(req,res);
+      if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+    else {
+          bookingModel.findAll()
           .then((bookings: Booking) => {
-              res.status(200).json(bookings);
-          })
-          .catch((err: Error) => {
-              res.status(409).send(err);
-          });
+            res.status(200).json(bookings);
+        })
+        .catch((err: Error) => {
+            res.status(409).send(err);
+        });
+      }
     };
 
 
@@ -427,7 +477,9 @@ import Transaction from "sequelize/types/transaction";
     // supprimer un utilisateur / le mettre en "inactif" dans la bdd
     const inactivateUser = (req: Express.Request, res: Express.Response) => {
       // Vérifier si l'utilisateur connecté est bien un admin
-      isNotAdmin(req,res);
+      if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+      else {
       userModel.update({
         isActive: 0
       }, {
@@ -441,6 +493,7 @@ import Transaction from "sequelize/types/transaction";
         .catch((err: Error) => {
           res.status(409).send(err);
         });
+      }
     };
 
 
@@ -453,21 +506,26 @@ import Transaction from "sequelize/types/transaction";
   // s'afficher sur sa page profil
   const getAdminProfile = (req: Express.Request, res: Express.Response) => {
     // Vérifier si l'utilisateur connecté est bien un admin
-    isNotAdmin(req,res);
-    userModel.findByPk(req.user.id)
+    if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+    else {
+      userModel.findByPk(req.user.id)
         .then((user: User) => {
             res.status(200).json(user);
         })
         .catch((err: Error) => {
             res.status(409).send(err);
         });
+    }
   };
   
 
   // Modifier les identifiants de l'admin sur sa page profil
 const editAdminProfile = (req: Express.Request, res: Express.Response) => {
   // Vérifier si l'utilisateur connecté est bien un admin
-    isNotAdmin(req,res);
+  if(isNotAdmin(req,res)) 
+    res.status(403).send("Accès refusé.");
+  else {
     const { password, email } = req.body;
     userModel.update({
       password: password,
@@ -483,6 +541,7 @@ const editAdminProfile = (req: Express.Request, res: Express.Response) => {
       .catch((err: Error) => {
         res.status(409).send(err);
       });
+  }
   };
 
 
@@ -495,7 +554,9 @@ const editAdminProfile = (req: Express.Request, res: Express.Response) => {
 
     //Récupérer toutes les catégories
   const getCategories = (req: Express.Request, res: Express.Response) => {
-    isNotAdmin(req,res);
+    if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+    else {
     categoryModel.findAll()
         .then((categories: Category) => {
             res.status(200).json(categories);
@@ -503,11 +564,14 @@ const editAdminProfile = (req: Express.Request, res: Express.Response) => {
         .catch((err: Error) => {
             res.status(409).send(err);
         });
+      }
   };
 
   //Récupérer une catégorie pour l'afficher avant de la modifier
   const getCategory = (req: Express.Request, res: Express.Response) => {
-    isNotAdmin(req,res);
+    if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+    else {
       categoryModel.findByPk(req.params.id)
           .then((category: Category) => {
               res.status(200).json(category);
@@ -515,11 +579,14 @@ const editAdminProfile = (req: Express.Request, res: Express.Response) => {
           .catch((err: Error) => {
               res.status(409).send(err);
           });
+        }
   };
 
   //Enregistrer une nouvelle catégorie
   const addCategory = (req: Express.Request, res: Express.Response) => {
-    isNotAdmin(req,res);
+    if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+    else {
       categoryModel.create({ name: req.body.name })
           .then((category: Category) => {
               res.status(201).json({ category });
@@ -527,11 +594,14 @@ const editAdminProfile = (req: Express.Request, res: Express.Response) => {
           .catch((err: Error) => {
               res.status(409).send(err);
           });
+        }
   };
 
   //Modifier une catégorie via sont id
   const editCategory = async (req: Express.Request, res: Express.Response) => {
-    isNotAdmin(req,res);
+    if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+    else {
       categoryModel.update({
           name: req.body.name
       }, {
@@ -545,11 +615,14 @@ const editAdminProfile = (req: Express.Request, res: Express.Response) => {
           .catch((err: Error) => {
               res.status(409).send(err);
           });
+        }
   };
 
   // Récupérer tous les services par catégorie - l'id de la catégorie est passé en paramètre
   const getServicesByCategory = (req: Express.Request, res: Express.Response) => {
-    isNotAdmin(req,res);
+    if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+    else {
       serviceModel.findAll({where: {idCategory: req.params.id}})
           .then((services: Service) => {
               res.status(200).json(services);
@@ -557,11 +630,14 @@ const editAdminProfile = (req: Express.Request, res: Express.Response) => {
           .catch((err: Error) => {
               res.status(409).send(err);
           });
+        }
   };
   
   //Récupérer le service par son id
   const getService = (req: Express.Request, res: Express.Response) => {
-    isNotAdmin(req,res);
+    if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+    else {
       serviceModel.findByPk(req.params.id)
           .then((service: Service) => {
               res.status(200).json(service);
@@ -569,11 +645,14 @@ const editAdminProfile = (req: Express.Request, res: Express.Response) => {
           .catch((err: Error) => {
               res.status(409).send(err);
           });
+        }
   };
   
   //Enregsitré un nouveau service, avec son type et son tarif
   const addService = (req: Express.Request, res: Express.Response) => {
-    isNotAdmin(req,res);
+    if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+    else {
       serviceModel.create({ 
         name: req.body.name,
         idCategory: req.body.idCategory,
@@ -586,11 +665,14 @@ const editAdminProfile = (req: Express.Request, res: Express.Response) => {
           .catch((err: Error) => {
               res.status(409).send(err);
           });
+        }
   };
   
   //Modifier un service, avec son type et son tarif
   const editService = (req: Express.Request, res: Express.Response) => {
-    isNotAdmin(req,res);
+    if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+    else {
       serviceModel.update({
           name: req.body.name,
           idCategory: req.body.idCategory,
@@ -607,12 +689,8 @@ const editAdminProfile = (req: Express.Request, res: Express.Response) => {
           .catch((err: Error) => {
               res.status(409).send(err);
           });
+        }
   };
-
-
-
-
-
 
   
   export { getAdminProfile, editAdminProfile,
