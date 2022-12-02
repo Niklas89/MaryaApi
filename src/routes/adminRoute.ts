@@ -7,22 +7,22 @@ import { getAdminProfile, editAdminProfile, getRecrutedClients, getRecrutedPartn
      getCategories, getCategory, addCategory, editCategory, getServicesByCategory, getService, addService, editService } from "../controllers/adminController";
 
 // clients
-router.get("/client/", getRecrutedClients);
-router.get("/client/", getClients);
+router.get("/client/recruted/", getRecrutedClients);
+router.get("/clients/", getClients);
 router.get("/client/:id", getClient);
 router.put("/client/:id", editClient);
 router.post("/client/", addClient);
 
 // partners
-router.get("/partner/", getRecrutedPartners);
-router.get("/", getPartners);
-router.get("/partner/", getPartnerProfile);
+router.get("/partner/recruted/", getRecrutedPartners);
+router.get("/partners/", getPartners);
+router.get("/partner/:id", getPartnerProfile);
 router.put("/partner/:id", editPartner);
 router.post("/partner/", addPartner);
 
 // bookings
 router.put("/booking/:id", editBooking);
-router.get("/booking/", getBookings);
+router.get("/bookings/", getBookings);
 router.get("/booking/:id", getBooking);
 router.patch("/booking/:id", cancelBooking);
 
@@ -34,7 +34,7 @@ router.get("/profile/", getAdminProfile);
 router.put("/profile/", editAdminProfile);
 
 // services
-router.get("/category/", getCategories);
+router.get("/categories/", getCategories);
 router.get("/category/:id", getCategory);
 router.get("/category/services/:id", getServicesByCategory);
 router.get("/category/service/:id", getService);
