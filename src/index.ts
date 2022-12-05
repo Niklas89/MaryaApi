@@ -73,8 +73,8 @@ dbConnection
   })
   .catch((err: Error) => {
     console.log(err);
-  });
-*/
+  });*/
+
 app.listen(8080, () => {
   console.log(`server running on port 8080`);
 });

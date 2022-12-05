@@ -101,7 +101,10 @@ const signIn = (req: Express.Request, res: Express.Response) => {
 };
 
 //fonction permettant à un client de s'inscrire
-const signUpClient = (req: Express.Request | any, res: Express.Response) => {
+const signUpClient = async (
+  req: Express.Request | any,
+  res: Express.Response
+) => {
   const {
     firstName,
     lastName,
@@ -112,7 +115,7 @@ const signUpClient = (req: Express.Request | any, res: Express.Response) => {
     postalCode,
     city,
   } = req.body;
-  /*
+
   const t = await dbConnection.transaction({ autocommit: true });
   try {
     const user = await userModel.create(
@@ -124,7 +127,6 @@ const signUpClient = (req: Express.Request | any, res: Express.Response) => {
         isActive: 1,
         idRole: 2,
       },
-      { individualHooks: true },
       { transaction: t }
     );
 
@@ -141,9 +143,10 @@ const signUpClient = (req: Express.Request | any, res: Express.Response) => {
     await t.commit();
     res.status(200).json({ partner, user });
   } catch (error) {
+    res.status(422).send(error.message);
     await t.rollback();
-  }*/
-
+  }
+  /*
   userModel
     .create(
       {
@@ -182,7 +185,7 @@ const signUpClient = (req: Express.Request | any, res: Express.Response) => {
     .catch((e: any) => {
       console.error(e);
       res.status(422).send("Erreur de la création de l'utilisateur.");
-    });
+    });*/
 };
 
 //fonction permettant à un client de s'inscrire
@@ -213,7 +216,6 @@ const signUpPartner = async (
         isActive: 1,
         idRole: 2,
       },
-      { individualHooks: true },
       { transaction: t }
     );
 
@@ -231,6 +233,7 @@ const signUpPartner = async (
     await t.commit();
     res.status(200).json({ partner, user });
   } catch (error) {
+    res.status(422).send(error.message);
     await t.rollback();
   }
 };
