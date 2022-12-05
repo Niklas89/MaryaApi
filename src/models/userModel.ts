@@ -55,7 +55,7 @@ const userModel = dbConnection.define("user", {
     allowNull: false,
     unique: {
       args: true,
-      msg: "L'adresse utilisé est déjà enregistré."
+      msg: "L'adresse mail utilisé est déjà enregistré."
     },
     validate: {
       isEmail: {
