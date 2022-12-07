@@ -326,56 +326,68 @@ import { INTEGER, Sequelize } from "sequelize/types";
     }
   };
 
-  // modifier un partenaire par le commercial
+  // modifier un partenaire par l'admin
   const editPartner = async (req: Express.Request, res: Express.Response) => {
-      // Vérifier si l'utilisateur connecté est bien un admin
-      if(isNotAdmin(req,res)) 
-        res.status(403).send("Accès refusé.");
-    else {
-      const { firstName, lastName, email, phone, birthdate, address, postalCode, city, img, SIRET, IBAN } = req.body;
-      const transaction: Transaction = await dbConnection.transaction();
-      try {
-          //on crée notre utilisateur
-          const user = await userModel.update({
-              firstName: firstName,
-              lastName: lastName,
-              email: email,
-          }, {
-              where: {
-                  id: req.params.id
-              },
-              individualHooks: true,
-          },
-              { transaction: transaction }
-          );
-  
-          const partner = await partnerModel.update({
-              phone: phone,
-              birthdate: birthdate,
-              address: address,
-              postalCode: postalCode,
-              city: city,
-              img: img,
-              SIRET: SIRET,
-              IBAN: IBAN
-          }, {
-              where: {
-                  idUser: req.params.id
-              },
-              individualHooks: true,
-          },
-              { transaction: transaction });
-  
-          //on commit nos changements 
-          await transaction.commit();
-          //on retourner les données de notre utilisateur
-          return res.status(200).json({ user, partner });
-      } catch (err) {
-          res.status(400).send(err);
-          await transaction.rollback();
-      }
+    // Vérifier si l'utilisateur connecté est bien un admin
+    if(isNotAdmin(req,res)) 
+      res.status(403).send("Accès refusé.");
+  else {
+    const firstName = req.body.FirstName; 
+    const lastName = req.body.LastName; 
+    const email = req.body.Email; 
+    const isActive = req.body.IsActive;
+    const deactivatedDate = req.body.DeactivatedDate
+    const phone = req.body.Partner.Phone;
+    const birthdate = req.body.Partner.Birthdate;
+    const address = req.body.Partner.Address; 
+    const postalCode = req.body.Partner.PostalCode; 
+    const city = req.body.Partner.City; 
+    const img = req.body.Partner.Img; 
+    const SIRET = req.body.Partner.SIRET; 
+    const IBAN = req.body.Partner.IBAN;
+    const transaction: Transaction = await dbConnection.transaction();
+    try {
+        //on crée notre utilisateur
+        const user = await userModel.update({
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            isActive: isActive,
+            deactivatedDate: deactivatedDate
+        }, {
+            where: {
+                id: req.params.id
+            }
+        },
+            { transaction: transaction }
+        );
+
+        const partner = await partnerModel.update({
+            phone: phone,
+            birthdate: birthdate,
+            address: address,
+            postalCode: postalCode,
+            city: city,
+            img: img,
+            SIRET: SIRET,
+            IBAN: IBAN
+        }, {
+            where: {
+                idUser: req.params.id
+            }
+        },
+            { transaction: transaction });
+
+        //on commit nos changements 
+        await transaction.commit();
+        //on retourner les données de notre utilisateur
+        return res.status(200).json({ user, partner });
+    } catch (err) {
+        res.status(400).send(err);
+        await transaction.rollback();
     }
-  };
+  }
+};
 
 
 
