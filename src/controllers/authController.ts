@@ -7,13 +7,10 @@ import Role from "../types/roleType";
 import bcrypt from "bcryptjs";
 import roleModel from "../models/roleModel";
 import nodemailer from "nodemailer";
-import { IsEmail } from "sequelize-typescript";
 import { Error, Transaction } from "sequelize/types";
 import { Op } from "sequelize";
 import clientModel from "../models/clientModel";
-import Client from "../types/clientType";
 import partnerModel from "../models/partnerModel";
-import Partner from "../types/partnerType";
 import dbConnection from "../config/dbConfig";
 
 const transporter = nodemailer.createTransport({
@@ -186,6 +183,44 @@ const signUpClient = async (
       console.error(e);
       res.status(422).send("Erreur de la création de l'utilisateur.");
     });*/
+};
+
+//fonction permettant à un admin de s'inscrire
+const signUpAdmin = async (
+  req: Express.Request | any,
+  res: Express.Response
+) => {
+  const {
+    firstName,
+    lastName,
+    email,
+    password
+  } = req.body;
+    userModel
+    .create(
+      {
+        firstName: firstName,
+        lastName: lastName,
+        password: password,
+        email: email,
+        isActive: 1,
+        idRole: 3,
+      },
+      { individualHooks: true }
+    )
+    .then((user: User) => {
+          res.status(201).json({ user });
+          transporter.sendMail({
+            to: user.email,
+            from: "contact@marya.app",
+            subject: "Inscription réussie !",
+            html: "<h1>Vous vous êtes bien inscrit sur Marya.app, félicitations !<h1>",
+          });
+        })
+        .catch((e: any) => {
+          console.error(e);
+          res.status(422).send("Erreur de la création du partenaire.");
+        });
 };
 
 //fonction permettant à un client de s'inscrire
@@ -372,4 +407,5 @@ export {
   postResetPassword,
   getNewPassword,
   postNewPassword,
+  signUpAdmin,
 };
