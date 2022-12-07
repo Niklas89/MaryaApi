@@ -72,7 +72,7 @@ import { INTEGER, Sequelize } from "sequelize/types";
     else {
       userModel.findAll({
         where: { isActive: 1 },
-        attributes: { exclude: ["updatedAt", "deactivatedDate", "idRole"] },
+        attributes: { exclude: ["updatedAt", "idRole"] },
         include: [
           { model: clientModel, attributes: { exclude: ["createdAt", "updatedAt"] } }
         ]
@@ -415,7 +415,7 @@ import { INTEGER, Sequelize } from "sequelize/types";
         res.status(403).send("Accès refusé.");
     else {
       bookingModel.update({
-          cancelDate: req.body.cancelDate,
+          cancelDate: req.body.CancelDate,
           isCancelled: 1,
       }, {
           where: {
