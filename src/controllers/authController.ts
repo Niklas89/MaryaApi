@@ -122,7 +122,7 @@ const signUpClient = async (
         password: password,
         email: email,
         isActive: 1,
-        idRole: 2,
+        idRole: 1,
       },
       { transaction: t }
     );
