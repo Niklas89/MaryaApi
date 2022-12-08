@@ -1,7 +1,8 @@
 import express from "express";
 const router = express.Router();
-import { signIn, signUpClient, postResetPassword, getNewPassword, postNewPassword, signUpPartner } from "../controllers/authController";
+import { signIn, signUpClient, postResetPassword, getNewPassword, postNewPassword, signUpPartner, signUpAdmin } from "../controllers/authController";
 
+router.post("/admin/register", signUpAdmin);
 router.post("/client/register", signUpClient);
 router.post("/partner/register", signUpPartner);
 router.post("/login", signIn);

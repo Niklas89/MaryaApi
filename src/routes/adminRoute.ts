@@ -24,7 +24,7 @@ router.post("/partner/", addPartner);
 router.put("/booking/:id", editBooking);
 router.get("/bookings/", getBookings);
 router.get("/booking/:id", getBooking);
-router.patch("/booking/:id", cancelBooking);
+router.put("/booking/cancel/:id", cancelBooking);
 
 // users
 router.patch("/inactivate/:id", inactivateUser);
