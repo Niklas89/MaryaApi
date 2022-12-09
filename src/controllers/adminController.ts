@@ -160,14 +160,19 @@ const addClient = async (req: Express.Request, res: Express.Response) => {
 
 //fonction permettant de modifier un client par le commercial lui-même
 const editClient = async (
-  req: Express.Request | any,
+  req: Express.Request,
   res: Express.Response
 ) => {
   // Vérifier si l'utilisateur connecté est bien un admin
   if (isNotAdmin(req, res)) res.status(403).send("Accès refusé.");
   else {
-    const { firstName, lastName, email, phone, address, postalCode, city } =
-      req.body;
+    const firstName = req.body.FirstName; 
+    const lastName = req.body.LastName; 
+    const email = req.body.Email; 
+    const phone = req.body.Client.Phone;
+    const address = req.body.Client.Address; 
+    const postalCode = req.body.Client.PostalCode;
+    const city = req.body.Client.City; 
     //on initie la transaction
     const transaction: Transaction = await dbConnection.transaction();
     try {
@@ -182,7 +187,6 @@ const editClient = async (
           where: {
             id: req.params.id,
           },
-          individualHooks: true,
         },
         { transaction: transaction }
       );
@@ -199,7 +203,6 @@ const editClient = async (
           where: {
             idUser: req.params.id,
           },
-          individualHooks: true,
         },
         { transaction: transaction }
       );
