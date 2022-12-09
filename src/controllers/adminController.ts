@@ -63,33 +63,6 @@ const isNotAdmin = (req: Express.Request, res: Express.Response) => {
       }
     };
 
-  // Récupérer les clients
-  const getClients = (req: Express.Request, res: Express.Response) => {
-    // Vérifier si l'utilisateur connecté est bien un admin
-    if(isNotAdmin(req,res)) 
-        res.status(403).send("Accès refusé.");
-    else {
-      userModel.findAll({
-        where: { isActive: 1 },
-        attributes: { exclude: ["updatedAt", "idRole"] },
-        include: [
-          {
-            model: clientModel,
-            where: {
-              idUser_salesHasClient: req.user.id,
-            },
-          },
-        ],
-      })
-      .then((clients: Client) => {
-        res.status(200).json(clients);
-      })
-      .catch((err: Error) => {
-        res.status(409).send(err);
-      });
-  }
-};
-
 // Récupérer les clients
 const getClients = (req: Express.Request, res: Express.Response) => {
   // Vérifier si l'utilisateur connecté est bien un admin
@@ -451,94 +424,33 @@ const getPartners = (req: Express.Request, res: Express.Response) => {
   }
 };
 
-// modifier un partenaire par le commercial
-const editPartner = async (req: Express.Request, res: Express.Response) => {
-  // Vérifier si l'utilisateur connecté est bien un admin
-  if (isNotAdmin(req, res)) res.status(403).send("Accès refusé.");
-  else {
-    const {
-      firstName,
-      lastName,
-      email,
-      phone,
-      birthdate,
-      address,
-      postalCode,
-      city,
-      img,
-      SIRET,
-      IBAN,
-    } = req.body;
-    const transaction: Transaction = await dbConnection.transaction();
-    try {
-      //on crée notre utilisateur
-      const user = await userModel.update(
-        {
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-        },
-        {
-          where: {
-            id: req.params.id,
-          },
-          individualHooks: true,
-        },
-        { transaction: transaction }
-      );
-
-      const partner = await partnerModel.update(
-        {
-          phone: phone,
-          birthdate: birthdate,
-          address: address,
-          postalCode: postalCode,
-          city: city,
-          img: img,
-          SIRET: SIRET,
-          IBAN: IBAN,
-        },
-        {
-          where: {
-            idUser: req.params.id,
-          },
-          individualHooks: true,
-        },
-        { transaction: transaction }
-      );
-
-      //on commit nos changements
-      await transaction.commit();
-      //on retourner les données de notre utilisateur
-      return res.status(200).json({ user, partner });
-    } catch (err) {
-      res.status(400).send(err);
-      await transaction.rollback();
-    }
-  }
-};
-
 /* ******************************************************************** */
 /* ****************************** BOOKINGS **************************** */
 /* ******************************************************************** */
 
 // Modifier un booking via son id par un commercial / admin
-const editBooking = (req: Express.Request, res: Express.Response) => {
-  // Vérifier si l'utilisateur connecté est bien un admin
-  if (isNotAdmin(req, res)) res.status(403).send("Accès refusé.");
-  else {
-    bookingModel
-      .update(
-        {
+    // Modifier un booking via son id par un commercial / admin
+    const editBooking = (req: Express.Request, res: Express.Response) => {
+      // Vérifier si l'utilisateur connecté est bien un admin
+      if(isNotAdmin(req,res)) 
+        res.status(403).send("Accès refusé.");
+    else {
+      bookingModel.update({
           appointementDate: req.body.appointementDate,
           nbHours: req.body.nbHours,
           description: req.body.description,
-          idService: req.body.idService,
-        },
-        {
+          idService: req.body.idService
+      }, {
           where: {
-            id: req.params.id,
-          },
+              id: req.params.id
+          }
+      })
+          .then((booking: Booking) => {
+              res.status(201).json({ booking: booking.id });
+          })
+          .catch((err: Error) => {
+              res.status(409).send(err);
+          });
         }
     };
 
