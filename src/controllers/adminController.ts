@@ -121,7 +121,6 @@ const addClient = async (req: Express.Request, res: Express.Response) => {
     //on initie la transaction
     const transaction: Transaction = await dbConnection.transaction();
     try {
-      //on crée notre utilisateur
       const user = await userModel.create(
         {
           firstName: req.body.firstName,
@@ -133,7 +132,6 @@ const addClient = async (req: Express.Request, res: Express.Response) => {
         { transaction: transaction }
       );
 
-      //on crée un client
       if (user.idRole === 1) {
         await clientModel.create(
           {
