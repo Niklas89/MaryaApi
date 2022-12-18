@@ -381,6 +381,7 @@ const getPartners = (req: Express.Request, res: Express.Response) => {
     const img = req.body.Partner.Img; 
     const SIRET = req.body.Partner.SIRET; 
     const IBAN = req.body.Partner.IBAN;
+    const idCategory = req.body.Partner.IdCategory;
     const transaction: Transaction = await dbConnection.transaction();
     try {
         //on crée notre utilisateur
@@ -406,7 +407,8 @@ const getPartners = (req: Express.Request, res: Express.Response) => {
             city: city,
             img: img,
             SIRET: SIRET,
-            IBAN: IBAN
+            IBAN: IBAN,
+            idCategory: idCategory
         }, {
             where: {
                 idUser: req.params.id
