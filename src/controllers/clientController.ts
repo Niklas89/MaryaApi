@@ -8,18 +8,18 @@ import { Transaction } from "sequelize/types";
 import moment from "moment";
 import { Op } from "sequelize";
 
-
 //ajouter un client
 const addClient = (req: Express.Request | any, res: Express.Response) => {
   const { phone, address, postalCode, city } = req.body;
 
-  clientModel.create({
-    idUser: req.user.id,
-    phone: phone,
-    address: address,
-    postalCode: postalCode,
-    city: city
-  })
+  clientModel
+    .create({
+      idUser: req.user.id,
+      phone: phone,
+      address: address,
+      postalCode: postalCode,
+      city: city,
+    })
     .then((client: Client) => {
       res.status(200).json(client);
     })
@@ -29,35 +29,49 @@ const addClient = (req: Express.Request | any, res: Express.Response) => {
 };
 
 //fonction permettant de modifier un client par le client lui-même
-const editClient = async (req: Express.Request | any, res: Express.Response) => {
-  const { firstName, lastName, email, phone, address, postalCode, city } = req.body;
+const editClient = async (
+  req: Express.Request | any,
+  res: Express.Response
+) => {
+  const { firstName, lastName, email, phone, address, postalCode, city } =
+    req.body;
   //on initie la transaction
   const transaction: Transaction = await dbConnection.transaction();
   try {
     //on modifie notre utilisateur
-    const user = await userModel.update({
-      firstName: firstName,
-      lastName: lastName,
-      email: email
-    }, {
-      where: {
-        id: req.user.id
-      }, individualHooks: false
-    }, { transaction: transaction });
+    const user = await userModel.update(
+      {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+      },
+      {
+        where: {
+          id: req.user.id,
+        },
+        individualHooks: false,
+      },
+      { transaction: transaction }
+    );
 
     //on modifie notre client
-    const client = await clientModel.update({
-      phone: phone,
-      address: address,
-      postalCode: postalCode,
-      city: city
-    }, {
-      where: {
-        idUser: req.user.id
-      }, individualHooks: false
-    }, { transaction: transaction });
+    const client = await clientModel.update(
+      {
+        phone: phone,
+        address: address,
+        postalCode: postalCode,
+        city: city,
+      },
+      {
+        where: {
+          idUser: req.user.id,
+        },
+        individualHooks: false,
+      },
+      { transaction: transaction }
+    );
 
-    //on commit nos changements 
+    //on commit nos changements
     await transaction.commit();
     //on retourner les données de notre utilisateur
     return res.status(200).json({ user, client });
@@ -69,16 +83,17 @@ const editClient = async (req: Express.Request | any, res: Express.Response) => 
 
 //Récupérer le client par l'id dans son token
 const getClientProfile = (req: Express.Request, res: Express.Response) => {
-  userModel.findByPk(req.user.id, {
-    include: [
-      {
-        model: clientModel,
-        where: {
-          idUser: req.user.id
-        }
-      }
-    ]
-  })
+  userModel
+    .findByPk(req.user.id, {
+      include: [
+        {
+          model: clientModel,
+          where: {
+            idUser: req.user.id,
+          },
+        },
+      ],
+    })
     .then((client: Client) => {
       res.status(200).json(client);
     })
@@ -95,7 +110,7 @@ const getClientBooking = (req: Express.Request, res: Express.Response) => {
   //On instancie les variable à null
   let whereClause = null;
   let acceptedClause = null;
-  //Pour les dates on verifie si c'est un date supperieur à aujourd'hui, 
+  //Pour les dates on verifie si c'est un date supperieur à aujourd'hui,
   if (dateType === "future") {
     whereClause = { [Op.gt]: moment().add(1, "d").format("YYYY-MM-DD") };
   }
@@ -105,38 +120,73 @@ const getClientBooking = (req: Express.Request, res: Express.Response) => {
   }
   //Sinon si c'est une date égale à aujourd'hui
   else {
-    whereClause = { [Op.between]: [moment().format("YYYY-MM-DD"), moment().add(1, "d").format("YYYY-MM-DD")] };
+    whereClause = {
+      [Op.between]: [
+        moment().format("YYYY-MM-DD"),
+        moment().add(1, "d").format("YYYY-MM-DD"),
+      ],
+    };
   }
   //Pour l'acceptation de la prestation :
   if (accepted === "true") {
-    acceptedClause = true
+    acceptedClause = true;
   } else {
-    acceptedClause = false
+    acceptedClause = false;
   }
   //On fait deux jointure dans la même requette
-  userModel.findByPk(req.user.id, {
-    attributes: ["firstName", "lastName"],
-    include: [
-      {
-        model: clientModel,
-        attributes: ["idUser"],
+  // userModel.findByPk(req.user.id, {
+  //   attributes: ["firstName", "lastName"],
+  //   include: [
+  //     {
+  //       model: clientModel,
+  //       attributes: ["idUser"],
+  //       where: {
+  //         idUser: req.user.id
+  //       },
+  //       order: [[bookingModel, "appointmentDate", "ASC"]],
+  //       include: {
+  //         model: bookingModel,
+  //         attributes: ["id", "appointmentDate", "nbHours", "description", "totalPrice", "accepted", "idService", "isPaid"],
+  //         where: {
+  //           appointmentDate: whereClause,
+  //           accepted: acceptedClause,
+  //           isCancelled: {
+  //             [Op.eq]: 0
+  //           }
+  //         }
+  //       }
+  //     }
+  //   ]
+  // })
+  
+  clientModel
+    .findOne({
+      attributes: ["idUser"],
+      where: {
+        idUser: req.user.id,
+      },
+      order: [[bookingModel, "appointmentDate", "ASC"]],
+      include: {
+        model: bookingModel,
+        attributes: [
+          "id",
+          "appointmentDate",
+          "nbHours",
+          "description",
+          "totalPrice",
+          "accepted",
+          "idService",
+          "isPaid",
+        ],
         where: {
-          idUser: req.user.id
+          appointmentDate: whereClause,
+          accepted: acceptedClause,
+          isCancelled: {
+            [Op.eq]: 0,
+          },
         },
-        include: {
-          model: bookingModel,
-          attributes: ["id", "appointmentDate", "nbHours", "description", "totalPrice", "accepted", "idService", "accepted"],
-          where: {
-            appointmentDate: whereClause,
-            accepted: acceptedClause,
-            isCancelled: {
-              [Op.eq]: 0
-            }
-          }
-        }
-      }
-    ]
-  })
+      },
+    })
     .then((client: Client) => {
       res.status(201).json(client);
     })
@@ -145,8 +195,4 @@ const getClientBooking = (req: Express.Request, res: Express.Response) => {
     });
 };
 
-
 export { editClient, getClientProfile, getClientBooking, addClient };
-
-
-
