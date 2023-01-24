@@ -14,7 +14,7 @@ const checkout = (req: Express.Request | any, res: Express.Response) => {
       line_items: [
         {
           price: req.body.priceId,
-          quantity: req.body.nbHours,
+          quantity: req.body.nbHours ? req.body.nbHours : 1,
         },
       ],
       mode: "payment",
