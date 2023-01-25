@@ -636,7 +636,7 @@ const addCategory = (req: Express.Request, res: Express.Response) => {
   if (isNotAdmin(req, res)) res.status(403).send("Accès refusé.");
   else {
     categoryModel
-      .create({ name: req.body.name })
+      .create({ name: req.body.Name })
       .then((category: Category) => {
         res.status(201).json({ category });
       })
