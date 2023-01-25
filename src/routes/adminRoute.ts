@@ -4,7 +4,9 @@ const router = express.Router();
 import { getAdminProfile, editAdminProfile, getRecrutedClients, getRecrutedPartners, getClients, getClient,
     addClient, editClient, getPartners, getPartnerProfile, addPartner, editPartner,
      editBooking, cancelBooking, getBooking, getBookings,  inactivateUser,
-     getCategories, getCategory, addCategory, editCategory, getServicesByCategory, getService, addService, editService } from "../controllers/adminController";
+     getCategories, getCategory, addCategory, editCategory, 
+     getServicesByCategory, getService, addService, editService,
+        getTypes } from "../controllers/adminController";
 
 // clients
 router.get("/client/recruted/", getRecrutedClients);
@@ -42,5 +44,8 @@ router.post("/category/", addCategory);
 router.post("/category/service/", addService);
 router.put("/category/:id", editCategory);
 router.put("/category/service/:id", editService);
+
+// types
+router.get("/types/", getTypes);
 
 export default router;

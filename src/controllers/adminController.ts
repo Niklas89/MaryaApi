@@ -4,6 +4,7 @@ import partnerModel from "../models/partnerModel";
 import bookingModel from "../models/bookingModel";
 import serviceModel from "../models/serviceModel";
 import categoryModel from "../models/categoryModel";
+import typeModel from "../models/typeModel";
 import User from "../types/userType";
 import Client from "../types/clientType";
 import Partner from "../types/partnerType";
@@ -31,6 +32,7 @@ const isNotAdmin = (req: Express.Request, res: Express.Response) => {
     4. USERS
     5. ADMIN
     6. SERVICES
+    7. TYPES
   */
 
 
@@ -704,10 +706,11 @@ const addService = (req: Express.Request, res: Express.Response) => {
   else {
     serviceModel
       .create({
-        name: req.body.name,
-        idCategory: req.body.idCategory,
-        idType: req.body.idCategory,
-        price: req.body.price,
+        name: req.body.Name,
+        idCategory: req.body.IdCategory,
+        idType: req.body.IdType,
+        price: req.body.Price,
+        priceId: req.body.PriceId
       })
       .then((service: Service) => {
         res.status(201).json({ service });
@@ -725,19 +728,38 @@ const editService = (req: Express.Request, res: Express.Response) => {
     serviceModel
       .update(
         {
-          name: req.body.name,
-          idCategory: req.body.idCategory,
-          idType: req.body.idCategory,
-          price: req.body.price,
+          name: req.body.Name,
+          idType: req.body.IdType,
+          price: req.body.Price,
+          priceId: req.body.PriceId
         },
         {
           where: {
-            idService: req.params.id,
+            id: req.params.id,
           },
         }
       )
       .then((service: Service) => {
         res.status(201).json({ service });
+      })
+      .catch((err: Error) => {
+        res.status(409).send(err);
+      });
+  }
+};
+
+/* ******************************************************************** */
+/* **************************** TYPES ****************************** */
+/* ******************************************************************** */
+
+//Récupérer tous les types
+const getTypes = (req: Express.Request, res: Express.Response) => {
+  if (isNotAdmin(req, res)) res.status(403).send("Accès refusé.");
+  else {
+    typeModel
+      .findAll()
+      .then((categories: Category) => {
+        res.status(200).json(categories);
       })
       .catch((err: Error) => {
         res.status(409).send(err);
@@ -771,4 +793,5 @@ export {
   getService,
   addService,
   editService,
+  getTypes,
 };
