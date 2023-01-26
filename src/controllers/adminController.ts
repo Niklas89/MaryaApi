@@ -123,11 +123,12 @@ const addClient = async (req: Express.Request, res: Express.Response) => {
     try {
       const user = await userModel.create(
         {
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
-          email: req.body.email,
-          password: req.body.password,
-          idRole: req.body.idRole,
+          firstName: req.body.FirstName,
+          lastName: req.body.LastName,
+          password: req.body.Password,
+          email: req.body.Email,
+          isActive: 1,
+          idRole: 1,
         },
         { transaction: transaction }
       );
@@ -137,10 +138,10 @@ const addClient = async (req: Express.Request, res: Express.Response) => {
           {
             idUser: user.id,
             idUser_salesHasClient: req.user.id,
-            phone: req.body.phone,
-            address: req.body.address,
-            postalCode: req.body.postalCode,
-            city: req.body.city,
+            phone: req.body.Client.Phone,
+            address: req.body.Client.Address,
+            postalCode: req.body.Client.PostalCode,
+            city: req.body.Client.City,
           },
           { transaction: transaction }
         );
@@ -328,27 +329,30 @@ const getPartners = (req: Express.Request, res: Express.Response) => {
       const transaction: Transaction = await dbConnection.transaction();
       try {
           //on crée notre utilisateur
+          console.log(req.body.Partner.IBAN);
+          
           const user = await userModel.create({
-              firstName: req.body.firstName,
-              lastName: req.body.lastName,
-              email: req.body.email,
-              password: req.body.password,
-              idRole: req.body.idRole
+              firstName: req.body.FirstName,
+              lastName: req.body.LastName,
+              password: req.body.Password,
+              email: req.body.Email,
+              isActive: 1,
+              idRole: 2,
           }, { transaction: transaction });
   
           //on crée un client 
           if (user.idRole === 2) {
               await partnerModel.create({
                   idUser: user.id,
-                  phone: req.body.phone,
-                  birthdate: req.body.birthdate,
-                  address: req.body.address,
-                  postalCode: req.body.postalCode,
-                  city: req.body.city,
-                  SIRET: req.body.siret,
-                  IBAN : req.body.iban,
+                  phone: req.body.Partner.Phone,
+                  birthdate: req.body.Partner.Birthdate,
+                  address: req.body.Partner.Address,
+                  postalCode: req.body.Partner.PostalCode,
+                  city: req.body.Partner.City,
+                  SIRET: req.body.Partner.SIRET,
+                  IBAN : req.body.Partner.IBAN,
                   idUser_salesHasPartner: req.user.id,
-                  idCategory: req.body.idCategory
+                  idCategory: req.body.Partner.IdCategory
               }, { transaction: transaction })
           }
   

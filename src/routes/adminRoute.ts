@@ -27,7 +27,7 @@ router.get("/booking/:id", getBooking);
 router.put("/booking/cancel/:id", cancelBooking);
 
 // users
-router.patch("/inactivate/:id", inactivateUser);
+router.put("/inactivate/:id", inactivateUser);
 
 // admin
 router.get("/profile/", getAdminProfile);
