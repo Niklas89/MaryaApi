@@ -5,7 +5,7 @@ import { getAdminProfile, editAdminProfile, getRecrutedClients, getRecrutedPartn
     addClient, editClient, getPartners, getPartnerProfile, addPartner, editPartner,
      editBooking, cancelBooking, getBooking, getBookings, getBookingsByService,  inactivateUser,
      getCategories, getCategory, addCategory, editCategory, 
-     getServicesByCategory, getService, addService, deleteService, editService,
+     getServicesByCategory, getService, addService, deleteService, editService, getServices,
         getTypes } from "../controllers/adminController";
 
 // clients
@@ -38,6 +38,7 @@ router.put("/profile/", editAdminProfile);
 
 // services
 router.get("/categories/", getCategories);
+router.get("/services/", getServices);
 router.get("/category/:id", getCategory);
 router.get("/category/services/:id", getServicesByCategory);
 router.get("/category/service/:id", getService);
