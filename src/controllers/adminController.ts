@@ -501,6 +501,23 @@ const getBooking = (req: Express.Request, res: Express.Response) => {
   }
 };
 
+//Récupérer par l'id un service
+const getBookingsByService = (req: Express.Request, res: Express.Response) => {
+  // Vérifier si l'utilisateur connecté est bien un admin
+  if (isNotAdmin(req, res)) res.status(403).send("Accès refusé.");
+  else {
+    bookingModel
+      .findAll({ where: { idService: req.params.id } })
+      .then((booking: Booking) => {
+        res.status(200).json(booking);
+      })
+      .catch((err: Error) => {
+        res.status(409).send(err);
+      });
+  }
+};
+
+
 //Récupérer toutes les réservations
 const getBookings = (req: Express.Request, res: Express.Response) => {
   // Vérifier si l'utilisateur connecté est bien un admin
@@ -721,6 +738,28 @@ const addService = (req: Express.Request, res: Express.Response) => {
   }
 };
 
+//Supprimer un service
+const deleteService = (req: Express.Request, res: Express.Response) => {
+  if (isNotAdmin(req, res)) res.status(403).send("Accès refusé.");
+  else {
+    serviceModel
+      .destroy(
+        {
+          where: {
+            id: req.params.id,
+          }
+        }
+      )
+      .then((service: Service) => {
+        res.status(201).json({ service });
+      })
+      .catch((err: Error) => {
+        res.status(409).send(err);
+      });
+  }
+};
+
+
 //Modifier un service, avec son type et son tarif
 const editService = (req: Express.Request, res: Express.Response) => {
   if (isNotAdmin(req, res)) res.status(403).send("Accès refusé.");
@@ -783,6 +822,7 @@ export {
   editBooking,
   cancelBooking,
   getBooking,
+  getBookingsByService,
   getBookings,
   inactivateUser,
   getCategories,
@@ -792,6 +832,7 @@ export {
   getServicesByCategory,
   getService,
   addService,
+  deleteService,
   editService,
   getTypes,
 };
