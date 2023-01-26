@@ -3,9 +3,9 @@ const router = express.Router();
 
 import { getAdminProfile, editAdminProfile, getRecrutedClients, getRecrutedPartners, getClients, getClient,
     addClient, editClient, getPartners, getPartnerProfile, addPartner, editPartner,
-     editBooking, cancelBooking, getBooking, getBookings,  inactivateUser,
+     editBooking, cancelBooking, getBooking, getBookings, getBookingsByService,  inactivateUser,
      getCategories, getCategory, addCategory, editCategory, 
-     getServicesByCategory, getService, addService, editService,
+     getServicesByCategory, getService, addService, deleteService, editService,
         getTypes } from "../controllers/adminController";
 
 // clients
@@ -26,6 +26,7 @@ router.post("/partner/", addPartner);
 router.put("/booking/:id", editBooking);
 router.get("/bookings/", getBookings);
 router.get("/booking/:id", getBooking);
+router.get("/bookings/service/:id", getBookingsByService);
 router.put("/booking/cancel/:id", cancelBooking);
 
 // users
@@ -40,6 +41,7 @@ router.get("/categories/", getCategories);
 router.get("/category/:id", getCategory);
 router.get("/category/services/:id", getServicesByCategory);
 router.get("/category/service/:id", getService);
+router.delete("/category/service/:id", deleteService);
 router.post("/category/", addCategory);
 router.post("/category/service/", addService);
 router.put("/category/:id", editCategory);
