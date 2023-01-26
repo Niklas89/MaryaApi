@@ -791,6 +791,22 @@ const editService = (req: Express.Request, res: Express.Response) => {
   }
 };
 
+//Récupérer tous les services
+const getServices = (req: Express.Request, res: Express.Response) => {
+  if (isNotAdmin(req, res)) res.status(403).send("Accès refusé.");
+  else {
+    serviceModel
+      .findAll()
+      .then((services: Service) => {
+        res.status(200).json(services);
+      })
+      .catch((err: Error) => {
+        res.status(409).send(err);
+      });
+  }
+};
+
+
 /* ******************************************************************** */
 /* **************************** TYPES ****************************** */
 /* ******************************************************************** */
@@ -836,6 +852,7 @@ export {
   getServicesByCategory,
   getService,
   addService,
+  getServices,
   deleteService,
   editService,
   getTypes,
