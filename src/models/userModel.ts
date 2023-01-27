@@ -46,7 +46,7 @@ const userModel = dbConnection.define("user", {
       },
       is: {
         args: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d@$!%*#?&\/]{6,50}$/,
-        msg: "Le champ contient des caractères non autorisés."
+        msg: "Le mot de passe contient des caractères non autorisés."
       }
     }
   },
@@ -68,7 +68,7 @@ const userModel = dbConnection.define("user", {
       },
       is: { // voir: https://tutorial.eyehunts.com/js/email-regex-javascript-validation-example-code/
         args: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-        msg: "Le champ contient des caractères non autorisés."
+        msg: "L'adresse email contient des caractères non autorisés."
       }
     }
   },
