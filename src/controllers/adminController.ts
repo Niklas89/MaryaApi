@@ -35,35 +35,34 @@ const isNotAdmin = (req: Express.Request, res: Express.Response) => {
     7. TYPES
   */
 
+/* ******************************************************************** */
+/* ****************************** CLIENTS ******************************* */
+/* ******************************************************************** */
 
-  /* ******************************************************************** */
-  /* ****************************** CLIENTS ******************************* */
-  /* ******************************************************************** */
-
-  // Récupérer les clients que le commercial a recruté 
-  const getRecrutedClients = (req: Express.Request, res: Express.Response) => {
-    // Vérifier si l'utilisateur connecté est bien un admin
-      if(isNotAdmin(req,res)) 
-        res.status(403).send("Accès refusé.");
-      else {
-        userModel.findAll({ 
-          include: [
-            { 
-                model: clientModel,
-                where: {
-                  idUser_salesHasClient:  req.user.id
-                } 
-            }
-          ]
-        })
-          .then((clients: Client) => {
-            res.status(200).json(clients);
-          })
-          .catch((err: Error) => {
-            res.status(409).send(err);
-          });
-      }
-    };
+// Récupérer les clients que le commercial a recruté
+const getRecrutedClients = (req: Express.Request, res: Express.Response) => {
+  // Vérifier si l'utilisateur connecté est bien un admin
+  if (isNotAdmin(req, res)) res.status(403).send("Accès refusé.");
+  else {
+    userModel
+      .findAll({
+        include: [
+          {
+            model: clientModel,
+            where: {
+              idUser_salesHasClient: req.user.id,
+            },
+          },
+        ],
+      })
+      .then((clients: Client) => {
+        res.status(200).json(clients);
+      })
+      .catch((err: Error) => {
+        res.status(409).send(err);
+      });
+  }
+};
 
 // Récupérer les clients
 const getClients = (req: Express.Request, res: Express.Response) => {
@@ -154,26 +153,24 @@ const addClient = async (req: Express.Request, res: Express.Response) => {
       //on retourner les données de notre utilisateur
       return res.status(201).json(user);
     } catch (err) {
+      res.status(409).send(err.errors[0].message);
       await transaction.rollback();
     }
   }
 };
 
 //fonction permettant de modifier un client par le commercial lui-même
-const editClient = async (
-  req: Express.Request,
-  res: Express.Response
-) => {
+const editClient = async (req: Express.Request, res: Express.Response) => {
   // Vérifier si l'utilisateur connecté est bien un admin
   if (isNotAdmin(req, res)) res.status(403).send("Accès refusé.");
   else {
-    const firstName = req.body.FirstName; 
-    const lastName = req.body.LastName; 
-    const email = req.body.Email; 
+    const firstName = req.body.FirstName;
+    const lastName = req.body.LastName;
+    const email = req.body.Email;
     const phone = req.body.Client.Phone;
-    const address = req.body.Client.Address; 
+    const address = req.body.Client.Address;
     const postalCode = req.body.Client.PostalCode;
-    const city = req.body.Client.City; 
+    const city = req.body.Client.City;
     //on initie la transaction
     const transaction: Transaction = await dbConnection.transaction();
     try {
@@ -283,152 +280,172 @@ const getPartners = (req: Express.Request, res: Express.Response) => {
                   model: categoryModel,
                   attributes: ["id", "name"],
               }] */
-            }]
-        })
-            .then((partners: Partner) => {
-                res.status(200).json(partners);
-            })
-            .catch((err: any) => {
-                res.status(409).send(err);
-            });
-        }
-    };
-    
-    //Récupérer un partenaire
-    const getPartnerProfile = (req: Express.Request, res: Express.Response) => {
-        // Vérifier si l'utilisateur connecté est bien un admin
-        if(isNotAdmin(req,res)) 
-          res.status(403).send("Accès refusé.");
-        else {
-        userModel.findByPk(
-            req.params.id,
-            {
-                include: [{
-                    model: partnerModel,
-                    where: {
-                        idUser: req.params.id
-                    },
-                    attributes: ["phone", "birthdate", "address", "postalCode", "city", "SIRET", "IBAN", "idCategory"]
-                }],
-                attributes: ["id", "firstName", "lastName", "email", "idRole"]
-            })
-            .then((partner: Partner) => {
-                res.status(200).json(partner);
-            })
-            .catch((err: any) => {
-                res.status(409).send(err);
-            });
-          }
-    };
-  
-  // Créer un partenaire par le commercial
-  const addPartner = async (req: Express.Request, res: Express.Response) => {
-      // Vérifier si l'utilisateur connecté est bien un admin
-      if(isNotAdmin(req,res)) 
-        res.status(403).send("Accès refusé.");
-    else {
-      //on initie la transaction
-      const transaction: Transaction = await dbConnection.transaction();
-      try {
-          //on crée notre utilisateur
-          console.log(req.body.Partner.IBAN);
-          
-          const user = await userModel.create({
-              firstName: req.body.FirstName,
-              lastName: req.body.LastName,
-              password: req.body.Password,
-              email: req.body.Email,
-              isActive: 1,
-              idRole: 2,
-          }, { transaction: transaction });
-  
-          //on crée un client 
-          if (user.idRole === 2) {
-              await partnerModel.create({
-                  idUser: user.id,
-                  phone: req.body.Partner.Phone,
-                  birthdate: req.body.Partner.Birthdate,
-                  address: req.body.Partner.Address,
-                  postalCode: req.body.Partner.PostalCode,
-                  city: req.body.Partner.City,
-                  SIRET: req.body.Partner.SIRET,
-                  IBAN : req.body.Partner.IBAN,
-                  idUser_salesHasPartner: req.user.id,
-                  idCategory: req.body.Partner.IdCategory
-              }, { transaction: transaction })
-          }
-  
-          //on commit nos changements 
-          await transaction.commit();
-          //on retourner les données de notre utilisateur
-          return res.status(201).json(user);
-      } catch (err) {
-          await transaction.rollback();
-      }
-    }
-  };
+          },
+        ],
+      })
+      .then((partners: Partner) => {
+        res.status(200).json(partners);
+      })
+      .catch((err: any) => {
+        res.status(409).send(err);
+      });
+  }
+};
 
-  // modifier un partenaire par l'admin
-  const editPartner = async (req: Express.Request, res: Express.Response) => {
-    // Vérifier si l'utilisateur connecté est bien un admin
-    if(isNotAdmin(req,res)) 
-      res.status(403).send("Accès refusé.");
+//Récupérer un partenaire
+const getPartnerProfile = (req: Express.Request, res: Express.Response) => {
+  // Vérifier si l'utilisateur connecté est bien un admin
+  if (isNotAdmin(req, res)) res.status(403).send("Accès refusé.");
   else {
-    const firstName = req.body.FirstName; 
-    const lastName = req.body.LastName; 
-    const email = req.body.Email; 
+    userModel
+      .findByPk(req.params.id, {
+        include: [
+          {
+            model: partnerModel,
+            where: {
+              idUser: req.params.id,
+            },
+            attributes: [
+              "phone",
+              "birthdate",
+              "address",
+              "postalCode",
+              "city",
+              "SIRET",
+              "IBAN",
+              "idCategory",
+            ],
+          },
+        ],
+        attributes: ["id", "firstName", "lastName", "email", "idRole"],
+      })
+      .then((partner: Partner) => {
+        res.status(200).json(partner);
+      })
+      .catch((err: any) => {
+        res.status(409).send(err);
+      });
+  }
+};
+
+// Créer un partenaire par le commercial
+const addPartner = async (req: Express.Request, res: Express.Response) => {
+  // Vérifier si l'utilisateur connecté est bien un admin
+  if (isNotAdmin(req, res)) res.status(403).send("Accès refusé.");
+  else {
+    //on initie la transaction
+    const transaction: Transaction = await dbConnection.transaction();
+    try {
+      //on crée notre utilisateur
+      console.log(req.body.Partner.IBAN);
+
+      const user = await userModel.create(
+        {
+          firstName: req.body.FirstName,
+          lastName: req.body.LastName,
+          password: req.body.Password,
+          email: req.body.Email,
+          isActive: 1,
+          idRole: 2,
+        },
+        { transaction: transaction }
+      );
+
+      //on crée un client
+      if (user.idRole === 2) {
+        await partnerModel.create(
+          {
+            idUser: user.id,
+            phone: req.body.Partner.Phone,
+            birthdate: req.body.Partner.Birthdate,
+            address: req.body.Partner.Address,
+            postalCode: req.body.Partner.PostalCode,
+            city: req.body.Partner.City,
+            SIRET: req.body.Partner.SIRET,
+            IBAN: req.body.Partner.IBAN,
+            idUser_salesHasPartner: req.user.id,
+            idCategory: req.body.Partner.IdCategory,
+          },
+          { transaction: transaction }
+        );
+      }
+
+      //on commit nos changements
+      await transaction.commit();
+      //on retourner les données de notre utilisateur
+      return res.status(201).json(user);
+    } catch (err) {
+      res.status(409).send(err.errors[0].message);
+      await transaction.rollback();
+    }
+  }
+};
+
+// modifier un partenaire par l'admin
+const editPartner = async (req: Express.Request, res: Express.Response) => {
+  // Vérifier si l'utilisateur connecté est bien un admin
+  if (isNotAdmin(req, res)) res.status(403).send("Accès refusé.");
+  else {
+    const firstName = req.body.FirstName;
+    const lastName = req.body.LastName;
+    const email = req.body.Email;
     const isActive = req.body.IsActive;
-    const deactivatedDate = req.body.DeactivatedDate
+    const deactivatedDate = req.body.DeactivatedDate;
     const phone = req.body.Partner.Phone;
     const birthdate = req.body.Partner.Birthdate;
-    const address = req.body.Partner.Address; 
-    const postalCode = req.body.Partner.PostalCode; 
-    const city = req.body.Partner.City; 
-    const img = req.body.Partner.Img; 
-    const SIRET = req.body.Partner.SIRET; 
+    const address = req.body.Partner.Address;
+    const postalCode = req.body.Partner.PostalCode;
+    const city = req.body.Partner.City;
+    const img = req.body.Partner.Img;
+    const SIRET = req.body.Partner.SIRET;
     const IBAN = req.body.Partner.IBAN;
     const idCategory = req.body.Partner.IdCategory;
     const transaction: Transaction = await dbConnection.transaction();
     try {
-        //on crée notre utilisateur
-        const user = await userModel.update({
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            isActive: isActive,
-            deactivatedDate: deactivatedDate
-        }, {
-            where: {
-                id: req.params.id
-            }
+      //on crée notre utilisateur
+      const user = await userModel.update(
+        {
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          isActive: isActive,
+          deactivatedDate: deactivatedDate,
         },
-            { transaction: transaction }
-        );
-
-        const partner = await partnerModel.update({
-            phone: phone,
-            birthdate: birthdate,
-            address: address,
-            postalCode: postalCode,
-            city: city,
-            img: img,
-            SIRET: SIRET,
-            IBAN: IBAN,
-            idCategory: idCategory
-        }, {
-            where: {
-                idUser: req.params.id
-            }
+        {
+          where: {
+            id: req.params.id,
+          },
         },
-            { transaction: transaction });
+        { transaction: transaction }
+      );
 
-        //on commit nos changements 
-        await transaction.commit();
-        //on retourner les données de notre utilisateur
-        return res.status(200).json({ user, partner });
+      const partner = await partnerModel.update(
+        {
+          phone: phone,
+          birthdate: birthdate,
+          address: address,
+          postalCode: postalCode,
+          city: city,
+          img: img,
+          SIRET: SIRET,
+          IBAN: IBAN,
+          idCategory: idCategory,
+        },
+        {
+          where: {
+            idUser: req.params.id,
+          },
+        },
+        { transaction: transaction }
+      );
+
+      //on commit nos changements
+      await transaction.commit();
+      //on retourner les données de notre utilisateur
+      return res.status(200).json({ user, partner });
     } catch (err) {
-        res.status(400).send(err);
-        await transaction.rollback()
+      res.status(400).send(err);
+      await transaction.rollback();
     }
   }
 };
@@ -438,38 +455,42 @@ const getPartners = (req: Express.Request, res: Express.Response) => {
 /* ******************************************************************** */
 
 // Modifier un booking via son id par un commercial / admin
-    // Modifier un booking via son id par un commercial / admin
-    const editBooking = (req: Express.Request, res: Express.Response) => {
-      // Vérifier si l'utilisateur connecté est bien un admin
-      if(isNotAdmin(req,res)) 
-        res.status(403).send("Accès refusé.");
-    else {
-      bookingModel.update({
+// Modifier un booking via son id par un commercial / admin
+const editBooking = (req: Express.Request, res: Express.Response) => {
+  // Vérifier si l'utilisateur connecté est bien un admin
+  if (isNotAdmin(req, res)) res.status(403).send("Accès refusé.");
+  else {
+    bookingModel
+      .update(
+        {
           appointementDate: req.body.appointementDate,
           nbHours: req.body.nbHours,
           description: req.body.description,
-          idService: req.body.idService
-      }, {
+          idService: req.body.idService,
+        },
+        {
           where: {
-              id: req.params.id
-          }
-      })
-          .then((booking: Booking) => {
-              res.status(201).json({ booking: booking.id });
-          })
-          .catch((err: Error) => {
-              res.status(409).send(err);
-          });
+            id: req.params.id,
+          },
         }
-    };
+      )
+      .then((booking: Booking) => {
+        res.status(201).json({ booking: booking.id });
+      })
+      .catch((err: Error) => {
+        res.status(409).send(err);
+      });
+  }
+};
 
-    // Annuler une prestation
-    const cancelBooking = (req: Express.Request, res: Express.Response) => {
-      // Vérifier si l'utilisateur connecté est bien un admin
-      if(isNotAdmin(req,res)) 
-        res.status(403).send("Accès refusé.");
-    else {
-      bookingModel.update({
+// Annuler une prestation
+const cancelBooking = (req: Express.Request, res: Express.Response) => {
+  // Vérifier si l'utilisateur connecté est bien un admin
+  if (isNotAdmin(req, res)) res.status(403).send("Accès refusé.");
+  else {
+    bookingModel
+      .update(
+        {
           cancelDate: req.body.CancelDate,
           isCancelled: 1,
         },
@@ -520,7 +541,6 @@ const getBookingsByService = (req: Express.Request, res: Express.Response) => {
       });
   }
 };
-
 
 //Récupérer toutes les réservations
 const getBookings = (req: Express.Request, res: Express.Response) => {
@@ -731,7 +751,7 @@ const addService = (req: Express.Request, res: Express.Response) => {
         idCategory: req.body.IdCategory,
         idType: req.body.IdType,
         price: req.body.Price,
-        priceId: req.body.PriceId
+        priceId: req.body.PriceId,
       })
       .then((service: Service) => {
         res.status(201).json({ service });
@@ -747,13 +767,11 @@ const deleteService = (req: Express.Request, res: Express.Response) => {
   if (isNotAdmin(req, res)) res.status(403).send("Accès refusé.");
   else {
     serviceModel
-      .destroy(
-        {
-          where: {
-            id: req.params.id,
-          }
-        }
-      )
+      .destroy({
+        where: {
+          id: req.params.id,
+        },
+      })
       .then((service: Service) => {
         res.status(201).json({ service });
       })
@@ -762,7 +780,6 @@ const deleteService = (req: Express.Request, res: Express.Response) => {
       });
   }
 };
-
 
 //Modifier un service, avec son type et son tarif
 const editService = (req: Express.Request, res: Express.Response) => {
@@ -774,7 +791,7 @@ const editService = (req: Express.Request, res: Express.Response) => {
           name: req.body.Name,
           idType: req.body.IdType,
           price: req.body.Price,
-          priceId: req.body.PriceId
+          priceId: req.body.PriceId,
         },
         {
           where: {
