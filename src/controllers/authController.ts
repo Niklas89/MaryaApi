@@ -214,12 +214,13 @@ const signUpAdmin = async (
             to: user.email,
             from: "contact@marya.app",
             subject: "Inscription réussie !",
-            html: "<h1>Vous vous êtes bien inscrit sur Marya.app, félicitations !<h1>",
+            html: "<h1>Vous êtes bien inscrit comme membre Administrateur sur Marya.app, félicitations !<h1>"
+            + "<p>Veuillez vous connecter sur l'application bureautique et changer de mot de passe dans votre page profil.</p>",
           });
         })
         .catch((e: any) => {
           console.error(e);
-          res.status(422).send("Erreur de la création du partenaire.");
+          res.status(422).send("Erreur de la création du membre administrateur.");
         });
 };
 
