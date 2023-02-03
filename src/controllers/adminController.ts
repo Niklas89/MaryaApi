@@ -711,6 +711,27 @@ const editCategory = async (req: Express.Request, res: Express.Response) => {
   }
 };
 
+//Supprimer une catégorie
+const deleteCategory = (req: Express.Request, res: Express.Response) => {
+  if (isNotAdmin(req, res)) res.status(403).send("Accès refusé.");
+  else {
+    categoryModel
+      .destroy(
+        {
+          where: {
+            id: req.params.id,
+          }
+        }
+      )
+      .then((category: Category) => {
+        res.status(201).json({ category });
+      })
+      .catch((err: Error) => {
+        res.status(409).send(err);
+      });
+  }
+};
+
 // Récupérer tous les services par catégorie - l'id de la catégorie est passé en paramètre
 const getServicesByCategory = (req: Express.Request, res: Express.Response) => {
   if (isNotAdmin(req, res)) res.status(403).send("Accès refusé.");
@@ -866,6 +887,7 @@ export {
   getCategory,
   addCategory,
   editCategory,
+  deleteCategory,
   getServicesByCategory,
   getService,
   addService,
