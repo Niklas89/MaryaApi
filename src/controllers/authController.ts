@@ -196,7 +196,7 @@ const signUpAdmin = async (
     email,
     password
   } = req.body;
-    userModel
+  userModel
     .create(
       {
         firstName: firstName,
@@ -209,19 +209,19 @@ const signUpAdmin = async (
       { individualHooks: true }
     )
     .then((user: User) => {
-          res.status(201).json({ user });
-          transporter.sendMail({
-            to: user.email,
-            from: "contact@marya.app",
-            subject: "Inscription réussie !",
-            html: "<h1>Vous êtes bien inscrit comme membre Administrateur sur Marya.app, félicitations !<h1>"
-            + "<p>Veuillez vous connecter sur l'application bureautique et changer de mot de passe dans votre page profil.</p>",
-          });
-        })
-        .catch((e: any) => {
-          console.error(e);
-          res.status(422).send("Erreur de la création du membre administrateur.");
-        });
+      res.status(201).json({ user });
+      transporter.sendMail({
+        to: user.email,
+        from: "contact@marya.app",
+        subject: "Inscription réussie !",
+        html: "<h1>Vous êtes bien inscrit comme membre Administrateur sur Marya.app, félicitations !<h1>"
+          + "<p>Veuillez vous connecter sur l'application bureautique et changer de mot de passe dans votre page profil.</p>",
+      });
+    })
+    .catch((e: any) => {
+      console.error(e);
+      res.status(422).send("Erreur de la création du membre administrateur.");
+    });
 };
 
 //fonction permettant à un client de s'inscrire
@@ -321,7 +321,7 @@ const postResetPassword = (req: Express.Request, res: Express.Response) => {
           subject: "Réinitialisation du mot de passe",
           html: `
               <p>Vous avez demandé une réinitialisation du mot de passe</p>
-              <p>Cliquez ici: <a href="http://localhost:3000/resetpassword/new/${token}">lien</a>, pour définir un nouveau mot de passe.</p>
+              <p>Cliquez ici: <a href="${process.env.FRONT_URL}resetpassword/new/${token}">lien</a>, pour définir un nouveau mot de passe.</p>
               <p>Votre token de réinitialisation est valable qu'une heure.</p>
             `,
         });

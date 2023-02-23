@@ -1,8 +1,7 @@
 version: '3'
 
-
 services:
-# Serveur node.js lts
+  # Serveur node.js lts
   nodejs:
     container_name: api-nodejs
     image: node:lts
@@ -16,10 +15,9 @@ services:
       - mariadb
     links:
       - mariadb:mariadb
-    build: 
+    build:
       context: .
       dockerfile: ./docker/Dockerfile
-    
 
   # Serveur mariadb
   mariadb:
@@ -34,17 +32,16 @@ services:
       - "3306:3306"
     volumes:
       - ./docker-data:/var/lib/mysql
-
   # Serveur PhpMyAdmin
-  phpmyadmin:
-    container_name: api-phpmyadmin
-    image: phpmyadmin
-    ports:
-      - "8081:80"
-    environment:
-      PMA_HOST: mariadb
-      PMA_PORT: 3306
-      UPLOAD_LIMIT: 1024M
-    links:
-      - mariadb:mariadb
+  # phpmyadmin:
+  #   container_name: api-phpmyadmin
+  #   image: phpmyadmin
+  #   ports:
+  #     - "8081:80"
+  #   environment:
+  #     PMA_HOST: mariadb
+  #     PMA_PORT: 3306
+  #     UPLOAD_LIMIT: 1024M
+  #   links:
+  #     - mariadb:mariadb
 

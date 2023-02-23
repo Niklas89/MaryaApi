@@ -47,7 +47,6 @@ app.use(cookieParser());
 
 //jwt
 //app.get('*', checkUser);
-
 //routes ----------------------------------------
 app.use("/api/service", serviceRoute);
 app.use("/api/booking", bookingRoute);
