@@ -20,7 +20,7 @@ const createRefreshToken = (id: number, role: number) => {
     if (typeof process.env.REFRESH_TOKEN_SECRET === "string") {
         return jwt.sign({ id, role }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "1d" }) // expiresIn: "1d" (1 jour)
     }
-  };
+};
 
 //fonction permettant d'utiliser le refresh token'
 const handleRefreshToken = (req: Express.Request, res: Express.Response) => {
@@ -28,35 +28,35 @@ const handleRefreshToken = (req: Express.Request, res: Express.Response) => {
     if (!cookies?.jwt) return res.sendStatus(401); // si cookie n'existe pas: 401
     const refreshToken = cookies.jwt;
     // res.clearCookie('jwt', { httpOnly: true, sameSite: "none", secure: true });
-    res.clearCookie('jwt', { httpOnly: true });
+    res.clearCookie('jwt', { httpOnly: true, sameSite: "none", secure: true });
     console.log(refreshToken);
 
     userModel.findOne({ where: { refreshToken: refreshToken } })
         .then((user: User) => {
             const userid = user.id;
             roleModel.findOne({ where: { id: user.idRole } })
-            .then((role: Role) => {
+                .then((role: Role) => {
 
-                // evaluate jwt 
-                if (typeof process.env.REFRESH_TOKEN_SECRET === "string") {
-                    jwt.verify(
-                        refreshToken,
-                        process.env.REFRESH_TOKEN_SECRET,
-                        (err: any, decoded: any) => {
-                            if (err) return res.sendStatus(403);
-                            const idRole = role.id;
-                            const accessToken = createAccessToken(user.id, idRole);
-                            const refreshToken = createRefreshToken(user.id, idRole);
-                            userModel.update({ refreshToken: refreshToken}, {where: {id: user.id}})
-                            res.cookie("jwt", refreshToken, {httpOnly: true, maxAge: 24*60*60*1000});  // maxAge: 1day
-                            res.status(200).send({ idRole, accessToken });
-                        }
-                    );
-                }
-            }) 
-            .catch(() => {
-                res.status(403).send("Rôle de l'utilisateur pas trouvé.");
-            })
+                    // evaluate jwt 
+                    if (typeof process.env.REFRESH_TOKEN_SECRET === "string") {
+                        jwt.verify(
+                            refreshToken,
+                            process.env.REFRESH_TOKEN_SECRET,
+                            (err: any, decoded: any) => {
+                                if (err) return res.sendStatus(403);
+                                const idRole = role.id;
+                                const accessToken = createAccessToken(user.id, idRole);
+                                const refreshToken = createRefreshToken(user.id, idRole);
+                                userModel.update({ refreshToken: refreshToken }, { where: { id: user.id } })
+                                res.cookie("jwt", refreshToken, { httpOnly: true, sameSite: "none", secure: true, maxAge: 24 * 60 * 60 * 1000 });  // maxAge: 1day
+                                res.status(200).send({ idRole, accessToken });
+                            }
+                        );
+                    }
+                })
+                .catch(() => {
+                    res.status(403).send("Rôle de l'utilisateur pas trouvé.");
+                })
         })
         .catch(() => { // If not found user
             res.status(403).send("Accès interdit");

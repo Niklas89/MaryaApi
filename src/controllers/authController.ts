@@ -73,6 +73,8 @@ const signIn = (req: Express.Request, res: Express.Response) => {
               // En prod: httpOnly: true, sameSite: "none", secure: true (marche que pour https)
               res.cookie("jwt", refreshToken, {
                 httpOnly: true,
+                sameSite: "none",
+                secure: true,
                 maxAge: 24 * 60 * 60 * 1000,
               }); // maxAge: 1day
               // envoyer l'access token, il va être stocké en mémoire,
