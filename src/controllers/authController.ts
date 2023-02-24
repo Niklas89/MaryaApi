@@ -140,51 +140,11 @@ const signUpClient = async (
       { transaction: t }
     );
     await t.commit();
-    res.status(200).json({ partner, user });
+    res.status(201).json({ partner, user });
   } catch (error) {
-    res.status(422).send(error.message);
+    res.status(409).send(error.message);
     await t.rollback();
   }
-  /*
-  userModel
-    .create(
-      {
-        firstName: firstName,
-        lastName: lastName,
-        password: password,
-        email: email,
-        isActive: 1,
-        idRole: 1,
-      },
-      { individualHooks: true }
-    )
-    .then((user: User) => {
-      clientModel
-        .create({
-          idUser: user.id,
-          phone: phone,
-          address: address,
-          postalCode: postalCode,
-          city: city,
-        })
-        .then((client: Client) => {
-          res.status(201).json({ user, client });
-          transporter.sendMail({
-            to: user.email,
-            from: "contact@marya.app",
-            subject: "Inscription réussie !",
-            html: "<h1>Vous vous êtes bien inscrit sur Marya.app, félicitations !<h1>",
-          });
-        })
-        .catch((e: any) => {
-          console.error(e);
-          res.status(422).send("Erreur de la création du partenaire.");
-        });
-    })
-    .catch((e: any) => {
-      console.error(e);
-      res.status(422).send("Erreur de la création de l'utilisateur.");
-    });*/
 };
 
 //fonction permettant à un admin de s'inscrire
@@ -220,9 +180,9 @@ const signUpAdmin = async (
           + "<p>Veuillez vous connecter sur l'application bureautique et changer de mot de passe dans votre page profil.</p>",
       });
     })
-    .catch((e: any) => {
+    .catch((e: Error) => {
       console.error(e);
-      res.status(422).send("Erreur de la création du membre administrateur.");
+      res.status(409).send("Erreur de la création du membre administrateur.");
     });
 };
 
@@ -269,9 +229,9 @@ const signUpPartner = async (
       { transaction: t }
     );
     await t.commit();
-    res.status(200).json({ partner, user });
+    res.status(201).json({ partner, user });
   } catch (error) {
-    res.status(422).send(error.message);
+    res.status(409).send(error.message);
     await t.rollback();
   }
 };
