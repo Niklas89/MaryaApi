@@ -79,7 +79,8 @@ const signIn = (req: Express.Request, res: Express.Response) => {
               }); // maxAge: 1day
               // envoyer l'access token, il va être stocké en mémoire,
               // ce n'est pas sécurisé en localStorage/Session ou cookie
-              res.status(200).send({ user, idRole, accessToken });
+              // res.status(200).send({ user, idRole, accessToken }); => suppression d'envoie obj user
+              res.status(200).send({ idRole, accessToken });
             } else {
               return res.status(500).json("Erreur à la création du token.");
             }
